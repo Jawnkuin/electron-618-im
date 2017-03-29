@@ -174,9 +174,11 @@
   },
   "dependencies": {
     "electron-debug": "^1.1.0",
+    "eslint-plugin-flowtype": "^2.30.4",
     "extract-text-webpack-plugin": "^2.0.0",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
+    "protobufjs": "^6.6.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-hot-loader": "3.0.0-beta.6",

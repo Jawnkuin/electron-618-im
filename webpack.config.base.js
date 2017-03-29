@@ -29,12 +29,12 @@ export default {
     extensions: ['.js', '.jsx', '.json'],
     modules: [
       path.join(__dirname, 'app'),
-      'node_modules',
-    ],
+      'node_modules'
+    ]
   },
 
   plugins: [
-    new webpack.NamedModulesPlugin(),
+    new webpack.NamedModulesPlugin()
   ],
 
   externals: Object.keys(externals || {})

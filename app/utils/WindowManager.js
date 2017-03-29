@@ -5,12 +5,11 @@ class WindowManager {
     this.windows = {};
     this.nameReferences = {};
     this.IDMap = {};
-
     this.focus = [null];
   }
 
   add (window, name = null) {
-    const newID = Symbol();
+    const newID = Symbol('window');
     this.windows[newID] = window;
     this.IDMap[window.id] = newID;
     window.on('closed', () => {
@@ -70,14 +69,14 @@ class WindowManager {
     }
   }
 
-  getWindowManagerName () {
+  static getWindowManagerName () {
     if (process.platform === 'linux') {
       return process.env['XDG_CURRENT_DESKTOP']; // eslint-disable-line
     }
     return undefined;
   }
 
-  getWindowManagerGDMName () {
+  static getWindowManagerGDMName () {
     if (process.platform === 'linux') {
       return process.env['GDMSESSION']; // eslint-disable-line
     }
