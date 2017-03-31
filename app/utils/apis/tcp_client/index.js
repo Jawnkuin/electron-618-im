@@ -1,28 +1,26 @@
 import net from 'net';
-
 import { HEADER_LENGTH, JKPBHeader } from './JKPBHeader';
+import { pbBodyParser } from '../pbParsers/pbModules';
 
 const ipaddr = '192.168.8.41';
 const port = 8000;
 
+// 可能同时会发过来各种东西，需要区分
 const onReceiveData = (buff) => {
   const resPBHeader = new JKPBHeader();
   try {
-    console.log(buff);
     const headerBuf = buff.slice(0, HEADER_LENGTH);
-    console.log(headerBuf);
-
     resPBHeader.unSerialize(headerBuf);
-    console.log(resPBHeader);
-        /*
-    if (buff.length - HEADER_LENGTH <= 0) {
-      return;
+
+    if (!resPBHeader || !resPBHeader.moduleId) {
+      throw new Error('Invalid Response Header');
     }
-
     const pbBodyBuf = buff.slice(HEADER_LENGTH, buff.length);
-
-    return pbBodyBuf;
-        */
+    const pbBody = pbBodyParser(resPBHeader, pbBodyBuf);
+    return {
+      header: resPBHeader,
+      body: pbBody
+    };
   } catch (e) {
     throw new Error(`Error on onReceiveData ${e.message}`);
   }
@@ -60,8 +58,9 @@ class TCPClient {
       const dataBuf = this.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);
       this.client.write(dataBuf);
       this.client.on('data', (res) => {
-        const pbBodyBuf = onReceiveData(res);
-        resolve(pbBodyBuf);
+        // 包含header 和 body的 resData
+        const resData = onReceiveData(res);
+        resolve(resData);
       });
     });
   }

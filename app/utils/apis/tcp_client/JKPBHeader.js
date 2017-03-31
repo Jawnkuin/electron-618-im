@@ -34,13 +34,17 @@ export class JKPBHeader {
     if (!headerBuf || !headerBuf.length || headerBuf.length !== HEADER_LENGTH) {
       throw new Error('Error unSerialize header buffer');
     }
-    this.HeaderBuff = Buffer.from(headerBuf);
-    this.length = this.HeaderBuff.readUInt32BE(0);
-    this.version = this.HeaderBuff.readUInt16BE(4);
-    this.flag = this.HeaderBuff.readUInt32BE(6);
-    this.moduleId = this.HeaderBuff.readUInt32BE(8);
-    this.commandId = this.HeaderBuff.readUInt32BE(10);
-    this.seqNumber = this.HeaderBuff.readUInt32BE(12);
-    this.reserved = this.HeaderBuff.readUInt32BE(14);
+    try {
+      this.HeaderBuff = Buffer.from(headerBuf);
+      this.length = this.HeaderBuff.readUInt32BE(0);
+      this.version = this.HeaderBuff.readUInt16BE(4);
+      this.flag = this.HeaderBuff.readUInt16BE(6);
+      this.moduleId = this.HeaderBuff.readUInt16BE(8);
+      this.commandId = this.HeaderBuff.readUInt16BE(10);
+      this.seqNumber = this.HeaderBuff.readUInt16BE(12);
+      this.reserved = this.HeaderBuff.readUInt16BE(14);
+    } catch (e) {
+      throw new Error(`Error JKPBHeader unSerialize ${e.message}`);
+    }
   }
 }

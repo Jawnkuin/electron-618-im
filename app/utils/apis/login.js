@@ -1,39 +1,17 @@
-import protobuf from 'protobufjs';
 import crypto from 'crypto';
-import path from 'path';
 
 import TCPClient from './tcp_client';
+import { IMLogin, IMBaseDefine } from './pbParsers/pbModules';
 
-const pbPath = path.join(process.cwd(), '/app/utils/apis/pb/IM.Login.proto');
+const IMLoginReq = IMLogin.IMLoginReq;
+const userStatType = IMBaseDefine.UserStatType;
+const clientType = IMBaseDefine.ClientType;
+const serviceIdEnums = IMBaseDefine.ServiceID;
 
-let protoRoot = null;
-let IMLoginReq = null;
-let userStatType = null;
-let clientType = null;
-let serviceIdEnums = null;
-let loginCmdIdEnums = null;
-let IMLoginRes = null;
+const loginCmdIdEnums = IMBaseDefine.LoginCmdID;
+
 let tcpClient = null;
 
-const getProtoRoot = () => new Promise((resolve, reject) => {
-  protobuf.load(pbPath, (err, pbRoot) => {
-    if (err) {
-      reject(err);
-    }
-    resolve(pbRoot);
-  });
-});
-
-// 加载PB相关配置
-const initPb = async () => {
-  protoRoot = await getProtoRoot();
-  IMLoginReq = protoRoot.lookup('IM.Login.IMLoginReq');
-  userStatType = protoRoot.lookup('IM.BaseDefine.UserStatType');
-  clientType = protoRoot.lookup('IM.BaseDefine.ClientType');
-  serviceIdEnums = protoRoot.lookup('IM.BaseDefine.ServiceID');
-  loginCmdIdEnums = protoRoot.lookup('IM.BaseDefine.LoginCmdID');
-  IMLoginRes = protoRoot.lookup('IM.Login.IMLoginRes');
-};
 
 // 获得PBBody
 const getLoginBuf = () => {
@@ -41,30 +19,46 @@ const getLoginBuf = () => {
   const loginMsg = IMLoginReq.create({
     userName: 'Wu',
     password: hash,
-    onlineStatus: userStatType.values.USER_STATUS_ONLINE,
-    clientType: clientType.values.CLIENT_TYPE_WINDOWS,
+    onlineStatus: userStatType.USER_STATUS_ONLINE,
+    clientType: clientType.CLIENT_TYPE_WINDOWS,
     clientVersion: 'win_10086'
   });
   const loginBuf = IMLoginReq.encode(loginMsg).finish();
   return loginBuf;
 };
 
-const onLoginRequest = (res, onLoginOK, onLoginFailed) => {
-  console.log(res);
-  const loginRes = IMLoginRes.decode(res);
-  if (!loginRes) {
-    onLoginFailed(new Error('Error on login, server failure'));
+const onLoginResponce = (res, onLoginOK, onLoginFailed) => {
+  if (!res || !res.header || !res.body) {
+    throw new Error('Error Empty res');
   }
-  console.log(loginRes);
+  // 其它消息
+  if (loginCmdIdEnums.CID_LOGIN_RES_USERLOGIN !== res.header.commandId) {
+    return;
+  }
+
+  switch (res.body.resultCode) {
+    case IMBaseDefine.ResultType.REFUSE_REASON_NO_MSG_SERVER:
+    case IMBaseDefine.ResultType.REFUSE_REASON_MSG_SERVER_FULL:
+    case IMBaseDefine.ResultType.REFUSE_REASON_NO_DB_SERVER:
+    case IMBaseDefine.ResultType.REFUSE_REASON_NO_LOGIN_SERVER:
+    case IMBaseDefine.ResultType.REFUSE_REASON_NO_ROUTE_SERVER:
+    case IMBaseDefine.ResultType.REFUSE_REASON_DB_VALIDATE_FAILED:
+    case IMBaseDefine.ResultType.REFUSE_REASON_VERSION_TOO_OLD:
+      onLoginFailed(new Error(res.body.resultString));
+      break;
+    case IMBaseDefine.ResultType.REFUSE_REASON_NONE:
+      onLoginOK(res.body);
+      break;
+    default:
+      onLoginFailed(new Error('未知错误'));
+  }
 };
 
 // 执行登录，回调登录成功和登录失败
-const doLogin = async (onLoginOK, onLoginFailed) => {
-  await initPb();
-
+const doLogin = (onLoginOK, onLoginFailed) => {
   const logReqBuf = getLoginBuf();
-  const loginServiceId = serviceIdEnums.values.SID_LOGIN;
-  const loginReqCmdId = loginCmdIdEnums.values.CID_LOGIN_REQ_USERLOGIN;
+  const loginServiceId = serviceIdEnums.SID_LOGIN;
+  const loginReqCmdId = loginCmdIdEnums.CID_LOGIN_REQ_USERLOGIN;
 
   if (!tcpClient) {
     tcpClient = new TCPClient();
@@ -72,10 +66,10 @@ const doLogin = async (onLoginOK, onLoginFailed) => {
 
   tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId).then(
     (res) => {
-      onLoginRequest(res, onLoginOK, onLoginFailed);
+      onLoginResponce(res, onLoginOK, onLoginFailed);
     },
     (err) => {
-      throw err;
+      throw new Error(`Error On Login ${err.message}`);
     }
   );
 };

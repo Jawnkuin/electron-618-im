@@ -5,6 +5,8 @@ import { Link } from 'react-router';
 import showNotify from '../utils/showNotify';
 import doLogin from '../utils/apis/login';
 
+// const doLogin = () => {};
+
 import styles from './Home.less';
 
 const resolve = (data) => {
