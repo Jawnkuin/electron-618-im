@@ -10,6 +10,6 @@ const router = routerMiddleware(hashHistory);
 
 const enhancer = applyMiddleware(thunk, router);
 
-export default function configureStore(initialState?: counterStateType) {
+export default function configureStore (initialState?: counterStateType) {
   return createStore(rootReducer, initialState, enhancer); // eslint-disable-line
 }

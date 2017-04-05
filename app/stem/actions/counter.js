@@ -12,6 +12,7 @@ export const incrementIfOdd = () => (dispatch, getState) => {
 
   if (counter % 2 === 0) {
     dispatch(increment(new Error('even args')));
+    return;
   }
 
   dispatch(increment());

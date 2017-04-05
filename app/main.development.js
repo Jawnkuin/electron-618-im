@@ -1,5 +1,10 @@
 // @flow
-import { app, BrowserWindow, Tray, Menu } from 'electron'; // eslint-disable-line import/no-extraneous-dependencies
+import { app, BrowserWindow, Tray, Menu, shell } from 'electron';
+import {
+  forwardToRenderer,
+  triggerAlias,
+  replayActionMain
+} from 'electron-redux';
 import path from 'path';
 import MenuBuilder from './menu';
 
@@ -48,6 +53,7 @@ let appTray = null;
 app.on('ready', async () => {
   await installExtensions();
 
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
@@ -69,6 +75,15 @@ app.on('ready', async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  function handleRedirect (e, url) {
+    if (url !== mainWindow.webContents.getURL()) {
+      e.preventDefault();
+      shell.openExternal(url);
+    }
+  }
+  mainWindow.webContents.on('will-navigate', handleRedirect);
+  mainWindow.webContents.on('new-window', handleRedirect);
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

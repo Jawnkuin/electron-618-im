@@ -10,7 +10,7 @@ import type { counterStateType } from '../reducers/counter';
 
 const actionCreators = {
   ...counterActions,
-  push,
+  push
 };
 
 const logger = createLogger({
@@ -25,7 +25,7 @@ const router = routerMiddleware(hashHistory);
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
     // Options: http://extension.remotedev.io/docs/API/Arguments.html
-    actionCreators,
+    actionCreators
   }) :
   compose;
 /* eslint-enable no-underscore-dangle */
@@ -33,7 +33,7 @@ const enhancer = composeEnhancers(
   applyMiddleware(thunk, router, logger)
 );
 
-export default function configureStore(initialState?: counterStateType) {
+export default function configureStore (initialState?: counterStateType) {
   const store = createStore(rootReducer, initialState, enhancer);
 
   if (module.hot) {
