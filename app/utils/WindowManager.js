@@ -1,6 +1,30 @@
 import _ from 'lodash';
+import { shell } from 'electron';
 
-class WindowManager {
+export class WindowConfigs {
+  static base = {
+    show: false,
+    useContentSize: true,
+    frame: false,
+    transparent: true
+  }
+
+  static login = Object.assign({}, WindowConfigs.base, {
+    width: 800, // 300
+    height: 565,
+    resizable: false
+  })
+}
+
+// 需要打开电脑上的浏览器
+const handleRedirect = lwindow => (e, url) => {
+  if (url !== lwindow.webContents.getURL()) {
+    e.preventDefault();
+    shell.openExternal(url);
+  }
+};
+
+export class WindowManager {
   constructor () {
     this.windows = {};
     this.nameReferences = {};
@@ -12,6 +36,8 @@ class WindowManager {
     const newID = Symbol(name);
     this.windows[newID] = window;
     this.IDMap[window.id] = newID;
+
+
     window.on('closed', () => {
       delete this.windows[newID];
     });
@@ -24,9 +50,24 @@ class WindowManager {
     window.on('enter-full-screen', () => {
       window.webContents.send('window:changefullscreen', true);
     });
+
     window.on('leave-full-screen', () => {
       window.webContents.send('window:changefullscreen', false);
     });
+
+
+    window.webContents.on('did-finish-load', () => {
+      if (!window) {
+        throw new Error('"mainWindow" is not defined');
+      }
+      window.show();
+      window.focus();
+    });
+
+    window.webContents.on('will-navigate', handleRedirect(window));
+    window.webContents.on('new-window', handleRedirect(window));
+
+
     if (name) {
       this.nameReferences[name] = this.nameReferences[name] || [];
       this.nameReferences[name].push(newID);
@@ -83,5 +124,3 @@ class WindowManager {
     return undefined;
   }
 }
-
-export default WindowManager;

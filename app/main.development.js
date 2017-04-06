@@ -1,6 +1,5 @@
 // @flow
-import { app, BrowserWindow, Tray, Menu, shell } from 'electron';
-import url from 'url';
+import { app, BrowserWindow, Tray, Menu } from 'electron';
 /*
 import {
   forwardToRenderer,
@@ -9,9 +8,10 @@ import {
 } from 'electron-redux';
 */
 import path from 'path';
-import MenuBuilder from './menu';
+import { WindowManager, WindowConfigs } from './utils/WindowManager';
 
-let mainWindow = null;
+// 防止被内存回收w
+const windowManager = new WindowManager();
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 if (process.env.NODE_ENV === 'development') {
-  require('electron-debug')(); // eslint-disable-line global-require
+  require('electron-debug')({ showDevTools: true }); // eslint-disable-line global-require
   const path = require('path'); // eslint-disable-line
   const p = path.join(__dirname, '..', 'app', 'node_modules'); // eslint-disable-line
   require('module').globalPaths.push(p); // eslint-disable-line
@@ -34,7 +34,6 @@ const installExtensions = async () => {
   if (process.env.NODE_ENV === 'development') {
     // eslint-disable-next-line global-require,import/no-extraneous-dependencies
     const installer = require('electron-devtools-installer');
-
     const extensions = [
       'REACT_DEVELOPER_TOOLS',
       'REDUX_DEVTOOLS'
@@ -56,42 +55,13 @@ let appTray = null;
 app.on('ready', async () => {
   await installExtensions();
 
+  // 登录窗体
+  const loginWindow = new BrowserWindow(WindowConfigs.login);
+  windowManager.add(loginWindow, 'login');
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    frame: false
-  });
+  loginWindow.loadURL(`${__dirname}/login/index.html`);
 
-  console.log(url.parse(`file://${__dirname}/stem/index.html`).href);
-  mainWindow.loadURL(`${__dirname}/stem/index.html`);
-
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    mainWindow.show();
-    mainWindow.focus();
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
-  function handleRedirect (e, surl) {
-    if (surl !== mainWindow.webContents.getURL()) {
-      e.preventDefault();
-      shell.openExternal(surl);
-    }
-  }
-  mainWindow.webContents.on('will-navigate', handleRedirect);
-  mainWindow.webContents.on('new-window', handleRedirect);
-  mainWindow.webContents.openDevTools();
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
-
-  console.log(path.join(__dirname, '../resources/icon.ico'));
+  // 托盘
   appTray = new Tray(path.join(__dirname, '../resources/icon.ico'));
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Item1IsVeryVeryVeryLong', type: 'radio' },
@@ -106,3 +76,24 @@ app.on('ready', async () => {
     content: 'Lorem ipsum'
   });
 });
+
+/*
+"electron-redux": "^1.2.5",
+"protobufjs": "^6.6.5",
+"lodash": "^4.17.4",
+"electron": "^1.4.15",
+"electron-debug": "^1.1.0",
+"extract-text-webpack-plugin": "^2.0.0",
+"font-awesome": "^4.7.0",
+"react": "^15.4.2",
+"react-dom": "^15.4.2",
+"redux-actions": "^2.0.1",
+"react-hot-loader": "3.0.0-beta.6",
+"react-redux": "^5.0.2",
+"react-router": "^3.0.2",
+"react-router-redux": "^4.0.7",
+"redux": "^3.6.0",
+"redux-thunk": "^2.2.0",
+"source-map-support": "^0.4.10",
+"redux-promise": "^0.5.3"
+*/

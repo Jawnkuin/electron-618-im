@@ -15,7 +15,10 @@ import baseConfig from './webpack.config.base';
 export default merge(baseConfig, {
   devtool: 'cheap-module-source-map',
 
-  entry: ['babel-polyfill', './app/stem/index'],
+  entry: {
+    stem: ['babel-polyfill', './app/stem/index'],
+    login: ['babel-polyfill', './app/login/index']
+  },
 
   output: {
     path: path.join(__dirname, 'app/dist'),
@@ -136,7 +139,7 @@ export default merge(baseConfig, {
      */
     new BabiliPlugin(),
 
-    new ExtractTextPlugin('style.css'),
+    new ExtractTextPlugin('[name].css'),
 
     /**
      * Dynamically generate index.html page

@@ -1,18 +1,25 @@
 # electron-618-im
 
-A desktop IM client build on [electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate)
+A desktop IM client (Mostly on Windows by so far), to communicate with [TeamTalk Server](https://github.com/meili/TeamTalk)
+Built on template [electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate)
+
 
 
 > Live editing development on desktop app
 
 [Electron](http://electron.atom.io/) application boilerplate based on [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [React Router](https://github.com/reactjs/react-router), [Webpack](http://webpack.github.io/docs/), [React Transform HMR](https://github.com/gaearon/react-transform-hmr) for rapid application development
 
+
+## Required Knowledge
+
+ProtocalBuf, React, Redux, Electron & TeamTalk Server
+
 ## Install
 
 First, clone the repo via git:
 
 ```bash
-git clone --depth=1 https://github.com/Jawnkuin/electron-618-im your-project-name
+git clone --depth=1 https://github.com/Jawnkuin/electron-618-im.git your-project-name
 ```
 
 And then install dependencies.

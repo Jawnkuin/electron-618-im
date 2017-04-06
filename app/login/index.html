@@ -8,7 +8,7 @@
         if (!process.env.HOT) {
           const link = document.createElement('link');
           link.rel = 'stylesheet';
-          link.href = '../dist/stem.css';
+          link.href = '../dist/login.css';
           // HACK: Writing the script path should be done with webpack
           document.getElementsByTagName('head')[0].appendChild(link);
         }
@@ -22,8 +22,8 @@
         const script = document.createElement('script');
         const port = process.env.PORT || 3000;
         script.src = (process.env.HOT)
-          ? 'http://localhost:' + port + '/dist/stem.js'
-          : '../dist/stem.js';
+          ? 'http://localhost:' + port + '/dist/login.js'
+          : '../dist/login.js';
         // HACK: Writing the script path should be done with webpack
         document.body.appendChild(script);
       }
