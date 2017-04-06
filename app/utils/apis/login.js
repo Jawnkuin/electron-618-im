@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import TCPClient from './tcp_client';
+import tcpClient from './tcp_client';
 import { IMLogin, IMBaseDefine } from './pbParsers/pbModules';
 
 const IMLoginReq = IMLogin.IMLoginReq;
@@ -9,8 +9,6 @@ const clientType = IMBaseDefine.ClientType;
 const serviceIdEnums = IMBaseDefine.ServiceID;
 
 const loginCmdIdEnums = IMBaseDefine.LoginCmdID;
-
-let tcpClient = null;
 
 
 // 获得PBBody
@@ -55,23 +53,25 @@ const onLoginResponce = (res, onLoginOK, onLoginFailed) => {
 };
 
 // 执行登录，回调登录成功和登录失败
-const doLogin = (onLoginOK, onLoginFailed) => {
+const doLogin = () => {
   const logReqBuf = getLoginBuf();
   const loginServiceId = serviceIdEnums.SID_LOGIN;
   const loginReqCmdId = loginCmdIdEnums.CID_LOGIN_REQ_USERLOGIN;
 
-  if (!tcpClient) {
-    tcpClient = new TCPClient();
+  if (!tcpClient.connecting) {
+    tcpClient.initConnToServer();
   }
 
-  tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId).then(
-    (res) => {
-      onLoginResponce(res, onLoginOK, onLoginFailed);
-    },
-    (err) => {
-      throw new Error(`Error On Login ${err.message}`);
-    }
-  );
+  return new Promise((resolve, reject) => {
+    tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId).then(
+      (res) => {
+        onLoginResponce(res, resolve, reject);
+      },
+      (err) => {
+        reject(err);
+      }
+    );
+  });
 };
 
 

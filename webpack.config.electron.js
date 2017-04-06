@@ -1,7 +1,7 @@
 /**
  * Build config for electron 'Main Process' file
  */
-
+/* eslint-disable import/no-extraneous-dependencies */
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 import BabiliPlugin from 'babili-webpack-plugin';

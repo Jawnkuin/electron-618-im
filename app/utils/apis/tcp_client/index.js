@@ -50,8 +50,7 @@ class TCPClient {
   /**
   * @pbbody: buffer of pb body
   */
-  async sendPbToServer (pbbody, moduleId, cmdId) {
-    await this.initConnToServer();
+  sendPbToServer (pbbody, moduleId, cmdId) {
     return new Promise((resolve) => {
       // 自定义序列号+1
       this.seqNumber += 1;
@@ -95,4 +94,4 @@ class TCPClient {
   }
 }
 
-export default TCPClient;
+export default new TCPClient();

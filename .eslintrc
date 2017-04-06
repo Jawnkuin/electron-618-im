@@ -22,6 +22,7 @@
     "consistent-return": 0,
     "new-cap": [2, {"capIsNewExceptions": ["ObjectId"]}],
     "jsx-quotes": 0,
+    "import/no-extraneous-dependencies": [2, {"devDependencies": false}],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/jsx-no-bind": [2, {
       "ignoreRefs": true,

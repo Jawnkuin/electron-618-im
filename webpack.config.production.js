@@ -2,6 +2,8 @@
  * Build config for electron 'Renderer Process' file
  */
 
+/* eslint-disable import/no-extraneous-dependencies */
+
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
@@ -13,7 +15,7 @@ import baseConfig from './webpack.config.base';
 export default merge(baseConfig, {
   devtool: 'cheap-module-source-map',
 
-  entry: ['babel-polyfill', './app/index'],
+  entry: ['babel-polyfill', './app/stem/index'],
 
   output: {
     path: path.join(__dirname, 'app/dist'),
@@ -27,7 +29,7 @@ export default merge(baseConfig, {
         test: /\.global\.css$/,
         use: ExtractTextPlugin.extract({
           use: 'css-loader',
-          fallback: 'style-loader',
+          fallback: 'style-loader'
         })
       },
 
@@ -40,10 +42,10 @@ export default merge(baseConfig, {
             options: {
               modules: true,
               importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
+              localIdentName: '[name]__[local]__[hash:base64:5]'
             }
           }
-        }),
+        })
       },
       // Pipe other less styles through css modules and append to style.css
       {
@@ -55,14 +57,14 @@ export default merge(baseConfig, {
               options: {
                 modules: true,
                 importLoaders: 1,
-                localIdentName: '[name]__[local]__[hash:base64:5]',
+                localIdentName: '[name]__[local]__[hash:base64:5]'
               }
             },
             {
               loader: 'less-loader'
             }
           ]
-        }),
+        })
       },
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
@@ -70,9 +72,9 @@ export default merge(baseConfig, {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff',
+            mimetype: 'application/font-woff'
           }
-        },
+        }
       },
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
@@ -80,7 +82,7 @@ export default merge(baseConfig, {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff',
+            mimetype: 'application/font-woff'
           }
         }
       },
@@ -96,7 +98,7 @@ export default merge(baseConfig, {
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader',
+        use: 'file-loader'
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
@@ -104,13 +106,13 @@ export default merge(baseConfig, {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'image/svg+xml',
+            mimetype: 'image/svg+xml'
           }
         }
       },
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use: 'url-loader',
+        use: 'url-loader'
       }
     ]
   },

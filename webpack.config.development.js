@@ -3,6 +3,8 @@
  * Build config for development process that uses Hot-Module-Replacement
  * https://webpack.js.org/concepts/hot-module-replacement/
  */
+/* eslint-disable import/no-extraneous-dependencies */
+
 import path from 'path';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
@@ -19,7 +21,7 @@ export default merge(baseConfig, {
     'react-hot-loader/patch',
     `webpack-dev-server/client?http://localhost:${port}/`,
     'webpack/hot/only-dev-server',
-    path.join(__dirname, 'app/index.js')
+    path.join(__dirname, 'app/stem/index.js')
   ],
 
   output: {
@@ -162,7 +164,7 @@ export default merge(baseConfig, {
       if (process.env.START_HOT) {
         spawn('npm', ['run', 'start-hot'], { shell: true, env: process.env, stdio: 'inherit' })
           .on('close', code => process.exit(code))
-          .on('error', spawnError => console.error(spawnError));
+          .on('error', spawnError => console.error(spawnError));  // eslint-disable-line no-console
       }
     }
   }

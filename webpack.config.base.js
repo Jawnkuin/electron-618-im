@@ -1,7 +1,7 @@
 /**
  * Base webpack config used across other specific configs
  */
-
+/* eslint-disable import/no-extraneous-dependencies */
 import path from 'path';
 import webpack from 'webpack';
 import { dependencies as externals } from './app/package.json';

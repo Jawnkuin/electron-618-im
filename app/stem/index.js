@@ -4,8 +4,8 @@ import { hashHistory } from 'react-router';
 import { AppContainer } from 'react-hot-loader';
 import { syncHistoryWithStore } from 'react-router-redux';
 import Root from './containers/Root';
-import configureStore from './store/configureStore';
-import './app.global.css';
+import configureStore from './store/index';
+import '../app.global.css';
 
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);

@@ -9,7 +9,7 @@ class WindowManager {
   }
 
   add (window, name = null) {
-    const newID = Symbol('window');
+    const newID = Symbol(name);
     this.windows[newID] = window;
     this.IDMap[window.id] = newID;
     window.on('closed', () => {

@@ -25,7 +25,7 @@ class Counter extends Component {
           {counter}
         </div>
         <div className={styles.btnGroup}>
-          <button className={styles.btn} onClick={increment} data-tclass="btn">
+          <button className={styles.btn} onClick={() => increment(1)} data-tclass="btn">
             <i className="fa fa-plus" />
           </button>
           <button className={styles.btn} onClick={decrement} data-tclass="btn">

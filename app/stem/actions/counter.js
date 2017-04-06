@@ -3,7 +3,7 @@ import { createAction } from 'redux-actions';
 export const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
 export const DECREMENT_COUNTER = 'DECREMENT_COUNTER';
 
-export const increment = createAction(INCREMENT_COUNTER);
+export const increment = createAction(INCREMENT_COUNTER, amount => amount);
 
 export const decrement = createAction(DECREMENT_COUNTER);
 
@@ -15,11 +15,13 @@ export const incrementIfOdd = () => (dispatch, getState) => {
     return;
   }
 
-  dispatch(increment());
+  dispatch(increment(1));
 };
 
-export const incrementAsync = (delay = 1000) => (dispatch) => {
-  setTimeout(() => {
-    dispatch(increment());
-  }, delay);
-};
+const incrementAsyncPromise = (delay = 1000) => new Promise(
+  (resolve, reject) => {
+    setTimeout(() => reject(new Error('undefined')), delay);
+  }
+);
+
+export const incrementAsync = createAction(INCREMENT_COUNTER, async delay => incrementAsyncPromise(delay));

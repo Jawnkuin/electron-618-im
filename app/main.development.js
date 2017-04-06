@@ -1,10 +1,13 @@
 // @flow
 import { app, BrowserWindow, Tray, Menu, shell } from 'electron';
+import url from 'url';
+/*
 import {
   forwardToRenderer,
   triggerAlias,
   replayActionMain
 } from 'electron-redux';
+*/
 import path from 'path';
 import MenuBuilder from './menu';
 
@@ -61,8 +64,8 @@ app.on('ready', async () => {
     frame: false
   });
 
-
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
+  console.log(url.parse(`file://${__dirname}/stem/index.html`).href);
+  mainWindow.loadURL(`${__dirname}/stem/index.html`);
 
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
@@ -76,15 +79,15 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
-  function handleRedirect (e, url) {
-    if (url !== mainWindow.webContents.getURL()) {
+  function handleRedirect (e, surl) {
+    if (surl !== mainWindow.webContents.getURL()) {
       e.preventDefault();
-      shell.openExternal(url);
+      shell.openExternal(surl);
     }
   }
   mainWindow.webContents.on('will-navigate', handleRedirect);
   mainWindow.webContents.on('new-window', handleRedirect);
-
+  mainWindow.webContents.openDevTools();
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
