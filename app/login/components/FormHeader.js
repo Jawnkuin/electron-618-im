@@ -1,10 +1,18 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { Icon } from 'antd';
+import styles from './FormHeader.less';
 
 const FormHeader = () => (
-  <div>
-    <button>T</button>
-    <button>T</button>
-    <button>T</button>
+  <div className={styles.headerContainer}>
+    <button className={styles.fontBtn}>
+      <Icon type="setting" />
+    </button>
+    <button className={styles.fontBtn}>
+      <Icon type="minus" />
+    </button>
+    <button className={styles.fontBtn}>
+      <Icon type="close" />
+    </button>
   </div>
 );
 

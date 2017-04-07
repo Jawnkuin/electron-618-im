@@ -1,9 +1,6 @@
 import React from 'react';
-import BasePanel from '../../share/BasePanel';
-import FormHeader from '../components/FormHeader';
+import LoginPanel from '../components/LoginPanel';
 
 export default () => (
-  <BasePanel>
-    <FormHeader />
-  </BasePanel>
+  <LoginPanel />
 );

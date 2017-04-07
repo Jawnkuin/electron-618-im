@@ -50,6 +50,19 @@ export default merge(baseConfig, {
       },
       {
         test: /\.less$/,
+        exclude: path.join(__dirname, 'app/'),
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader'
+          },
+          {
+            loader: 'less-loader'
+          }
+        ]
+      },
+      {
+        test: /\.less$/,
         exclude: /node_modules/,
         use: [
           { loader: 'style-loader' },
