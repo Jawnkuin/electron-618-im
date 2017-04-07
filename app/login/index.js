@@ -1,12 +1,25 @@
+import React from 'react';
+import { render } from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
+import Root from './containers/app';
 import '../app.global.css';
 
-function component () {
-  const element = document.createElement('div');
 
-  /* lodash is required for the next line to work */
-  element.innerHTML = 'Hello webpack';
+render(
+  <AppContainer>
+    <Root />
+  </AppContainer>,
+  document.getElementById('root')
+);
 
-  return element;
+if (module.hot) {
+  module.hot.accept('./containers/app', () => {
+    const NextRoot = require('./containers/app'); // eslint-disable-line global-require
+    render(
+      <AppContainer>
+        <NextRoot />
+      </AppContainer>,
+      document.getElementById('root')
+    );
+  });
 }
-
-document.body.appendChild(component());
