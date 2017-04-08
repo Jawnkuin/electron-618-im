@@ -56,10 +56,12 @@ app.on('ready', async () => {
   await installExtensions();
 
   // 登录窗体
-  const loginWindow = new BrowserWindow(WindowConfigs.login);
-  windowManager.add(loginWindow, 'login');
+  // const loginWindow = new BrowserWindow(WindowConfigs.login);
+  const stemWindow = new BrowserWindow(WindowConfigs.stem);
+  // windowManager.add(loginWindow, 'login');
+  windowManager.add(stemWindow, 'stem');
 
-  loginWindow.loadURL(`${__dirname}/login/index.html`);
+  stemWindow.loadURL(`${__dirname}/stem/index.html`);
 
   // 托盘
   appTray = new Tray(path.join(__dirname, '../resources/icon.ico'));

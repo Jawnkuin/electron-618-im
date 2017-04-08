@@ -1,18 +1,6 @@
-// @flow
-import React, { Component } from 'react';
-import type { Children } from 'react';
+import React from 'react';
+import LoginPanel from '../components/LoginPanel';
 
-export default class App extends Component {
-  props: {
-    children: Children
-  };
-
-
-  render () {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
-  }
-}
+export default () => (
+  <LoginPanel />
+);

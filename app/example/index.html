@@ -16,19 +16,17 @@
     </script>
   </head>
   <body>
-    <div id="container">
-      <div id="root"></div>
-      <script>
-        {
-          const script = document.createElement('script');
-          const port = process.env.PORT || 3000;
-          script.src = (process.env.HOT)
-            ? 'http://localhost:' + port + '/dist/stem.js'
-            : '../dist/stem.js';
-          // HACK: Writing the script path should be done with webpack
-          document.body.appendChild(script);
-        }
-      </script>
-    </div>
+    <div id="root"></div>
+    <script>
+      {
+        const script = document.createElement('script');
+        const port = process.env.PORT || 3000;
+        script.src = (process.env.HOT)
+          ? 'http://localhost:' + port + '/dist/stem.js'
+          : '../dist/stem.js';
+        // HACK: Writing the script path should be done with webpack
+        document.body.appendChild(script);
+      }
+    </script>
   </body>
 </html>

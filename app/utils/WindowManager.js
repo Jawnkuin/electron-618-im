@@ -14,6 +14,14 @@ export class WindowConfigs {
     height: 565,
     resizable: false
   })
+
+  static stem = Object.assign({}, WindowConfigs.base, {
+    width: 800, // 300
+    height: 635,
+    minWidth: 300,
+    minHeight: 600,
+    resizable: true
+  })
 }
 
 // 需要打开电脑上的浏览器

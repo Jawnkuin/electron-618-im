@@ -1,0 +1,57 @@
+@import "../../share/style/base.less";
+
+.ProfileContainer{
+	margin-top: 3px;
+	padding: 6px 10px;
+	text-align: left;
+	display: flex;
+	font-family: SimHei;
+	.ImgBox{
+		display: block;
+		flex: 0 1 auto;
+		img{
+			margin: 0 auto;
+			width: 75px;
+			height: 75px;
+			border: 2px solid #ffffff;
+			background: @btn-normal-white-active;
+		}
+	}
+	.DetailBox{
+		padding: 0 0 0 10px;
+		flex: 1 1 auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		.ant-btn {
+			border: none;
+		}
+
+		.ant-btn:hover, .ant-btn:focus{
+			color: @btn-normal-white-active;
+		}
+
+	}
+
+	.NameBox{
+		padding: 5px 0;
+		font-size: 15px;
+		color: @text-black;
+		> button {
+			color: #00ff00;
+		}
+	}
+
+	.SignBox{
+		color: @text-gray-4d;
+		font-size: 12px;
+	}
+
+	.ToolBox{
+		text-align: right;
+		.ant-btn {
+			color: @btn-normal-white;
+		}
+		font-size: 15px;
+	}
+}

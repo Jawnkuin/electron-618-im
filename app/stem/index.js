@@ -1,28 +1,23 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { hashHistory } from 'react-router';
 import { AppContainer } from 'react-hot-loader';
-import { syncHistoryWithStore } from 'react-router-redux';
-import Root from './containers/Root';
-import configureStore from './store/index';
+import Root from './containers/app';
 import '../app.global.css';
 
-const store = configureStore();
-const history = syncHistoryWithStore(hashHistory, store);
 
 render(
   <AppContainer>
-    <Root store={store} history={history} />
+    <Root />
   </AppContainer>,
   document.getElementById('root')
 );
 
 if (module.hot) {
-  module.hot.accept('./containers/Root', () => {
-    const NextRoot = require('./containers/Root'); // eslint-disable-line global-require
+  module.hot.accept('./containers/app', () => {
+    const NextRoot = require('./containers/app'); // eslint-disable-line global-require
     render(
       <AppContainer>
-        <NextRoot store={store} history={history} />
+        <NextRoot />
       </AppContainer>,
       document.getElementById('root')
     );
