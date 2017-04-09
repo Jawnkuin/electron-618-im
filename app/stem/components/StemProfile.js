@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button } from 'antd';
 import styles from './StemProfile.less';
+import dummyimage from '../../utils/dummyimage';
 
 export default () => (
   <div className={styles.ProfileContainer}>
     <div className={styles.ImgBox}>
-      <img alt="sa" src="../../resources/icons/zbcg/96×96.png" />
+      <img alt="sa" src={dummyimage('建軍')} />
     </div>
     <div className={styles.DetailBox}>
       <div className={styles.NameBox}>

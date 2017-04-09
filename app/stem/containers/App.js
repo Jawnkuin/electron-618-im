@@ -1,6 +1,6 @@
 import React from 'react';
-import LoginPanel from '../components/LoginPanel';
+import StemPanel from '../components/StemPanel';
 
 export default () => (
-  <LoginPanel />
+  <StemPanel />
 );

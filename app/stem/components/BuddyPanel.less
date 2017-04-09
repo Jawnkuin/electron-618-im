@@ -1,29 +1,64 @@
+@import "../../share/style/base.less";
 .BuddyPanel{
 	-webkit-app-region:no-drag;
+	flex: 1 1 auto;
+	font-family: SimHei;
+	display: flex;
+	flex-direction: column;
 	.ant-tabs-nav {
 		float: none;
 		display: flex;
 	}
 
-	.ant-tabs-content {
-	  height: 120px;
-	  margin-top: -16px;
-	}
-
-	.ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
-	  background: #fff;
-	  padding: 16px;
-	}
-
-	.ant-tabs-tab {
-	  border-color: transparent;
+	> .ant-tabs {
 		flex: 1 1 auto;
-		font-size: 15px;
-		text-align: center;
-		margin-right: 0;
-	}
+		display: flex;
+		flex-direction: column;
+		.ant-tabs-content {
+			flex: 0 1 auto;
+			margin-top: -16px;
+			.ant-tabs-tabpane{
+				overflow-y:auto;
+				transition: none !important;
+				// 子选项卡字体减小
+				.ant-tabs-tab {
+					font-size: 13px;
+				}
+			}
+		}
+		/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+		.ant-tabs-tabpane::-webkit-scrollbar
+		{
+				width: 4px;
+				height: 4px;
+				background-color: transparent;
+		}
 
-	.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
-	  border-color: #fff;
+		/*定义滚动条轨道 内阴影+圆角*/
+		.ant-tabs-tabpane::-webkit-scrollbar-track
+		{
+				border-radius: 1px;
+				background-color: inherit;
+		}
+
+		/*定义滑块 内阴影+圆角*/
+		.ant-tabs-tabpane::-webkit-scrollbar-thumb
+		{
+				border-radius: 2px;
+				background-color: @primary-color-fadeout-6;
+		}
+		.ant-tabs-tab {
+			border-color: transparent;
+			flex: 1 1 auto;
+			font-size: 17px;
+			line-height: 1;
+			text-align: center;
+			margin-right: 0;
+		}
+
+		#subTab{
+			font-size:13px;
+			line-height:1.5;
+		}
 	}
 }

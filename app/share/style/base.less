@@ -1,4 +1,13 @@
 @primary-color: #2c9dff;
+
+@primary-color-fadeout-1: fadeout(@primary-color, 10%);
+@primary-color-fadeout-2: fadeout(@primary-color, 20%);
+@primary-color-fadeout-3: fadeout(@primary-color, 30%);
+@primary-color-fadeout-4: fadeout(@primary-color, 40%);
+
+@primary-color-fadeout-6: fadeout(@primary-color, 60%);
+@primary-color-fadeout-8: fadeout(@primary-color, 80%);
+
 @primary-color-dark-1: darken(@primary-color, 10%);
 @primary-color-dark-2: darken(@primary-color, 20%);
 @primary-color-dark-3: darken(@primary-color, 30%);
@@ -12,6 +21,25 @@
 @text-white-4: darken(@text-white-5, 10%);
 
 @text-black: #000000;
+@text-gray-a4: #a4a4a4;
 @text-gray-80: #808080;
 @text-gray-70: #707070;
 @text-gray-4d: #4d4d4d;
+
+@strip-normal-bg: #ffffff;
+@strip-focus-bg: #e1effa;
+@strip-active-bg: #cbeaff;
+
+
+.ListItem{
+	background-color: @strip-normal-bg;
+	font-family: SimHei;
+}
+
+.ListItem:hover, .ListItem:focus{
+	background-color: @strip-focus-bg;
+}
+
+.ListItem:active{
+	background-color: @strip-active-bg;
+}

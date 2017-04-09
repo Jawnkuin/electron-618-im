@@ -6,8 +6,10 @@ import BuddyContainer from './BuddyContainer';
 
 export default () => (
   <BasePanel>
-    <FormHeader />
-    <StemProfile />
+    <div>
+      <FormHeader />
+      <StemProfile />
+    </div>
     <BuddyContainer />
   </BasePanel>
 );

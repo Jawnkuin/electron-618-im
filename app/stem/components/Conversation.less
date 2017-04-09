@@ -1,0 +1,37 @@
+@import "../../share/style/base.less";
+
+.ConversationItem:hover:extend(.ListItem:hover){}
+.ConversationItem:focus:extend(.ListItem:focus){}
+.ConversationItem:active:extend(.ListItem:active){}
+.ConversationItem:extend(.ListItem){
+	height: 45px;
+	display: flex;
+	img{
+		width: 35px;
+		height: 35px;
+		flex: 0 1 auto;
+		margin: 5px;
+	}
+	.ConversationDetail{
+		margin: 5px;
+		flex: 1 1 auto;
+		.NameBox{
+			color: @text-black;
+			font-size: 13px;
+		}
+		.HistoryBox{
+			color: @text-gray-a4;
+			font-size: 12px;
+		}
+	}
+	.Badge{
+		margin: auto 8px;
+		flex: 0 1 auto;
+		font-size: 10px;
+		vertical-align: middle;
+		.ant-scroll-number-only > p{
+			height: auto;
+			font-size: inherit;
+		}
+	}
+}
