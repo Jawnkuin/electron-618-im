@@ -1,0 +1,25 @@
+@import "../../share/style/base.less";
+
+.ProfilePanel{
+	flex: 0 0 auto;
+	font-family: SimHei;
+	border-left: 1px solid @text-gray-ca;
+	> img {
+		width: 142px;
+		height: 142px;
+	}
+	.profileBox{
+		overflow: hidden;
+		font-size: 13px;
+		color: @text-black;
+		.profileItem{
+			padding: 10px;
+			i {
+				color: @text-gray-bf;
+			}
+		}
+		.contactItem{
+				color: @primary-color-dark-1;
+		}
+	}
+}

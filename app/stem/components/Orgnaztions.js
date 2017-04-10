@@ -75,7 +75,9 @@ const data = {
   ]
 };
 
+// 递归函数生成树
 const getTreeNodes = (node) => {
+  // 含有子组织
   if (node.orgs) {
     return (
       <TreeNode
@@ -86,6 +88,7 @@ const getTreeNodes = (node) => {
       </TreeNode>
     );
   }
+  // 没有子组织，下面只有具体成员
   if (node.members) {
     return (
       <TreeNode
@@ -97,6 +100,8 @@ const getTreeNodes = (node) => {
       </TreeNode>
     );
   }
+
+  // 渲染成员
   return (
     <TreeNode
       title={

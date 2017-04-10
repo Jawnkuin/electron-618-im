@@ -1,0 +1,17 @@
+@import "../../share/style/base.less";
+
+.DialogPanel{
+	flex: 1 1 auto;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	.DlgListView{
+		flex: 2 1 356px;
+		overflow-y:scroll;
+		border-bottom: 1px solid @text-gray-ca;
+	}
+	.DlgInputView{
+		flex: 0 0 165px;
+		color: @text-black;
+	}
+}

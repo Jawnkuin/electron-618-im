@@ -1,0 +1,49 @@
+@import "../../share/style/base.less";
+
+.InputPanel{
+	background: #ffffff;
+	display: flex;
+	flex-direction: column;
+	.InputControl{
+		flex: 0 0 30px;
+		display: flex;
+		justify-content: space-between;
+		.fontBtn {
+			color: @btn-normal-dark-gray;
+		}
+
+		.fontBtn:active {
+			color:@btn-normal-dark-gray-active;
+		}
+
+		.fontBtn:focus {
+		 color: @btn-normal-dark-gray-active;
+		}
+
+		.fontBtn:hover {
+		 color: @btn-normal-dark-gray-active;
+		}
+		.InputControlBtnGroup{
+			font-size: 18px;
+		}
+		color: @text-gray-80;
+	}
+	.InputArea{
+		>.ant-input{
+			color: @text-gray-4d;
+			font-size: 14px;
+			display: block;
+		}
+
+		>.ant-input:focus{
+			box-shadow: none;
+		}
+		flex: 1 1 100px;
+		>textarea{
+			resize: none;
+			height: 100px;
+			max-height: 100px;
+			border: none;
+		}
+	}
+}

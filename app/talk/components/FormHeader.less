@@ -1,0 +1,54 @@
+@import "../../share/style/base.less";
+
+.headerContainer {
+	font-size: 13px;
+	font-weight: 500;
+	display: flex;
+	flex: 0 0 55px;
+	justify-content:space-between;
+	border-bottom: 1px solid @text-gray-ca;
+}
+
+.title{
+	color: @text-black;
+	background: transparent;
+	font-family: SimHei;
+	font-weight: 500;
+	font-size: 19px;
+	padding: 10px;
+	> img {
+		width: 40px;
+		height: 35px;
+		vertical-align: middle;
+		padding-right: 5px;
+	}
+	.nameBox{
+		display: inline-block;
+		vertical-align: top;
+	}
+}
+
+.btnGroup {
+	.fontBtn {
+		color: @btn-normal-gray;
+	}
+
+	.fontBtn:active {
+		color: @btn-normal-gray-active;
+	}
+
+	.fontBtn:focus {
+	 color: @btn-normal-gray-active;
+	}
+
+	.fontBtn:hover {
+	 color: @btn-normal-gray-active;
+	}
+}
+
+.controlContainer {
+	position: absolute;
+	right: 5px;
+	font-size: 16px;
+	font-weight: 500;
+}

@@ -9,17 +9,28 @@ export class WindowConfigs {
     transparent: true
   }
 
+  // 登录窗配置
   static login = Object.assign({}, WindowConfigs.base, {
-    width: 800, // 300
+    width: 800, // 默认300，dev过程中适当增加宽度来容纳chrome开发者工具
     height: 565,
     resizable: false
   })
 
+  // 主窗体配置
   static stem = Object.assign({}, WindowConfigs.base, {
     width: 800, // 300
     height: 635,
     minWidth: 300,
     minHeight: 600,
+    resizable: true
+  })
+
+  // 对话窗体配置
+  static talk = Object.assign({}, WindowConfigs.base, {
+    width: 1500, // 620
+    height: 585,
+    minWidth: 620,
+    minHeight: 585,
     resizable: true
   })
 }

@@ -17,7 +17,8 @@ export default merge(baseConfig, {
 
   entry: {
     stem: ['babel-polyfill', './app/stem/index'],
-    login: ['babel-polyfill', './app/login/index']
+    login: ['babel-polyfill', './app/login/index'],
+    talk: ['babel-polyfill', './app/talk/index']
   },
 
   output: {
@@ -60,7 +61,7 @@ export default merge(baseConfig, {
               options: {
                 modules: true,
                 importLoaders: 1,
-                localIdentName: '[name]__[local]__[hash:base64:5]'
+                localIdentName: '[local]'
               }
             },
             {

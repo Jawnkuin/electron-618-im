@@ -17,10 +17,18 @@
 @btn-normal-white: #e3e0e0;
 @btn-normal-white-active: lighten(@btn-normal-white, 20%);
 
+@btn-normal-gray: #a9a9a9;
+@btn-normal-gray-active: darken(@btn-normal-gray, 20%);
+
+@btn-normal-dark-gray: darken(@btn-normal-gray, 20%);
+@btn-normal-dark-gray-active: darken(@btn-normal-dark-gray, 20%);
+
 @text-white-5: #ffffff;
 @text-white-4: darken(@text-white-5, 10%);
 
 @text-black: #000000;
+@text-gray-bf: #bfbfbf;
+@text-gray-ca: #cacaca;
 @text-gray-a4: #a4a4a4;
 @text-gray-80: #808080;
 @text-gray-70: #707070;
@@ -42,4 +50,27 @@
 
 .ListItem:active{
 	background-color: @strip-active-bg;
+}
+
+
+.fontBtn {
+	background: transparent;
+	border: none;
+	margin: 0;
+	padding: 6px;
+}
+
+.fontBtn:active {
+	border: none;
+	outline: none;
+}
+
+.fontBtn:focus {
+ border: none;
+ outline: none;
+}
+
+.fontBtn:hover {
+ border: none;
+ outline: none;
 }
