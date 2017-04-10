@@ -1,10 +1,33 @@
 @import "../../share/style/base.less";
 
 
-.BuddyItem:hover:extend(.ListItem:hover){}
-.BuddyItem:focus:extend(.ListItem:focus){}
-.BuddyItem:active:extend(.ListItem:active){}
-.BuddyItem:extend(.ListItem){
+.BuddyItem li>a:hover:extend(.ListItem:hover){}
+.BuddyItem li>a:focus:extend(.ListItem:focus){}
+.BuddyItem li>a:active:extend(.ListItem:active){}
+.BuddyItem{
+	ul {
+		padding: 0 !important;
+	}
+	.MemberItem{
+		img{
+			vertical-align: middle;
+			width: 20px;
+			height: 20px;
+		}
+		.NameBox{
+			text-align: left;
+			vertical-align: middle;
+			display: inline-block;
+			margin-left: 10px;
+		}
+	}
+}
+
+.TreeNode li > a :focus:extend(.ListItem:focus){}
+.TreeNode:extend(.ListItem){
 	font-size: 13px;
-	color: @text-black;
+	li a {
+		color: @text-black;
+		opacity: 1;
+	}
 }

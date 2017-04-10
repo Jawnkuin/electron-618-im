@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tree } from 'antd';
 import styles from './Orgnaztions.less';
+import dummyImage from '../../utils/dummyimage';
 
 const TreeNode = Tree.TreeNode;
 
@@ -65,7 +66,7 @@ const data = {
           name: '林巍'
         },
         {
-          id: '2-1',
+          id: '2-3',
           name: '吴良堤'
         }
 
@@ -88,6 +89,7 @@ const getTreeNodes = (node) => {
   if (node.members) {
     return (
       <TreeNode
+        className={styles.BuddyItem}
         title={`${node.name} ${node.online}/${node.total}`}
         key={node.id}
       >
@@ -96,14 +98,22 @@ const getTreeNodes = (node) => {
     );
   }
   return (
-    <TreeNode title={node.name} key={node.id} />
+    <TreeNode
+      title={
+        <div className={styles.MemberItem}>
+          <img src={dummyImage(node.name.slice(0, 1))} alt={node.name} />
+          <div className={styles.NameBox}>{node.name}</div>
+        </div>
+      }
+      key={node.id}
+    />
   );
 };
 
 // 主面板列表项
 export default () => (
   <Tree
-    className={styles.BuddyItem}
+    className={styles.TreeNode}
   >
     {data.orgs.map(org => getTreeNodes(org))}
   </Tree>
