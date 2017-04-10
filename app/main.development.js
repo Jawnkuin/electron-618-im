@@ -1,17 +1,10 @@
 // @flow
 import { app, BrowserWindow, Tray, Menu } from 'electron';
-/*
-import {
-  forwardToRenderer,
-  triggerAlias,
-  replayActionMain
-} from 'electron-redux';
-*/
 import path from 'path';
-import { WindowManager, WindowConfigs } from './utils/WindowManager';
+import { replayActionMain } from 'electron-redux';
+import { windowManager, WindowConfigs } from './utils/WindowManager';
+import mainStore from './main/store';
 
-// 防止被内存回收w
-const windowManager = new WindowManager();
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -55,16 +48,20 @@ let appTray = null;
 app.on('ready', async () => {
   await installExtensions();
 
+
+  replayActionMain(mainStore);
   // 登录窗体
-  // const loginWindow = new BrowserWindow(WindowConfigs.login);
+  const loginWindow = new BrowserWindow(WindowConfigs.login);
   // 主窗体
   // const stemWindow = new BrowserWindow(WindowConfigs.stem);
-  // windowManager.add(loginWindow, 'login');
+  windowManager.add(loginWindow, 'login');
   // windowManager.add(stemWindow, 'stem');
 
-  const talkWindow = new BrowserWindow(WindowConfigs.talk);
-  windowManager.add(talkWindow, 'talk');
-  talkWindow.loadURL(`${__dirname}/talk/index.html`);
+  // 会话窗体
+  // const talkWindow = new BrowserWindow(WindowConfigs.talk);
+  // windowManager.add(talkWindow, 'talk');
+
+  loginWindow.loadURL(`${__dirname}/login/index.html`);
 
   // 托盘
   appTray = new Tray(path.join(__dirname, '../resources/icon.ico'));

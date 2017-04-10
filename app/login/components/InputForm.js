@@ -1,5 +1,7 @@
 import React from 'react';
 import { Input, Icon, Checkbox, Button } from 'antd';
+import { ipcRenderer } from 'electron';
+import { doLogin } from '../actions';
 import styles from './InputForm.less';
 
 const onChange = (e) => {
@@ -14,6 +16,11 @@ export default () => (
       <Checkbox onChange={onChange} >记住密码</Checkbox>
       <Checkbox onChange={onChange} >自动登录</Checkbox>
     </div>
-    <Button className={styles.loginBtn}>登&nbsp;&nbsp;录</Button>
+    <Button
+      className={styles.loginBtn}
+      onClick={() => ipcRenderer.send('redux-action', doLogin('吴建军'))}
+    >
+      登&nbsp;&nbsp;录
+    </Button>
   </div>
 );

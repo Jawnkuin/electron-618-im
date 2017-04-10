@@ -43,7 +43,7 @@ const handleRedirect = lwindow => (e, url) => {
   }
 };
 
-export class WindowManager {
+class WindowManager {
   constructor () {
     this.windows = {};
     this.nameReferences = {};
@@ -143,3 +143,5 @@ export class WindowManager {
     return undefined;
   }
 }
+
+export const windowManager = new WindowManager();

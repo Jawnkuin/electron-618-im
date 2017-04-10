@@ -10,7 +10,11 @@ export const doLoginMain = createAction(LOGIN, async (name, psw) => {
 });
 */
 
-export const doLoginMain = createAction(LOGIN, async name => ({
+export const doLogin = createAction(LOGIN, name => ({
   name,
   id: '001'
-}));
+}),
+(name, isLocal) => (
+  isLocal ? { scope: 'local' } : {}
+)
+);
