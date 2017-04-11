@@ -7,8 +7,8 @@ option optimize_for = LITE_RUNTIME;
 
 message IMP2PCmdMsg{
 	//cmd id:		0x0601
-	required uint32 from_user_id = 1;
-	required uint32 to_user_id = 2;
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
 	required string cmd_msg_data = 3;
 }
 

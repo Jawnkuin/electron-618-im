@@ -244,11 +244,11 @@ message IpAddr{
 }
 
 message UserInfo{
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	required uint32 user_gender = 2; 	//// 用户性别,男：1 女：2 人妖/外星人：0
 	required string user_nick_name = 3;	//绰号
 	required string avatar_url = 4;
-	required uint32 department_id = 5;
+	required uint64 department_id = 5;
 	required string email = 6;
 	required string user_real_name = 7;	//真名
 	required string user_tel = 8;
@@ -258,64 +258,64 @@ message UserInfo{
 }
 
 message ContactSessionInfo{
-	required uint32 session_id = 1;
+	required uint64 session_id = 1;
 	required SessionType session_type = 2;
     required SessionStatusType session_status = 3;
 	required uint32 updated_time = 4;
-	required uint32 latest_msg_id = 5;
+	required uint64 latest_msg_id = 5;
 	required bytes latest_msg_data = 6;
     required MsgType latest_msg_type = 7;
-    required uint32 latest_msg_from_user_id = 8;
+    required uint64 latest_msg_from_user_id = 8;
 }
 
 message UserStat{
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	required UserStatType status = 2;
 }
 
 message ServerUserStat{
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	required UserStatType status = 2;
 	required ClientType client_type = 3;
 }
 
 message UnreadInfo{
-	required uint32 session_id = 1;
+	required uint64 session_id = 1;
 	required SessionType session_type = 2;
 	required uint32 unread_cnt = 3;
-	required uint32 latest_msg_id = 4;
+	required uint64 latest_msg_id = 4;
 	required bytes latest_msg_data = 5;
     required MsgType latest_msg_type = 6;
-    required uint32 latest_msg_from_user_id = 7;        //发送得用户id
+    required uint64 latest_msg_from_user_id = 7;        //发送得用户id
 }
 
 message MsgInfo{
-	required uint32 msg_id = 1;
-	required uint32 from_session_id = 2;   //发送的用户id
+	required uint64 msg_id = 1;
+	required uint64 from_session_id = 2;   //发送的用户id
 	required uint32 create_time = 3;
 	required MsgType msg_type = 4;
 	required bytes msg_data = 5;
 }
 
 message GroupVersionInfo{
-	required uint32 group_id = 1;
+	required uint64 group_id = 1;
 	required uint32 version = 2;
 	
 }
 
 message GroupInfo{
-	required uint32 group_id = 1;
+	required uint64 group_id = 1;
 	required uint32 version = 2;
 	required string group_name = 3;
 	required string group_avatar = 4;
-	required uint32 group_creator_id = 5;
+	required uint64 group_creator_id = 5;
 	required GroupType group_type = 6;
 	required uint32 shield_status = 7;		//1: shield  0: not shield 
-	repeated uint32 group_member_list = 8;
+	repeated uint64 group_member_list = 8;
 }
 
 message UserTokenInfo{
-    required uint32 user_id = 1;
+    required uint64 user_id = 1;
 	required ClientType user_type = 2;
 	required string token = 3;
 	required uint32 push_count = 4;
@@ -328,27 +328,27 @@ message PushResult{
 }
 
 message ShieldStatus{
-	required uint32 user_id = 1;		
-	required uint32 group_id = 2;	
+	required uint64 user_id = 1;		
+	required uint64 group_id = 2;	
 	required uint32 shield_status = 3;		//1: shield  0: not shield 
 }
 
 message OfflineFileInfo{
-    required uint32 from_user_id = 1;
+    required uint64 from_user_id = 1;
     required string task_id = 2;
     required string file_name = 3;
     required uint32 file_size = 4;
 }
 
 message DepartInfo{
-	required uint32 dept_id = 1;
+	required uint64 dept_id = 1;
 	required uint32 priority = 2;
 	required string dept_name = 3;
-    required uint32 parent_dept_id = 4;
+    required uint64 parent_dept_id = 4;
     required DepartmentStatusType dept_status = 5;
 }
 
 message PushShieldStatus{
-    required uint32 user_id = 1;
+    required uint64 user_id = 1;
     required uint32 shield_status = 2;		//1: shield  0: not shield
 }

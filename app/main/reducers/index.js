@@ -3,6 +3,8 @@ import { combineReducers } from 'redux';
 import { BrowserWindow } from 'electron';
 import { windowManager, WindowConfigs } from '../../utils/WindowManager';
 import { STEM_PATH, TALK_PATH } from '../../configs';
+import mainStore from '../store';
+import { doLoginServer } from '../actions/login';
 
 const immutableState = {
   login: {},
@@ -13,9 +15,8 @@ const immutableState = {
 };
 
 const login = handleActions({
-  LOGIN: { next: (state = immutableState, action) => {
-    console.log(action);
-    console.log(process.cwd());
+  LOGIN: { next: async (state = immutableState, action) => {
+    await doLoginServer(action.payload.name, action.payload.psw)(mainStore.dispatch);
     const stemWindow = new BrowserWindow(WindowConfigs.stem);
     windowManager.add(stemWindow, 'stem');
     stemWindow.loadURL(STEM_PATH);

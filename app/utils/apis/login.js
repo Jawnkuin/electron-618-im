@@ -12,10 +12,10 @@ const loginCmdIdEnums = IMBaseDefine.LoginCmdID;
 
 
 // 获得PBBody
-const getLoginBuf = () => {
-  const hash = crypto.createHash('md5').update('11').digest('hex');
+const getLoginBuf = (name, psw) => {
+  const hash = crypto.createHash('md5').update(psw).digest('hex');
   const loginMsg = IMLoginReq.create({
-    userName: 'Wu',
+    userName: name,
     password: hash,
     onlineStatus: userStatType.USER_STATUS_ONLINE,
     clientType: clientType.CLIENT_TYPE_WINDOWS,
@@ -53,8 +53,8 @@ const onLoginResponce = (res, onLoginOK, onLoginFailed) => {
 };
 
 // 执行登录，回调登录成功和登录失败
-const doLogin = () => {
-  const logReqBuf = getLoginBuf();
+const doLogin = (name, psw) => {
+  const logReqBuf = getLoginBuf(name, psw);
   const loginServiceId = serviceIdEnums.SID_LOGIN;
   const loginReqCmdId = loginCmdIdEnums.CID_LOGIN_REQ_USERLOGIN;
 

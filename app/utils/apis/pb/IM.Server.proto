@@ -31,7 +31,7 @@ message IMValidateRsp{
 //db_proxy
 message IMGetDeviceTokenReq{
 	//cmd id:	0x0705
-	repeated uint32 user_id = 1;
+	repeated uint64 user_id = 1;
 	optional bytes attach_data = 20;
 }
 
@@ -65,26 +65,26 @@ message IMMsgServInfo{
 message IMUserStatusUpdate{
 	//cmd id:	0x070a
 	required uint32 user_status = 1;
-	required uint32 user_id = 2;
+	required uint64 user_id = 2;
 	required IM.BaseDefine.ClientType client_type = 3;
 }
 
 message IMUserCntUpdate{
 	//cmd id:	0x070b
 	required uint32 user_action = 1; 		//1-inc, 2-dec
-	required uint32 user_id = 2;
+	required uint64 user_id = 2;
 }
 
 message IMServerKickUser{
 	//cmd id:	0x070d
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	required IM.BaseDefine.ClientType client_type = 2;
 	required uint32 reason = 3;   	//KICK_REASON_DUPLICATE_USER = 1;
 }
 
 message IMServerPCLoginStatusNotify{
 	//cmd id:	0x070e
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	required uint32 login_status = 2; 		//1: on   0: off
 }
 
@@ -102,22 +102,22 @@ message IMPushToUserRsp{
 
 message IMGroupGetShieldReq{
 	//cmd id:			0x0711
-	required uint32 group_id = 1;
-	repeated uint32 user_id = 2;
+	required uint64 group_id = 1;
+	repeated uint64 user_id = 2;
 	optional bytes attach_data = 20;
 }
 
 message IMGroupGetShieldRsp{
 	//cmd id: 			0x0712
-	required uint32 group_id = 1;
+	required uint64 group_id = 1;
 	repeated IM.BaseDefine.ShieldStatus shield_status_list = 2;
 	optional bytes attach_data = 20;
 }
 
 message IMFileTransferReq{
 	//cmd id:			0x0715
-	required uint32 from_user_id = 1;
-	required uint32 to_user_id = 2;
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
 	required string file_name = 3;
 	required uint32 file_size = 4;
 	required IM.BaseDefine.TransferFileType trans_mode = 5;
@@ -127,8 +127,8 @@ message IMFileTransferReq{
 message IMFileTransferRsp{
 	//cmd id:			0x0716
 	required uint32 result_code = 1;
-	required uint32 from_user_id = 2;
-	required uint32 to_user_id = 3;
+	required uint64 from_user_id = 2;
+	required uint64 to_user_id = 3;
 	optional string file_name = 4;
 	optional uint32 file_size = 5;
 	optional string task_id = 6;

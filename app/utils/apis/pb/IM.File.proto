@@ -6,7 +6,7 @@ option optimize_for = LITE_RUNTIME;
 
 message IMFileLoginReq{
 	//cmd id:	0x0501
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	required string task_id = 2;
 	required IM.BaseDefine.ClientFileRole file_role= 3;
 }
@@ -21,13 +21,13 @@ message IMFileState{
 	//cmd id: 	0x0503
 	required IM.BaseDefine.ClientFileState state = 1;
 	required string task_id = 2;
-	required uint32 user_id = 3;
+	required uint64 user_id = 3;
 }
 
 message IMFilePullDataReq{
 	//cmd id:	0x0504
 	required string task_id = 1;
-	required uint32 user_id = 2;
+	required uint64 user_id = 2;
 	required IM.BaseDefine.TransferFileType trans_mode = 3;
 	required uint32 offset = 4;
 	required uint32 data_size = 5;
@@ -37,15 +37,15 @@ message IMFilePullDataRsp{
 	//cmd id: 	0x0505
 	required uint32 result_code = 1;
 	required string task_id = 2;
-	required uint32 user_id = 3;
+	required uint64 user_id = 3;
 	required uint32 offset = 4;
 	required bytes file_data = 5;
 }
 
 message IMFileReq{
 	//cmd id: 	0x0506
-	required uint32 from_user_id = 1;
-	required uint32 to_user_id = 2;
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
 	required string file_name = 3;
 	required uint32 file_size = 4;
 	required IM.BaseDefine.TransferFileType trans_mode = 5;
@@ -54,8 +54,8 @@ message IMFileReq{
 message IMFileRsp{
 	//cmd id: 	0x0507
 	required uint32	result_code = 1;			//1: 失败 0:成功
-	required uint32 from_user_id = 2;
-	required uint32 to_user_id = 3;
+	required uint64 from_user_id = 2;
+	required uint64 to_user_id = 3;
 	required string file_name = 4;
 	required string task_id = 5;
 	repeated IM.BaseDefine.IpAddr ip_addr_list = 6;
@@ -64,8 +64,8 @@ message IMFileRsp{
 
 message IMFileNotify{
 	//cmd id: 	0x0508
-	required uint32 from_user_id = 1;
-	required uint32 to_user_id = 2;
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
 	required string file_name = 3;
 	required uint32 file_size = 4;
 	required string task_id = 5;
@@ -76,13 +76,13 @@ message IMFileNotify{
 
 message IMFileHasOfflineReq{
 	//cmd id: 	0x0509
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	optional bytes attach_data = 20;
 }
 
 message IMFileHasOfflineRsp{
 	//cmd id:	0x050a
-	required uint32 user_id = 1;
+	required uint64 user_id = 1;
 	repeated IM.BaseDefine.OfflineFileInfo offline_file_list = 2;
 	repeated IM.BaseDefine.IpAddr ip_addr_list = 3;
 	optional bytes attach_data = 20;
@@ -90,8 +90,8 @@ message IMFileHasOfflineRsp{
 
 message IMFileAddOfflineReq{
 	//cmd id:	0x050b
-	required uint32 from_user_id = 1;
-	required uint32 to_user_id = 2;
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
 	required string task_id = 3;
 	required string file_name = 4;
 	required uint32 file_size = 5;
@@ -99,7 +99,7 @@ message IMFileAddOfflineReq{
 
 message IMFileDelOfflineReq{
 	//cmd id:	0x050c
-	required uint32 from_user_id = 1;
-	required uint32 to_user_id = 2;
+	required uint64 from_user_id = 1;
+	required uint64 to_user_id = 2;
 	required string task_id = 3;
 }
