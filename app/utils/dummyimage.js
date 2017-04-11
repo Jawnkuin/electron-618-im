@@ -18,5 +18,5 @@ export default (text) => {
   // eslint-disable-next-line no-unused-vars
   const colorText = color[keys[parseInt(keys.length * Math.random(), 10)]].slice(1);
   // return `https://dummyimage.com/100x100/${colorText}/787878.png&text=${text}`;
-  return `https://dummyimage.com/180x180/8fc9fb/787878.png&text=${text}`;
+  return `https://dummyimage.com/180x180/6acd9e/787878.png&text=${text}`;
 };

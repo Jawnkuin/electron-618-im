@@ -10,18 +10,28 @@ const customPaddingStyle = (isLeft = true) => ({
   },
   DlgDetail: {
     alignItems: isLeft ? 'flex-start' : 'flex-end'
+  },
+  msgBubble: {
+    backgroundColor: isLeft ? '#e8ecef' : '#78cdf8'
   }
 });
+
+const formatNum = num => num.toLocaleString('cn', { minimumIntegerDigits: 2 });
+
+const dateFormat = (time) => {
+  const date = new Date(time);
+  return `${formatNum(date.getHours())}:${formatNum(date.getMinutes())}:${formatNum(date.getSeconds())}`;
+};
 
 const DlgItem = ({ time, user, msg, isLeft }) => (
   <div className={styles.DlgItem} style={customPaddingStyle(isLeft).DlgItem}>
     <img src={dummyImage(user.name)} alt={user.name} />
     <div className={styles.DlgDetail} style={customPaddingStyle(isLeft).DlgDetail}>
       <div className={styles.nameBox}>
-        {`${user.name} ${new Date(time)}`}
+        {`${user.name} ${dateFormat(time)}`}
       </div>
       <div className={styles.msgBox}>
-        <div className={styles.msgBubble}>{msg}</div>
+        <div className={styles.msgBubble} style={customPaddingStyle(isLeft).msgBubble}>{msg}</div>
       </div>
     </div>
   </div>

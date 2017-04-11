@@ -26,12 +26,12 @@ export default () => (
     <div className={styles.InputArea}>
       <Input type="textarea" autosize />
     </div>
-    <div>
-      <Button type="primary">
-        关闭
-      </Button>
+    <div className={styles.InputRooter}>
       <Button type="primary">
         发送
+      </Button>
+      <Button type="primary">
+        关闭
       </Button>
     </div>
   </div>
