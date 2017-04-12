@@ -2,10 +2,13 @@
 // state shold be
 //
 //
-const onReducerInvoke = () => (getState, windowManager) => {
 
+import * as Actions from '../../main/actions/login';
+
+const onReducerInvoke = (preState, store, windowManager) => async () => {
+  await Actions.doLoginServer(action.payload.name, action.payload.psw)(mainStore.dispatch);
 };
 
-export default (store, windowManager) => {
-  store.subscribe(onReducerInvoke(store.getState, windowManager));
+export default (initState = {}, store, windowManager) => {
+  store.subscribe(onReducerInvoke(initState, store, windowManager));
 };

@@ -1,10 +1,12 @@
 import { createAction } from 'redux-actions';
-// import { windowManager } from '../../utils/WindowManager';
+import { BrowserWindow } from 'electron';
+import { windowManager, WindowConfigs } from '../../utils/WindowManager';
 import doLogin from '../../utils/apis/login';
 import { LOGIN_FAIL, LOGIN_SUCCESS } from '../../login/actions';
-// import doLogin from '../../utils/apis/login';
+import { STEM_PATH, TALK_PATH } from '../../configs';
 
 export const LOGIN_SERVER = 'LOGIN_SERVER';
+
 
 /*
 export const doLoginMain = createAction(LOGIN, async (name, psw) => {
@@ -13,15 +15,20 @@ export const doLoginMain = createAction(LOGIN, async (name, psw) => {
 });
 */
 
+
 const loginFailActionCreator = createAction(LOGIN_FAIL, errMsg => ({ errMsg }));
 
 const loginSuccessActionCreator = createAction(LOGIN_SUCCESS, res => res);
 
 // 主线程调用TCPClient登录
-export const doLoginServer = async (name, psw) => {
+export const doLoginServer = dispatch => async (name, psw) => {
   try {
-    return await doLogin(name, psw);
+    const res = await doLogin(name, psw);
+    const stemWin = new BrowserWindow(WindowConfigs.stem);
+    windowManager.add(stemWin, 'stem', () => dispatch(loginSuccessActionCreator(res)));
+    stemWin.loadURL(STEM_PATH);
   } catch (e) {
-    return loginFailActionCreator(e.message);
+    console.log(e);
+    dispatch(loginFailActionCreator(e.message));
   }
 };

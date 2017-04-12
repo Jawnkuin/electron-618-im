@@ -51,7 +51,7 @@ class WindowManager {
     this.focus = [null];
   }
 
-  add (window, name = null) {
+  add (window, name = null, onContentloaded) {
     const newID = Symbol(name);
     this.windows[newID] = window;
     this.IDMap[window.id] = newID;
@@ -78,6 +78,10 @@ class WindowManager {
     window.webContents.on('did-finish-load', () => {
       if (!window) {
         throw new Error('"mainWindow" is not defined');
+      }
+      // window加载完毕回调
+      if (onContentloaded && typeof onContentloaded === 'function') {
+        onContentloaded();
       }
       window.show();
       window.focus();

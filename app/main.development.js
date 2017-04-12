@@ -6,6 +6,9 @@ import { windowManager, WindowConfigs } from './utils/WindowManager';
 import mainStore from './main/store';
 
 
+replayActionMain(mainStore);
+console.log(mainStore);
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
   sourceMapSupport.install();
@@ -47,9 +50,9 @@ let appTray = null;
 
 app.on('ready', async () => {
   await installExtensions();
+  console.log(mainStore);
 
 
-  replayActionMain(mainStore);
   // 登录窗体
   const loginWindow = new BrowserWindow(WindowConfigs.login);
   // 主窗体
