@@ -1,5 +1,9 @@
 import _ from 'lodash';
 import { shell } from 'electron';
+import actionsCreators from '../main/actions';
+import mainStore from '../main/store';
+
+const Actions = actionsCreators(mainStore);
 
 export class WindowConfigs {
   static base = {
@@ -35,7 +39,7 @@ export class WindowConfigs {
   })
 }
 
-// 需要打开电脑上的浏览器
+// 在需要的时候打开电脑上的浏览器
 const handleRedirect = lwindow => (e, url) => {
   if (url !== lwindow.webContents.getURL()) {
     e.preventDefault();
@@ -59,6 +63,7 @@ class WindowManager {
 
     window.on('closed', () => {
       delete this.windows[newID];
+      // action REMOVE_WINDOW tobe added
     });
     window.on('focus', () => {
       const focusIndex = _.findLastIndex(this.focus, win => win !== null);
@@ -79,12 +84,14 @@ class WindowManager {
       if (!window) {
         throw new Error('"mainWindow" is not defined');
       }
+
+      Actions.addWindow(newID, name);
+      window.show();
+      window.focus();
       // window加载完毕回调
       if (onContentloaded && typeof onContentloaded === 'function') {
         onContentloaded();
       }
-      window.show();
-      window.focus();
     });
 
     window.webContents.on('will-navigate', handleRedirect(window));

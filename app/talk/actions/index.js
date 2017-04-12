@@ -1,12 +1,14 @@
 import { createAction } from 'redux-actions';
 // import doLogin from '../../utils/apis/login';
 
-export const LOGIN = 'LOGIN';
-export const LOGIN_FAIL = 'LOGIN_FAIL';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const SEND_MESSAGE_FAIL = 'SEND_MESSAGE_FAIL';
+export const SEND_MESSAGE_SUCCESS = 'LOGIN_SUCCESS';
 
-const dologinActionCreator = createAction(LOGIN,
-  (name, psw) => ({
+export const RECIEVE_MESSAGE = 'RECIEVE_MESSAGE';
+
+const sendMessageCreator = createAction(SEND_MESSAGE,
+  (user, psw) => ({
     name,
     psw
   }),

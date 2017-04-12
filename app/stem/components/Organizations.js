@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Tree } from 'antd';
-import styles from './Orgnaztions.less';
+import PropTypes from 'prop-types';
+import styles from './Organizations.less';
 import dummyImage from '../../utils/dummyimage';
 
 const TreeNode = Tree.TreeNode;
@@ -115,11 +116,34 @@ const getTreeNodes = (node) => {
   );
 };
 
-// 主面板列表项
-export default () => (
-  <Tree
-    className={styles.TreeNode}
-  >
-    {data.orgs.map(org => getTreeNodes(org))}
-  </Tree>
-);
+// 主面板组织列表
+class Organizations extends Component {
+  static propTypes = {
+    userInfo: PropTypes.shape({
+      userInfo: PropTypes.object
+    }).isRequired,
+    getAllUsers: PropTypes.func.isRequired,
+    getDeptList: PropTypes.func.isRequired
+  }
+  componentDidMount () {
+    console.log('componentDidMount', this.props);
+    const { userInfo, getAllUsers, getDeptList } = this.props;
+    getAllUsers(userInfo.userInfo.userId, 0);
+    getDeptList(userInfo.userInfo.userId, 0);
+  }
+  componentDidUpdate () {
+    console.log('componentDidUpdate', this.props);
+  }
+  render () {
+    return (
+      <Tree
+        className={styles.TreeNode}
+      >
+        {data.orgs.map(org => getTreeNodes(org))}
+      </Tree>
+    );
+  }
+}
+
+
+export default Organizations;

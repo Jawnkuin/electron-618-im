@@ -18,7 +18,6 @@ class InputForm extends Component {
 
   constructor (props) {
     super(props);
-    console.log(props);
     this.state = {
       name: '',
       psw: ''
@@ -59,6 +58,9 @@ class InputForm extends Component {
         >
           登&nbsp;&nbsp;录
         </Button>
+        <div className={styles.ErrorMessage}>
+          {this.props.loginstate.error}
+        </div>
       </div>
     );
   }

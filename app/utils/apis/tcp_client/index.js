@@ -1,6 +1,6 @@
 import net from 'net';
 import { HEADER_LENGTH, JKPBHeader } from './JKPBHeader';
-import { pbBodyParser } from '../pbParsers/pbModules';
+import { pbBodyParser } from '../pbParsers/pbParser';
 
 const ipaddr = '192.168.8.41';
 const port = 8000;
@@ -15,6 +15,8 @@ const onReceiveData = (buff) => {
     if (!resPBHeader || !resPBHeader.moduleId) {
       throw new Error('Invalid Response Header');
     }
+    // console.log('HEADER_LENGTH', HEADER_LENGTH); // eslint-disable-line no-console
+    // console.log('buff.length', buff.length); // eslint-disable-line no-console
     const pbBodyBuf = buff.slice(HEADER_LENGTH, buff.length);
     const pbBody = pbBodyParser(resPBHeader, pbBodyBuf);
     return {
@@ -36,32 +38,33 @@ class TCPClient {
   }
 
   initConnToServer () {
-    return new Promise((resolve) => {
-      if (!this.client) {
-        this.client = new net.Socket(); // return a Node socket
-      }
-      if (!this.client.connecting) {
-        this.client.connect(port, ipaddr);
-        this.client.on('connect', () => resolve());
-      }
-    });
+    if (!this.client) {
+      console.log('initConnToServer'); // eslint-disable-line no-console
+      this.client = new net.Socket(); // return a Node socket
+      console.log('initConnToServer connecting'); // eslint-disable-line no-console
+      this.client.setKeepAlive(true);
+      this.client.connect(port, ipaddr);
+      this.client.on('connect', () => console.log('onConnect'));
+      this.client.on('data', (res) => {
+          // 包含header 和 body的 resData
+        try {
+          onReceiveData(res);
+        } catch (e) {
+          console.log(e);
+          // eslint-disable-line no-console
+        }
+      });
+    }
   }
 
   /**
   * @pbbody: buffer of pb body
   */
   sendPbToServer (pbbody, moduleId, cmdId) {
-    return new Promise((resolve) => {
       // 自定义序列号+1
-      this.seqNumber += 1;
-      const dataBuf = this.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);
-      this.client.write(dataBuf);
-      this.client.on('data', (res) => {
-        // 包含header 和 body的 resData
-        const resData = onReceiveData(res);
-        resolve(resData);
-      });
-    });
+    this.seqNumber += 1;
+    const dataBuf = this.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);
+    this.client.write(dataBuf, (e) => { console.log(e); });
   }
 
   getSendPacket (pbBody, moduleId, cmdId, seq) {
@@ -93,5 +96,6 @@ class TCPClient {
     }
   }
 }
+
 
 export default new TCPClient();

@@ -2,7 +2,7 @@ import React from 'react';
 import { Tabs, Icon } from 'antd';
 import styles from './BuddyPanel.less';
 import ConversationItem from './Conversation';
-import Orgnaztions from './Orgnaztions';
+import OrganizationsContainer from '../containers/OrganizationsContainer';
 
 
 const TabPane = Tabs.TabPane;
@@ -27,7 +27,7 @@ export default () => (
       <TabPane tab={<Icon type="user" />} key="2" >
         <Tabs>
           <TabPane tab="组织构架" key="a1">
-            <Orgnaztions />
+            <OrganizationsContainer />
           </TabPane>
           <TabPane tab="所属企业" key="a2" />
         </Tabs>

@@ -2,12 +2,11 @@
 import { app, BrowserWindow, Tray, Menu } from 'electron';
 import path from 'path';
 import { replayActionMain } from 'electron-redux';
+import mapStateToWindow from './utils/redux/mapStateToWindow';
 import { windowManager, WindowConfigs } from './utils/WindowManager';
+import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
-
-
-replayActionMain(mainStore);
-console.log(mainStore);
+import tcpClient from './utils/apis/tcp_client';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -22,7 +21,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
+  if (process.platform !== 'darwin') {
+    tcpClient.client.destroy((e) => {
+      console.log(e); // eslint-disable-line no-console
+    });
+    app.quit();
+  }
 });
 
 
@@ -50,8 +54,10 @@ let appTray = null;
 
 app.on('ready', async () => {
   await installExtensions();
-  console.log(mainStore);
-
+  // 接收render的action到reducer中，修改state
+  replayActionMain(mainStore);
+  // 根据修改的state更新window
+  mapStateToWindow({}, mainStore, stateChangeHandlers);
 
   // 登录窗体
   const loginWindow = new BrowserWindow(WindowConfigs.login);

@@ -1,7 +1,6 @@
 import crypto from 'crypto';
-
-import tcpClient from './tcp_client';
 import { IMLogin, IMBaseDefine } from './pbParsers/pbModules';
+import tcpClient from './tcp_client';
 
 const IMLoginReq = IMLogin.IMLoginReq;
 const userStatType = IMBaseDefine.UserStatType;
@@ -25,12 +24,13 @@ const getLoginBuf = (name, psw) => {
   return loginBuf;
 };
 
-const onLoginResponce = (res, onLoginOK, onLoginFailed) => {
+export const onLoginResponce = res => (onLoginOK, onLoginFailed) => {
   if (!res || !res.header || !res.body) {
-    throw new Error('Error Empty res');
+    onLoginFailed(new Error('Error Empty res'));
   }
   // 其它消息
   if (loginCmdIdEnums.CID_LOGIN_RES_USERLOGIN !== res.header.commandId) {
+    onLoginFailed(new Error('Wrong cmdId'));
     return;
   }
 
@@ -58,20 +58,11 @@ const doLogin = (name, psw) => {
   const loginServiceId = serviceIdEnums.SID_LOGIN;
   const loginReqCmdId = loginCmdIdEnums.CID_LOGIN_REQ_USERLOGIN;
 
-  if (!tcpClient.connecting) {
+  if (!tcpClient.client) {
     tcpClient.initConnToServer();
   }
 
-  return new Promise((resolve, reject) => {
-    tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId).then(
-      (res) => {
-        onLoginResponce(res, resolve, reject);
-      },
-      (err) => {
-        reject(err);
-      }
-    );
-  });
+  tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId);
 };
 
 

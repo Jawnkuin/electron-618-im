@@ -3,11 +3,15 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import Root from './containers/app';
 import '../app.global.css';
+import configureStore from './store';
+import { immutableState } from './reducers';
+
+const store = configureStore(immutableState);
 
 
 render(
   <AppContainer>
-    <Root />
+    <Root store={store} />
   </AppContainer>,
   document.getElementById('root')
 );
@@ -17,7 +21,7 @@ if (module.hot) {
     const NextRoot = require('./containers/app'); // eslint-disable-line global-require
     render(
       <AppContainer>
-        <NextRoot />
+        <NextRoot store={store} />
       </AppContainer>,
       document.getElementById('root')
     );
