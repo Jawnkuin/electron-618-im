@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Input, Icon, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './InputForm.less';
+import doLogin from '../apis';
 
 const onChange = (e) => {
   console.log(`checked = ${e.target.checked}`);
@@ -12,8 +13,7 @@ class InputForm extends Component {
     loginstate: PropTypes.shape({
       status: PropTypes.string.isRequired,
       error: PropTypes.string.isRequired
-    }).isRequired,
-    doLogin: PropTypes.func.isRequired
+    }).isRequired
   }
 
   constructor (props) {
@@ -54,7 +54,7 @@ class InputForm extends Component {
           className={styles.loginBtn}
           disabled={this.checkLoading()}
           loading={this.checkLoading()}
-          onClick={() => this.props.doLogin(this.state.name, this.state.psw)}
+          onClick={() => doLogin(this.state.name, this.state.psw, new Date().getTime())}
         >
           登&nbsp;&nbsp;录
         </Button>

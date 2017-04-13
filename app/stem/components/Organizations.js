@@ -3,6 +3,7 @@ import { Tree } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './Organizations.less';
 import dummyImage from '../../utils/dummyimage';
+import { getAllUsers, getDeptList } from '../apis';
 
 const TreeNode = Tree.TreeNode;
 
@@ -121,13 +122,11 @@ class Organizations extends Component {
   static propTypes = {
     userInfo: PropTypes.shape({
       userInfo: PropTypes.object
-    }).isRequired,
-    getAllUsers: PropTypes.func.isRequired,
-    getDeptList: PropTypes.func.isRequired
+    }).isRequired
   }
   componentDidMount () {
     console.log('componentDidMount', this.props);
-    const { userInfo, getAllUsers, getDeptList } = this.props;
+    const { userInfo } = this.props;
     getAllUsers(userInfo.userInfo.userId, 0);
     getDeptList(userInfo.userInfo.userId, 0);
   }

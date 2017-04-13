@@ -7,7 +7,7 @@ export const userInfoState = {
 
 const userInfo = handleActions({
   // 用户登录成功
-  LOGIN_SUCCESS: {
+  ON_LOAD_USER: {
     next: (state = userInfoState, action) => action.payload
   }
 }, userInfoState);

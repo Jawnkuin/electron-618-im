@@ -1,5 +1,7 @@
 import crypto from 'crypto';
-import { IMLogin, IMBaseDefine } from './pbParsers/pbModules';
+import { ipcMain } from 'electron';
+import { LOGIN } from '../../login/actions';
+import { IMLogin, IMBaseDefine } from './pbParsers/PbModules';
 import tcpClient from './tcp_client';
 
 const IMLoginReq = IMLogin.IMLoginReq;
@@ -26,11 +28,11 @@ const getLoginBuf = (name, psw) => {
 
 export const onLoginResponce = res => (onLoginOK, onLoginFailed) => {
   if (!res || !res.header || !res.body) {
-    onLoginFailed(new Error('Error Empty res'));
+    onLoginFailed('Error Empty res');
   }
   // 其它消息
   if (loginCmdIdEnums.CID_LOGIN_RES_USERLOGIN !== res.header.commandId) {
-    onLoginFailed(new Error('Wrong cmdId'));
+    onLoginFailed('Wrong cmdId');
     return;
   }
 
@@ -42,13 +44,13 @@ export const onLoginResponce = res => (onLoginOK, onLoginFailed) => {
     case IMBaseDefine.ResultType.REFUSE_REASON_NO_ROUTE_SERVER:
     case IMBaseDefine.ResultType.REFUSE_REASON_DB_VALIDATE_FAILED:
     case IMBaseDefine.ResultType.REFUSE_REASON_VERSION_TOO_OLD:
-      onLoginFailed(new Error(res.body.resultString));
+      onLoginFailed(res.body.resultString);
       break;
     case IMBaseDefine.ResultType.REFUSE_REASON_NONE:
       onLoginOK(res.body);
       break;
     default:
-      onLoginFailed(new Error('未知错误'));
+      onLoginFailed('未知错误');
   }
 };
 
@@ -65,5 +67,8 @@ const doLogin = (name, psw) => {
   tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId);
 };
 
+ipcMain.on(LOGIN, (event, arg) => {
+  doLogin(arg.name, arg.psw);
+});
 
 export default doLogin;

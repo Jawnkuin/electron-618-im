@@ -1,6 +1,6 @@
 import loginHandlers from './loginHandlers';
-import windowsHandlers from './windowsHandlers';
-import buddyHandlers from './buddyHandlers';
+// import windowsHandlers from './windowsHandlers';
+// import stemHandlers from './stemHandlers';
 
 // 每个handler会传入对应的preState和newState
 // loginHandlers(loginPreState, loginNewState)

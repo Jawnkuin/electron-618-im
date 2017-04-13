@@ -1,6 +1,9 @@
 import { handleActions } from 'redux-actions';
 
 const immutableState = {
+  onLoadUser: {
+
+  },
   getAllUsers: {
   },
   getDepList: {
@@ -8,6 +11,7 @@ const immutableState = {
 };
 
 const buddy = handleActions({
+
   GET_ALL_USERS: {
     next: (state = immutableState, action) => Object.assign({}, state, {
       getAllUsers: {
@@ -23,5 +27,10 @@ const buddy = handleActions({
     })
   }
 }, immutableState);
+
+export const stemKeys = {
+  getAllUsers: 'getAllUsers',
+  getDepList: 'getDepList'
+};
 
 export default buddy;

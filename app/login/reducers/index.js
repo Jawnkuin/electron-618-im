@@ -15,7 +15,11 @@ const login = handleActions({
   LOGIN_FAIL: {
     next: (state = immutableState, action) => Object.assign({}, state, {
       status: 'UNLOGIN',
-      error: action.payload.errMsg
+      error: action.payload
+    }),
+    throw: (state = immutableState, action) => Object.assign({}, state, {
+      status: 'UNLOGIN',
+      error: action.error.message
     })
   }
 }, immutableState);

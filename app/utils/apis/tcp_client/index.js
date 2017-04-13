@@ -1,28 +1,26 @@
 import net from 'net';
 import { HEADER_LENGTH, JKPBHeader } from './JKPBHeader';
-import { pbBodyParser } from '../pbParsers/pbParser';
+import pbBodyParser from '../pbParsers/pbParser';
 
 const ipaddr = '192.168.8.41';
 const port = 8000;
 
 // 可能同时会发过来各种东西，需要区分
+// 有多个包的情况 ，考虑采用readStream的方式做
 const onReceiveData = (buff) => {
   const resPBHeader = new JKPBHeader();
   try {
     const headerBuf = buff.slice(0, HEADER_LENGTH);
     resPBHeader.unSerialize(headerBuf);
-
+    console.log('buffClaimLenth', resPBHeader.length);
+    console.log('actualLenth', buff.length);
     if (!resPBHeader || !resPBHeader.moduleId) {
       throw new Error('Invalid Response Header');
     }
     // console.log('HEADER_LENGTH', HEADER_LENGTH); // eslint-disable-line no-console
     // console.log('buff.length', buff.length); // eslint-disable-line no-console
     const pbBodyBuf = buff.slice(HEADER_LENGTH, buff.length);
-    const pbBody = pbBodyParser(resPBHeader, pbBodyBuf);
-    return {
-      header: resPBHeader,
-      body: pbBody
-    };
+    pbBodyParser(resPBHeader, pbBodyBuf);
   } catch (e) {
     throw new Error(`Error on onReceiveData ${e.message}`);
   }
@@ -42,18 +40,42 @@ class TCPClient {
       console.log('initConnToServer'); // eslint-disable-line no-console
       this.client = new net.Socket(); // return a Node socket
       console.log('initConnToServer connecting'); // eslint-disable-line no-console
-      this.client.setKeepAlive(true);
-      this.client.connect(port, ipaddr);
+      // this.client.setKeepAlive(true, 10000);
+      let bufList = [];
+      let totalLen = 0;
       this.client.on('connect', () => console.log('onConnect'));
-      this.client.on('data', (res) => {
+      this.client.on('data', (chunck) => {
           // 包含header 和 body的 resData
         try {
-          onReceiveData(res);
+          onReceiveData(chunck);
+        } catch (e) {
+          console.log('onData', bufList.length);
+          console.log('client', this.client);
+          bufList.push(chunck);
+          totalLen += chunck.length;
+        }
+      });
+      this.client.on('end', () => {
+        try {
+          const resBuf = Buffer.concat(bufList, totalLen);
+          onReceiveData(resBuf);
         } catch (e) {
           console.log(e);
           // eslint-disable-line no-console
+        } finally {
+          bufList = [];
+          totalLen = 0;
         }
+        console.log(`client end ${this.seqNumber}`);
       });
+      if (!this.client.connecting) {
+        this.client.connect(port, ipaddr);
+      }
+    }
+
+    if (this.client.destroyed) {
+      this.seqNumber = 0;
+      this.client.connect(port, ipaddr);
     }
   }
 
@@ -61,6 +83,11 @@ class TCPClient {
   * @pbbody: buffer of pb body
   */
   sendPbToServer (pbbody, moduleId, cmdId) {
+    console.log('sendPbToServer', this.client.connecting);
+
+    this.initConnToServer();
+
+
       // 自定义序列号+1
     this.seqNumber += 1;
     const dataBuf = this.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);
