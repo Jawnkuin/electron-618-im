@@ -5,35 +5,93 @@ import pbBodyParser from '../pbParsers/pbParser';
 const ipaddr = '192.168.8.41';
 const port = 8000;
 
-// 可能同时会发过来各种东西，需要区分
-// 有多个包的情况 ，考虑采用readStream的方式做
-const onReceiveData = (buff) => {
-  const resPBHeader = new JKPBHeader();
-  try {
-    const headerBuf = buff.slice(0, HEADER_LENGTH);
-    resPBHeader.unSerialize(headerBuf);
-    console.log('buffClaimLenth', resPBHeader.length);
-    console.log('actualLenth', buff.length);
-    if (!resPBHeader || !resPBHeader.moduleId) {
-      throw new Error('Invalid Response Header');
-    }
-    // console.log('HEADER_LENGTH', HEADER_LENGTH); // eslint-disable-line no-console
-    // console.log('buff.length', buff.length); // eslint-disable-line no-console
-    const pbBodyBuf = buff.slice(HEADER_LENGTH, buff.length);
-    pbBodyParser(resPBHeader, pbBodyBuf);
-  } catch (e) {
-    throw new Error(`Error on onReceiveData ${e.message}`);
-  }
-};
-
-
 class TCPClient {
   constructor () {
     this.seqNumber = 0;
-    this.mJKPBHeader = null;
     this.client = null;
-    this.response = null;
+    this.bufList = [];
+    this.totalLenth = 0;
+    this.resPBHeader = null;
   }
+
+  // 可能一次请求由多个包组成，
+  // 根据header声明的长度，来确定是否在某次on data event后执行处理
+  checkShouldHandlePackages = () => {
+    // 连接已经断开需要处理
+    if (this.client.destroyed) {
+      return true;
+    }
+  }
+
+
+  // 可能同时会发过来各种东西，需要区分
+  // 有多个包的情况
+  onReceiveData = (buff) => {
+    try {
+      if (!this.resPBHeader && buff.length < HEADER_LENGTH) {
+        throw new Error(`Buffer length is required lge ${HEADER_LENGTH}, current buffer lenth: ${buff.length}`);
+      }
+
+      if (!this.resPBHeader) {
+        this.resPBHeader = new JKPBHeader();
+
+        const headerBuf = buff.slice(0, HEADER_LENGTH);
+        this.resPBHeader.unSerialize(headerBuf);
+
+        if (!this.resPBHeader || !this.resPBHeader.moduleId) {
+          throw new Error('Invalid Response Header');
+        }
+
+        this.bufList.push(buff);
+        this.totalLenth += buff.length;
+      }
+
+      console.log('onReceiveData', // eslint-disable-line no-console
+      `
+        ==========================
+        totalLength:${this.totalLenth},
+        claimedLength:${this.resPBHeader.length},
+        buffListLength:${this.bufList.length}
+        ==========================
+      `
+      );
+      if (this.totalLenth < this.resPBHeader.length) {
+        this.bufList.push(buff);
+        this.totalLenth += buff.length;
+        return;
+      }
+
+      if (this.totalLenth >= this.resPBHeader.length) {
+        const concatedBuff = Buffer.concat(this.bufList, this.totalLenth);
+
+        // 截取固定长度
+        const pbBodyBuf = concatedBuff.slice(HEADER_LENGTH, this.resPBHeader.length);
+        pbBodyParser(this.resPBHeader, pbBodyBuf);
+
+        const claimedLength = this.resPBHeader.length;
+        // 还原
+        delete this.resPBHeader;
+        this.bufList = [];
+        this.totalLenth = 0;
+
+        // 如果一个包是多个消息合并
+        if (concatedBuff.length - claimedLength > 0) {
+          const newBuf = concatedBuff.slice(claimedLength, concatedBuff.length);
+          this.onReceiveData(newBuf);
+        }
+
+        return;
+      }
+
+      throw new Error('UnKnow socket chunck');
+    } catch (e) {
+      // 还原
+      delete this.resPBHeader;
+      this.bufList = [];
+      this.totalLenth = 0;
+      throw new Error(`Error on onReceiveData ${e.message}`);
+    }
+  };
 
   initConnToServer () {
     if (!this.client) {
@@ -41,31 +99,16 @@ class TCPClient {
       this.client = new net.Socket(); // return a Node socket
       console.log('initConnToServer connecting'); // eslint-disable-line no-console
       // this.client.setKeepAlive(true, 10000);
-      let bufList = [];
-      let totalLen = 0;
       this.client.on('connect', () => console.log('onConnect'));
       this.client.on('data', (chunck) => {
           // 包含header 和 body的 resData
         try {
-          onReceiveData(chunck);
+          this.onReceiveData(chunck);
         } catch (e) {
-          console.log('onData', bufList.length);
-          console.log('client', this.client);
-          bufList.push(chunck);
-          totalLen += chunck.length;
+          console.log('onDataError', e.message);
         }
       });
       this.client.on('end', () => {
-        try {
-          const resBuf = Buffer.concat(bufList, totalLen);
-          onReceiveData(resBuf);
-        } catch (e) {
-          console.log(e);
-          // eslint-disable-line no-console
-        } finally {
-          bufList = [];
-          totalLen = 0;
-        }
         console.log(`client end ${this.seqNumber}`);
       });
       if (!this.client.connecting) {
@@ -90,33 +133,25 @@ class TCPClient {
 
       // 自定义序列号+1
     this.seqNumber += 1;
-    const dataBuf = this.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);
+    const dataBuf = TCPClient.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);
     this.client.write(dataBuf, (e) => { console.log(e); });
   }
 
-  getSendPacket (pbBody, moduleId, cmdId, seq) {
-    if (!this.mJKPBHeader) {
-      this.mJKPBHeader = new JKPBHeader();
-    }
+  static getSendPacket (pbBody, moduleId, cmdId, seq) {
+    const mJKPBHeader = new JKPBHeader();
 
-    moduleId && (this.mJKPBHeader.moduleId = moduleId);
-    cmdId && (this.mJKPBHeader.commandId = cmdId);
-    seq && (this.mJKPBHeader.seqNumber = seq);
+
+    moduleId && (mJKPBHeader.moduleId = moduleId);
+    cmdId && (mJKPBHeader.commandId = cmdId);
+    seq && (mJKPBHeader.seqNumber = seq);
 
     const socketLength = HEADER_LENGTH + pbBody.length;
-    this.mJKPBHeader.length = socketLength;
+    mJKPBHeader.length = socketLength;
     try {
       // 由PBHeader和PBBody组成
       const sendBuffer = Buffer.allocUnsafe(socketLength);
-
-      this.mJKPBHeader.getSerializedBuffer().copy(sendBuffer, 0);
-
+      mJKPBHeader.getSerializedBuffer().copy(sendBuffer, 0);
       pbBody.copy(sendBuffer, HEADER_LENGTH);
-      // 保证每次发送pbheader是一个新的
-      delete this.mJKPBHeader;
-      // 保证每次接收的res是新的
-      delete this.response;
-
       return sendBuffer;
     } catch (e) {
       throw new Error(`Error on getSendPacket ${e.message}`);

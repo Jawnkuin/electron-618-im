@@ -14,22 +14,22 @@ const userInfo = handleActions({
 
 
 export const allUsersInfoState = {
-  userList: {},
-  depList: {}
+  userListInfo: {},
+  deptListInfo: {}
 };
 
 const allUsersInfo = handleActions(
   {
     GET_ALL_USERS_SUCCESS: {
       next: (state = allUsersInfoState, action) => Object.assign({}, state, {
-        userList: action.payload
+        userListInfo: action.payload
       })
     },
     GET_DEPT_LIST_SUCCESS: {
       next: (state = allUsersInfoState, action) => {
         console.log(action);
         return Object.assign({}, state, {
-          depList: action.payload
+          deptListInfo: action.payload
         });
       }
     },
@@ -37,7 +37,7 @@ const allUsersInfo = handleActions(
       next: (state = allUsersInfoState, action) => {
         console.log(action);
         return Object.assign({}, state, {
-          depList: action.payload
+          deptListInfo: action.payload
         });
       }
     }

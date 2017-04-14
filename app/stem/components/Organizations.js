@@ -2,91 +2,23 @@ import React, { Component } from 'react';
 import { Tree } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './Organizations.less';
+import Department from '../../share/classes/Department';
 import dummyImage from '../../utils/dummyimage';
 import { getAllUsers, getDeptList } from '../apis';
 
 const TreeNode = Tree.TreeNode;
 
-const data = {
-  orgs: [
-    {
-      id: '0',
-      name: '集团领导',
-      total: 5,
-      online: 1,
-      members: [
-        {
-          id: '0-1',
-          name: '陈武0'
-        },
-        {
-          id: '0-2',
-          name: '陈武1'
-        },
-        {
-          id: '0-3',
-          name: '陈武2'
-        }
-      ]
-    },
-    {
-      id: '1',
-      name: '经纬测绘信息有限公司',
-      total: 27,
-      online: 2,
-      members: [
-        {
-          id: '1-1',
-          name: '吴建军'
-        },
-        {
-          id: '1-2',
-          name: '饶强'
-        },
-        {
-          id: '1-3',
-          name: '高宇婷'
-        },
-        {
-          id: '1-4',
-          name: '鲁东'
-        }
-      ]
-    },
-    {
-      id: '2',
-      name: '六一八信息技术有限公司',
-      total: 5,
-      online: 0,
-      members: [
-        {
-          id: '2-1',
-          name: '王文伟'
-        },
-        {
-          id: '2-2',
-          name: '林巍'
-        },
-        {
-          id: '2-3',
-          name: '吴良堤'
-        }
-
-      ]
-    }
-  ]
-};
 
 // 递归函数生成树
 const getTreeNodes = (node) => {
   // 含有子组织
-  if (node.orgs) {
+  if (node.children) {
     return (
       <TreeNode
-        title={`${node.name} ${node.online}/${node.total}`}
-        key={node.id}
+        title={`${node.deptName} `} // ${node.online}/${node.total}
+        key={`${node.deptId.high}-${node.deptId.low}`}
       >
-        {node.orgs.map(getTreeNodes)}
+        {node.children.map(getTreeNodes)}
       </TreeNode>
     );
   }
@@ -95,8 +27,8 @@ const getTreeNodes = (node) => {
     return (
       <TreeNode
         className={styles.BuddyItem}
-        title={`${node.name} ${node.online}/${node.total}`}
-        key={node.id}
+        title={`${node.deptName} ${node.online}/${node.total}`}
+        key={`${node.deptId.high}-${node.deptId.low}`}
       >
         {node.members.map(getTreeNodes)}
       </TreeNode>
@@ -122,14 +54,34 @@ class Organizations extends Component {
   static propTypes = {
     userInfo: PropTypes.shape({
       userInfo: PropTypes.object
+    }).isRequired,
+    allUsersInfo: PropTypes.shape({
+      deptListInfo: PropTypes.object,
+      userListInfo: PropTypes.object
     }).isRequired
+  }
+  constructor (props) {
+    super(props);
+    this.state = {
+      deptTree: {}
+    };
   }
   componentDidMount () {
     console.log('componentDidMount', this.props);
     const { userInfo } = this.props;
-    getAllUsers(userInfo.userInfo.userId, 0);
+    // getAllUsers(userInfo.userInfo.userId, 0);
     getDeptList(userInfo.userInfo.userId, 0);
   }
+
+  componentWillReceiveProps (nextProps) {
+    const { allUsersInfo } = nextProps;
+    if (allUsersInfo && allUsersInfo.deptListInfo && allUsersInfo.deptListInfo.deptList) {
+      const deptTree = Department.getDeptTree(allUsersInfo.deptListInfo.deptList);
+      console.log(deptTree);
+      this.setState({ deptTree });
+    }
+  }
+
   componentDidUpdate () {
     console.log('componentDidUpdate', this.props);
   }
@@ -138,7 +90,10 @@ class Organizations extends Component {
       <Tree
         className={styles.TreeNode}
       >
-        {data.orgs.map(org => getTreeNodes(org))}
+        {
+          (this.state.deptTree && this.state.deptTree.children) &&
+          this.state.deptTree.children.map(node => getTreeNodes(node))
+        }
       </Tree>
     );
   }

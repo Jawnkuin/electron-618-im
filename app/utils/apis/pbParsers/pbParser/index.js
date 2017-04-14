@@ -1,6 +1,6 @@
 import loginParser from './login';
 import buddyParser from './buddy';
-import { IMBaseDefine } from '../PbModules';
+import { IMBaseDefine } from '../pbModules';
 
 const IMServiceIDs = IMBaseDefine.ServiceID;
 

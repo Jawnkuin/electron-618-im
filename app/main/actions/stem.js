@@ -20,10 +20,9 @@ dispatch(createAction(GET_ALL_USERS_FAIL, errMsg => ({ errMsg }), () => ({ scope
 export const getAllUserSuccessActionCreator =
 dispatch => (...args) => {
   console.log(
-    GET_ALL_USERS_SUCCESS,
-    createAction(GET_ALL_USERS_SUCCESS, res => res, () => ({ scope: 'local' }))(...args)
+    GET_ALL_USERS_SUCCESS, args
   );
-  dispatch(createAction(GET_ALL_USERS_SUCCESS, res => res, () => ({ scope: 'local' }))(...args));
+  dispatch(createAction(GET_ALL_USERS_SUCCESS, res => ({ res }), () => ({ scope: 'local' }))(...args));
 };
 
 
@@ -32,5 +31,7 @@ dispatch => (...args) =>
 dispatch(createAction(GET_DEPT_LIST_FAIL, errMsg => ({ errMsg }), () => ({ scope: 'local' }))(...args));
 
 export const getDepSuccessActionCreator =
-dispatch => (...args) =>
-dispatch(createAction(GET_DEPT_LIST_SUCCESS, res => res, () => ({ scope: 'local' }))(args));
+dispatch => (...args) => {
+  console.log(GET_DEPT_LIST_SUCCESS, args);
+  dispatch(createAction(GET_DEPT_LIST_SUCCESS, res => res[0], () => ({ scope: 'local' }))(args));
+};
