@@ -1,16 +1,13 @@
 import React from 'react';
 import { Badge } from 'antd';
-import { ipcRenderer } from 'electron';
 import styles from './Conversation.less';
 import dummyImage from '../../utils/dummyimage';
-import { showTalk } from '../actions';
 // 主面板列表项
 export default () => (
   <div
     className={styles.ConversationItem}
-    onClick={() => {
-      console.log('click');
-      ipcRenderer.send('redux-action', showTalk('吴建军'));
+    onDoubleClick={() => {
+      console.log('dbclick');
     }}
   >
     <img src={dummyImage('李四')} alt={'李四'} />

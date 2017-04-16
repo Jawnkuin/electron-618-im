@@ -1,6 +1,5 @@
-import { ipcMain } from 'electron';
-import { IMBuddy, IMBaseDefine } from './pbParsers/PbModules';
-import { GET_ALL_USERS, GET_DEPT_LIST } from '../../stem/actions';
+import { IMBuddy, IMBaseDefine } from './pbParsers/pbModules';
+
 import tcpClient from './tcp_client';
 
 // 用来获取service id
@@ -80,11 +79,3 @@ export const getDepList = (uid, latestUpdateTime) => {
   }
   tcpClient.sendPbToServer(reqBuf, serviceId, reqCmdId);
 };
-
-ipcMain.on(GET_DEPT_LIST, (e, arg) => {
-  getDepList(arg.userId, arg.latestUpdateTime);
-});
-
-ipcMain.on(GET_ALL_USERS, (e, arg) => {
-  getAllUser(arg.userId, arg.latestUpdateTime);
-});

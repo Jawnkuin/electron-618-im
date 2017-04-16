@@ -1,6 +1,6 @@
 import React from 'react';
 import DlgItem from './DlgItem';
-import InputPanel from './InputPanel';
+import InputPanelContainer from '../containers/InputPanelContainer';
 
 import styles from './DialogPanel.less';
 
@@ -74,7 +74,7 @@ const DialogPanel = () => (
       }
     </div>
     <div className={styles.DlgInputView}>
-      <InputPanel />
+      <InputPanelContainer />
     </div>
   </div>
 );

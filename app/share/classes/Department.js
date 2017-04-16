@@ -1,5 +1,13 @@
 import _ from 'lodash';
 
+const dfs = (node, arr) => {
+  if (node.children.length === 0) {
+    arr.push(node);
+  } else {
+    node.children.map(n => dfs(n, arr));
+  }
+};
+
 export default class Department {
   constructor ({ deptId, deptName, deptStatus, parentDeptId, priority }) {
     this.deptId = deptId;
@@ -8,6 +16,12 @@ export default class Department {
     parentDeptId && (this.parentDeptId = parentDeptId);
     priority && (this.priority = priority);
     this.children = [];
+  }
+
+  getLeafDescendants () {
+    const leafNodeList = [];
+    dfs(this, leafNodeList);
+    return leafNodeList;
   }
 
   // 递归获得树形结构

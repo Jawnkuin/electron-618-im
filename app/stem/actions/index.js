@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-// import doLogin from '../../utils/apis/login';
+
 export const GET_ALL_USERS_SUCCESS = 'GET_ALL_USERS_SUCCESS';
 export const GET_ALL_USERS_FAIL = 'GET_ALL_USERS_FAIL';
 export const GET_ALL_USERS = 'GET_ALL_USERS';
@@ -10,7 +10,7 @@ export const GET_DEPT_LIST_FAIL = 'GET_DEPT_LIST_FAIL';
 
 export const ON_LOAD_USER = 'ON_LOAD_USER';
 
-export const TALK = 'TALK';
+export const OPEN_SINGLE_TALK = 'OPEN_SINGLE_TALK';
 
 /*
 export const doLoginMain = createAction(LOGIN, async (name, psw) => {
@@ -19,11 +19,10 @@ export const doLoginMain = createAction(LOGIN, async (name, psw) => {
 });
 */
 
-export const showTalk = createAction(TALK, name => ({
-  name,
-  id: '001'
+export const openSingleTalk = createAction(OPEN_SINGLE_TALK, toBuddy => ({
+  toBuddy
 }),
-(name, isLocal) => (
+(toBuddy, isLocal = false) => (
   isLocal ? { scope: 'local' } : {}
 )
 );

@@ -1,7 +1,6 @@
 import crypto from 'crypto';
-import { ipcMain } from 'electron';
-import { LOGIN } from '../../login/actions';
-import { IMLogin, IMBaseDefine } from './pbParsers/PbModules';
+
+import { IMLogin, IMBaseDefine } from './pbParsers/pbModules';
 import tcpClient from './tcp_client';
 
 const IMLoginReq = IMLogin.IMLoginReq;
@@ -55,7 +54,7 @@ export const onLoginResponce = res => (onLoginOK, onLoginFailed) => {
 };
 
 // 执行登录，回调登录成功和登录失败
-const doLogin = (name, psw) => {
+export const doLogin = (name, psw) => {
   const logReqBuf = getLoginBuf(name, psw);
   const loginServiceId = serviceIdEnums.SID_LOGIN;
   const loginReqCmdId = loginCmdIdEnums.CID_LOGIN_REQ_USERLOGIN;
@@ -66,9 +65,3 @@ const doLogin = (name, psw) => {
 
   tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId);
 };
-
-ipcMain.on(LOGIN, (event, arg) => {
-  doLogin(arg.name, arg.psw);
-});
-
-export default doLogin;

@@ -1,5 +1,4 @@
 import { createAction } from 'redux-actions';
-// import { getAllUser, getDepList } from '../../utils/apis/buddy';
 import {
   GET_ALL_USERS_SUCCESS,
   GET_ALL_USERS_FAIL,
@@ -19,12 +18,8 @@ dispatch(createAction(GET_ALL_USERS_FAIL, errMsg => ({ errMsg }), () => ({ scope
 
 export const getAllUserSuccessActionCreator =
 dispatch => (...args) => {
-  console.log(
-    GET_ALL_USERS_SUCCESS, args
-  );
-  dispatch(createAction(GET_ALL_USERS_SUCCESS, res => ({ res }), () => ({ scope: 'local' }))(...args));
+  dispatch(createAction(GET_ALL_USERS_SUCCESS, res => res, () => ({ scope: 'local' }))(...args));
 };
-
 
 export const getDepFailActionCreator =
 dispatch => (...args) =>
@@ -32,6 +27,5 @@ dispatch(createAction(GET_DEPT_LIST_FAIL, errMsg => ({ errMsg }), () => ({ scope
 
 export const getDepSuccessActionCreator =
 dispatch => (...args) => {
-  console.log(GET_DEPT_LIST_SUCCESS, args);
   dispatch(createAction(GET_DEPT_LIST_SUCCESS, res => res[0], () => ({ scope: 'local' }))(args));
 };

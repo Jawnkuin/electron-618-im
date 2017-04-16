@@ -8,14 +8,14 @@ const login = handleActions({
     next: (state = immutableState, action) => {
       const successRes = action.payload;
       return Object.assign({}, state, {
-        successRes
+        user: successRes
       });
     }
   }
 }, immutableState);
 
 export const loginKeys = {
-  successRes: 'successRes'
+  user: 'user'
 };
 
 

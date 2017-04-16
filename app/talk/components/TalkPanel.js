@@ -1,15 +1,15 @@
 import React from 'react';
-import FormHeader from './FormHeader';
+import FormHeaderContainer from '../containers/FormHeaderContainer';
 import DialogPanel from './DialogPanel';
-import ProfilePanel from './ProfilePanel';
+import ProfilePanelContainer from '../containers/ProfilePanelContainer';
 import styles from './TalkPanel.less';
 
 export default () => (
   <div className={styles.TalkPanel}>
-    <FormHeader />
+    <FormHeaderContainer />
     <div className={styles.FormContent}>
       <DialogPanel />
-      <ProfilePanel />
+      <ProfilePanelContainer />
     </div>
   </div>
 );

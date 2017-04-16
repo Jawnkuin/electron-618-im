@@ -41,24 +41,22 @@ class TCPClient {
         if (!this.resPBHeader || !this.resPBHeader.moduleId) {
           throw new Error('Invalid Response Header');
         }
-
-        this.bufList.push(buff);
-        this.totalLenth += buff.length;
       }
 
-      console.log('onReceiveData', // eslint-disable-line no-console
-      `
-        ==========================
-        totalLength:${this.totalLenth},
-        claimedLength:${this.resPBHeader.length},
-        buffListLength:${this.bufList.length}
-        ==========================
-      `
-      );
+
       if (this.totalLenth < this.resPBHeader.length) {
         this.bufList.push(buff);
         this.totalLenth += buff.length;
-        return;
+
+        console.log('onReceiveData', // eslint-disable-line no-console
+        `
+          ==========================
+          totalLength:${this.totalLenth},
+          claimedLength:${this.resPBHeader.length},
+          buffListLength:${this.bufList.length}
+          ==========================
+        `
+        );
       }
 
       if (this.totalLenth >= this.resPBHeader.length) {
@@ -82,11 +80,10 @@ class TCPClient {
 
         return;
       }
-
-      throw new Error('UnKnow socket chunck');
+      return;
     } catch (e) {
       // 还原
-      delete this.resPBHeader;
+      if (this.resPBHeader) { delete this.resPBHeader; }
       this.bufList = [];
       this.totalLenth = 0;
       throw new Error(`Error on onReceiveData ${e.message}`);
@@ -134,7 +131,7 @@ class TCPClient {
       // 自定义序列号+1
     this.seqNumber += 1;
     const dataBuf = TCPClient.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);
-    this.client.write(dataBuf, (e) => { console.log(e); });
+    this.client.write(dataBuf);
   }
 
   static getSendPacket (pbBody, moduleId, cmdId, seq) {

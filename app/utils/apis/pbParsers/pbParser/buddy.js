@@ -1,4 +1,4 @@
-import { IMBaseDefine, IMBuddy } from '../PbModules';
+import { IMBaseDefine, IMBuddy } from '../pbModules';
 import actionCreators from '../../../../main/actions';
 import mainStore from '../../../../main/store';
 import { onBuddyListResponce, onDepListResponce } from '../../stem';

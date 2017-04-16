@@ -63,6 +63,7 @@ class WindowManager {
 
     window.on('closed', () => {
       delete this.windows[newID];
+      Actions.closeWindow(newID, name);
       // action REMOVE_WINDOW tobe added
     });
     window.on('focus', () => {

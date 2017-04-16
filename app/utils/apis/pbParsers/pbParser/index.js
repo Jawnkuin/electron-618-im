@@ -1,5 +1,6 @@
 import loginParser from './login';
 import buddyParser from './buddy';
+import messageParser from './message';
 import { IMBaseDefine } from '../pbModules';
 
 const IMServiceIDs = IMBaseDefine.ServiceID;
@@ -10,6 +11,8 @@ export default (pbHeader, pbBodyBuffer) => {
       return loginParser(pbHeader, pbBodyBuffer);
     case IMServiceIDs.SID_BUDDY_LIST:
       return buddyParser(pbHeader, pbBodyBuffer);
+    case IMServiceIDs.SID_MSG:
+      return messageParser(pbHeader, pbBodyBuffer);
     default:
       // throw new Error('Unknow MouduleId');
       console.log('Unknow MouduleId');

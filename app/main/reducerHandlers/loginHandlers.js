@@ -23,7 +23,7 @@ export default (preState, newState, dispatch, getState) => {
     // 登录不需要变化，待改
     if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
       switch (key) {
-        case loginKeys.successRes:
+        case loginKeys.user:
           {
             const stemWin = new BrowserWindow(WindowConfigs.stem);
             const loginWinId = getState().windows.login.windowID;

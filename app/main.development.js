@@ -1,12 +1,12 @@
 // @flow
-import { app, BrowserWindow, Tray, Menu } from 'electron';
-import path from 'path';
+import { app, BrowserWindow } from 'electron'; // , Tray, Menu
 import { replayActionMain } from 'electron-redux';
 import mapStateToWindow from './utils/redux/mapStateToWindow';
 import { windowManager, WindowConfigs } from './utils/WindowManager';
 import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
 import tcpClient from './utils/apis/tcp_client';
+import './utils/ipcMainResponces';
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support'); // eslint-disable-line
@@ -50,7 +50,7 @@ const installExtensions = async () => {
   }
 };
 
-let appTray = null;
+// const appTray = null;
 
 app.on('ready', async () => {
   await installExtensions();
@@ -72,7 +72,8 @@ app.on('ready', async () => {
 
   loginWindow.loadURL(`${__dirname}/login/index.html`);
 
-  // 托盘
+
+  /* 托盘
   appTray = new Tray(path.join(__dirname, '../resources/icon.ico'));
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Item1IsVeryVeryVeryLong', type: 'radio' },
@@ -86,4 +87,5 @@ app.on('ready', async () => {
     title: 'Title',
     content: 'Lorem ipsum'
   });
+  */
 });

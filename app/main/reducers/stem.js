@@ -1,36 +1,25 @@
 import { handleActions } from 'redux-actions';
+import _ from 'lodash';
 
 const immutableState = {
-  onLoadUser: {
-
-  },
-  getAllUsers: {
-  },
-  getDepList: {
-  }
+  toBuddys: []
 };
 
-const buddy = handleActions({
-
-  GET_ALL_USERS: {
-    next: (state = immutableState, action) => Object.assign({}, state, {
-      getAllUsers: {
-        ...action.payload
-      }
-    })
-  },
-  GET_DEPT_LIST: {
-    next: (state = immutableState, action) => Object.assign({}, state, {
-      getDepList: {
-        ...action.payload
-      }
-    })
+const stem = handleActions({
+  OPEN_SINGLE_TALK: {
+    next: (state = immutableState, action) => {
+      const toBuddy = action.payload.toBuddy;
+      console.log(toBuddy);
+      return Object.assign({}, state, {
+        toBuddys: _.unionWith(state.toBuddys, [toBuddy], (f, l) => _.isEqual(f.userId, l.userId))
+      });
+    }
   }
 }, immutableState);
 
 export const stemKeys = {
-  getAllUsers: 'getAllUsers',
-  getDepList: 'getDepList'
+  toBuddys: 'toBuddys'
 };
 
-export default buddy;
+
+export default stem;

@@ -1,49 +1,55 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Tooltip } from 'antd';
 import styles from './ProfilePanel.less';
 import dummyImage from '../../utils/dummyimage';
 
 
-const data = {
-  company: '福建省经纬测绘',
-  name: '李四',
-  role: '员工',
-  phone: '[空]',
-  tel: '18888888888',
-  email: '123435@exd.es'
-};
-
-const ProfilePanel = () => (
-  <div className={styles.ProfilePanel}>
-    <img src={dummyImage(data.name)} alt="LOGO" />
-    <div className={styles.profileBox}>
-      <div className={styles.profileItem}>
-        <Tooltip title={data.company}>
-          <span><Icon type="home" /> {data.company}</span>
-        </Tooltip>
-      </div>
-      <div className={styles.profileItem}>
-        <Tooltip title={data.role}>
-          <span><Icon type="solution" /> {data.role}</span>
-        </Tooltip>
-      </div>
-      <div className={styles.profileItem}>
-        <Tooltip title={data.phone}>
-          <span><Icon type="phone" /> {data.phone}</span>
-        </Tooltip>
-      </div>
-      <div className={`${styles.profileItem} ${styles.contactItem}`}>
-        <Tooltip title={data.tel}>
-          <span><Icon type="mobile" /> {data.tel}</span>
-        </Tooltip>
-      </div>
-      <div className={`${styles.profileItem} ${styles.contactItem}`}>
-        <Tooltip title={data.email}>
-          <span><Icon type="mail" /> {data.email}</span>
-        </Tooltip>
+const ProfilePanel = ({ buddyInfo }) => {
+  const info = buddyInfo.buddyInfo;
+  info.userTel = '18022222222';
+  info.email = 'excdn@qq.com';
+  return (
+    <div className={styles.ProfilePanel}>
+      <img src={dummyImage(info.userNickName)} alt="LOGO" />
+      <div className={styles.profileBox}>
+        <div className={styles.profileItem}>
+          <Tooltip title={'六一八信息科技有限公司'}>
+            <span><Icon type="home" /> {'六一八信息科技有限公司'}</span>
+          </Tooltip>
+        </div>
+        <div className={styles.profileItem}>
+          <Tooltip title={'员工'}>
+            <span><Icon type="solution" /> {'员工'}</span>
+          </Tooltip>
+        </div>
+        <div className={`${styles.profileItem} ${styles.contactItem}`}>
+          <Tooltip title={info.userTel}>
+            <span><Icon type="mobile" /> {info.userTel}</span>
+          </Tooltip>
+        </div>
+        <div className={`${styles.profileItem} ${styles.contactItem}`}>
+          <Tooltip title={info.email}>
+            <span><Icon type="mail" /> {info.email}</span>
+          </Tooltip>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
+
+/*
+<div className={styles.profileItem}>
+  <Tooltip title={data.phone}>
+    <span><Icon type="phone" /> {data.phone}</span>
+  </Tooltip>
+</div>
+*/
+
+ProfilePanel.propTypes = {
+  buddyInfo: PropTypes.shape({
+    userId: PropTypes.object.isRequired
+  }).isRequired
+};
 
 export default ProfilePanel;

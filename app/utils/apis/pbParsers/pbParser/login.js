@@ -1,7 +1,7 @@
 import { onLoginResponce } from '../../login';
 import actionCreators from '../../../../main/actions';
 import mainStore from '../../../../main/store';
-import { IMBaseDefine, IMLogin } from '../PbModules';
+import { IMBaseDefine, IMLogin } from '../pbModules';
 
 const Actions = actionCreators(mainStore);
 // 登录模块响应解析
