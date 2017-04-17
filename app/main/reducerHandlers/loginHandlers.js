@@ -5,6 +5,7 @@ import mainStore from '../../main/store';
 import { loginKeys } from '../reducers/login';
 import { windowManager, WindowConfigs } from '../../utils/WindowManager';
 import { STEM_PATH } from '../../configs';
+import { getUnreadMsgCnt } from '../../utils/apis/talk';
 
 const Actions = actionCreators(mainStore);
 
@@ -25,6 +26,7 @@ export default (preState, newState, dispatch, getState) => {
       switch (key) {
         case loginKeys.user:
           {
+            // 登录成功打开主窗体，关闭登录窗体
             const stemWin = new BrowserWindow(WindowConfigs.stem);
             const loginWinId = getState().windows.login.windowID;
             windowManager.add(stemWin, 'stem', () => {
@@ -32,6 +34,9 @@ export default (preState, newState, dispatch, getState) => {
               Actions.onLoadUser(newState[key]);
             });
             stemWin.loadURL(STEM_PATH);
+
+            // 循环请求未读消息，后期放到独立模块
+            setInterval(getUnreadMsgCnt, 10000);
           }
 
           break;

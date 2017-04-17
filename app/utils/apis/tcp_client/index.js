@@ -47,7 +47,7 @@ class TCPClient {
       if (this.totalLenth < this.resPBHeader.length) {
         this.bufList.push(buff);
         this.totalLenth += buff.length;
-
+        /*
         console.log('onReceiveData', // eslint-disable-line no-console
         `
           ==========================
@@ -57,6 +57,7 @@ class TCPClient {
           ==========================
         `
         );
+        */
       }
 
       if (this.totalLenth >= this.resPBHeader.length) {
@@ -123,11 +124,7 @@ class TCPClient {
   * @pbbody: buffer of pb body
   */
   sendPbToServer (pbbody, moduleId, cmdId) {
-    console.log('sendPbToServer', this.client.connecting);
-
     this.initConnToServer();
-
-
       // 自定义序列号+1
     this.seqNumber += 1;
     const dataBuf = TCPClient.getSendPacket(pbbody, moduleId, cmdId, this.seqNumber);

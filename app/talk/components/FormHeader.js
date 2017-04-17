@@ -32,7 +32,9 @@ const FormHeader = ({ buddyInfo }) => {
 
 FormHeader.propTypes = {
   buddyInfo: PropTypes.shape({
-    userId: PropTypes.object.isRequired
+    buddyInfo: PropTypes.shape({
+      userId: PropTypes.object.isRequired
+    }).isRequired
   }).isRequired
 };
 

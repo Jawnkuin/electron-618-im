@@ -1,82 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
 import DlgItem from './DlgItem';
 import InputPanelContainer from '../containers/InputPanelContainer';
 
 import styles from './DialogPanel.less';
 
-const time0 = new Date().getTime();
 
-const dlgs = [
-  {
-    time: time0,
-    user: {
-      name: '李四'
-    },
-    msg: '短消息'
-  },
-  {
-    time: time0 + 1000,
-    user: {
-      name: '吴建军'
-    },
-    msg: '谁能想到一个消息竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然这么长！'
-  },
-  {
-    time: time0 + 2000,
-    user: {
-      name: '吴建军'
-    },
-    msg: '短消息'
-  },
-  {
-    time: time0 + 3000,
-    user: {
-      name: '吴建军'
-    },
-    msg: '谁能想到一个消息竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然这么长！'
-  },
-  {
-    time: time0 + 4000,
-    user: {
-      name: '李四'
-    },
-    msg: '短消息'
-  },
-  {
-    time: time0 + 5000,
-    user: {
-      name: '李四'
-    },
-    msg: '谁能想到一个消息竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然竟然这么长！'
-  },
-  {
-    time: time0 + 6000,
-    user: {
-      name: '吴建军'
-    },
-    msg: '短消息'
+class DialogPanel extends Component {
+  static propTypes = {
+    dlgInfo: PropTypes.shape({
+      msgList: PropTypes.arrayOf(PropTypes.shape({
+        msg: PropTypes.string
+      })).isRequired
+    }).isRequired,
+    buddyInfo: PropTypes.shape({
+      buddyInfo: PropTypes.object.isRequired,
+      selfInfo: PropTypes.object.isRequired
+    }).isRequired
+  };
+
+  render () {
+    const { msgList } = this.props.dlgInfo;
+    const { selfInfo, buddyInfo } = this.props.buddyInfo;
+
+    return (
+      <div className={styles.DialogPanel}>
+        <div className={styles.DlgListView} >
+          {
+            msgList.map((dlg) => {
+              const utf8Buf = Buffer.from(dlg.msgData, 'base64');
+              const msgStr = utf8Buf.toString('utf8');
+              const isFromSelf = _.isEqual(dlg.fromUserId, selfInfo.userId);
+              return (
+                <DlgItem
+                  key={`${dlg.createTime}${dlg.fromUserId.high}${dlg.fromUserId.low}`}
+                  name={
+                    isFromSelf ? selfInfo.userNickName : buddyInfo.userNickName
+                  }
+                  time={dlg.createTime}
+                  msg={msgStr}
+                  isLeft={!isFromSelf}
+                />
+              );
+            }
+            )
+          }
+        </div>
+        <div className={styles.DlgInputView}>
+          <InputPanelContainer />
+        </div>
+      </div>
+    );
   }
-];
+}
 
-const DialogPanel = () => (
-  <div className={styles.DialogPanel}>
-    <div className={styles.DlgListView} >
-      {
-        dlgs.map(dlg => (
-          <DlgItem
-            key={dlg.user.name + dlg.time}
-            user={dlg.user}
-            time={dlg.time}
-            msg={dlg.msg}
-            isLeft={dlg.user.name === '李四'}
-          />
-        ))
-      }
-    </div>
-    <div className={styles.DlgInputView}>
-      <InputPanelContainer />
-    </div>
-  </div>
-);
 
 export default DialogPanel;

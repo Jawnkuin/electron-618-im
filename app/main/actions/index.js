@@ -11,7 +11,8 @@ import {
   getDepSuccessActionCreator
 } from './stem';
 import {
-  onLoadTalkActionCreator
+  onLoadTalkActionCreator,
+  onReceiveMessageActionCreator
 } from './talk';
 
 export default store => ({
@@ -27,6 +28,7 @@ export default store => ({
   getDepFail: getDepFailActionCreator(store.dispatch, store.getState),
   getDepSuccess: getDepSuccessActionCreator(store.dispatch, store.getState),
 
-  onLoadTalk: onLoadTalkActionCreator(store.dispatch, store.getState)
+  onLoadTalk: onLoadTalkActionCreator(store.dispatch, store.getState),
+  onReceiveMessage: onReceiveMessageActionCreator(store.dispatch, store.getState)
 
 });

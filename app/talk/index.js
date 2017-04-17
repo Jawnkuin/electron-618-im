@@ -3,9 +3,10 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import Root from './containers/app';
 import configureStore from './store';
+import { immutableState } from './reducers';
 import '../app.global.css';
 
-const store = configureStore({});
+const store = configureStore(immutableState);
 
 render(
   <AppContainer>

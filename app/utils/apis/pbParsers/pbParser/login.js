@@ -8,6 +8,7 @@ const Actions = actionCreators(mainStore);
 export default (pbHeader, pbBodyBuffer) => {
   try {
     const IMLoginCmdIDs = IMBaseDefine.LoginCmdID;
+    console.log('pbHeader', pbHeader);
     switch (pbHeader.commandId) {
       case IMLoginCmdIDs.CID_LOGIN_RES_USERLOGIN:
         onLoginResponce({
@@ -22,6 +23,10 @@ export default (pbHeader, pbBodyBuffer) => {
       case IMLoginCmdIDs.CID_LOGIN_KICK_USER:
         return IMLogin.IMKickUser.decode(pbBodyBuffer);
 
+      case IMLoginCmdIDs.CID_LOGIN_REQ_DEVICETOKEN:
+        console.log('IMDeviceTokenReq', IMLogin.IMDeviceTokenReq.decode(pbBodyBuffer));
+        break;
+
       case IMLoginCmdIDs.CID_LOGIN_RES_DEVICETOKEN:
         return IMLogin.IMDeviceTokenRsp.decode(pbBodyBuffer);
 
@@ -35,7 +40,8 @@ export default (pbHeader, pbBodyBuffer) => {
         return IMLogin.IMQueryPushShieldRsp.decode(pbBodyBuffer);
 
       default:
-        throw new Error('Error parse Login res');
+
+        throw new Error(`Error parse Login res ${pbHeader.commandId}`);
     }
   } catch (e) {
     throw (new Error(`loginParser ${e.message}`));

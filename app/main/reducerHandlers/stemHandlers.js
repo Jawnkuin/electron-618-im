@@ -34,7 +34,11 @@ export default (preState, newState) => {
 
             const talkWin = new BrowserWindow(WindowConfigs.talk);
             windowManager.add(talkWin, 'talk', () => {
-              Actions.onLoadTalk(newBuddys[0]);
+              const loadInfo = {
+                buddyInfo: newBuddys[0],
+                selfInfo: mainStore.getState().login.user.userInfo
+              };
+              Actions.onLoadTalk(loadInfo);
             });
             talkWin.loadURL(TALK_PATH);
           }

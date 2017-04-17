@@ -8,3 +8,12 @@ export const SEND_MESSAGE_FAIL = 'SEND_MESSAGE_FAIL';
 export const SEND_MESSAGE_SUCCESS = 'SEND_MESSAGE_SUCCESS';
 
 export const RECIEVE_MESSAGE = 'RECIEVE_MESSAGE';
+
+export const sendMessage = createAction(SEND_MESSAGE,
+  (fromUserId, createTime, msgData) => ({
+    fromUserId,
+    createTime,
+    msgData
+  }),
+  () => ({ scope: 'local' })
+);

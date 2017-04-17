@@ -23,12 +23,12 @@ const dateFormat = (time) => {
   return `${formatNum(date.getHours())}:${formatNum(date.getMinutes())}:${formatNum(date.getSeconds())}`;
 };
 
-const DlgItem = ({ time, user, msg, isLeft }) => (
+const DlgItem = ({ time, name, msg, isLeft }) => (
   <div className={styles.DlgItem} style={customPaddingStyle(isLeft).DlgItem}>
-    <img src={dummyImage(user.name)} alt={user.name} />
+    <img src={dummyImage(name)} alt={name} />
     <div className={styles.DlgDetail} style={customPaddingStyle(isLeft).DlgDetail}>
       <div className={styles.nameBox}>
-        {`${user.name} ${dateFormat(time)}`}
+        {`${name} ${dateFormat(time)}`}
       </div>
       <div className={styles.msgBox}>
         <div className={styles.msgBubble} style={customPaddingStyle(isLeft).msgBubble}>{msg}</div>
@@ -40,9 +40,7 @@ const DlgItem = ({ time, user, msg, isLeft }) => (
 
 DlgItem.propTypes = {
   time: PropTypes.number.isRequired,
-  user: PropTypes.shape({
-    name: PropTypes.string.isRequired
-  }).isRequired,
+  name: PropTypes.string.isRequired,
   msg: PropTypes.string.isRequired,
   isLeft: PropTypes.bool.isRequired
 };
