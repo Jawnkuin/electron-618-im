@@ -9,6 +9,12 @@ import { getAllUsers, getDeptList } from '../apis';
 
 const TreeNode = Tree.TreeNode;
 
+/*
+* uint64 has difference stucture in regards to the enviroment.
+* In development/production enviroment，it will be a {high,low,unsigned}
+* On windows it will be symply a number
+* Use `Number.MAX_SAFE_INTEGER` to check
+**/
 
 // 主面板组织列表
 class Organizations extends Component {
@@ -48,7 +54,7 @@ class Organizations extends Component {
 
     if (!this.state.appendedChildren && allUsersInfo.userListInfo.userList) {
       const userList = allUsersInfo.userListInfo.userList;
-      const newDeptTree = this.state.deptTree;
+      const newDeptTree = _.clone(this.state.deptTree);
       const leafDepts = newDeptTree.getLeafDescendants();
       leafDepts.forEach((node) => {
         userList.forEach((user) => {
@@ -72,7 +78,7 @@ class Organizations extends Component {
         <TreeNode
           className={styles.BuddyItem}
           title={`${node.deptName} 0/${node.members.length}`}
-          key={`${node.deptId.high}-${node.deptId.low}`}
+          key={node.deptId.high ? `${node.deptId.high}-${node.deptId.low}` : node.deptId}
         >
           {node.members.map(this.getTreeNodes)}
         </TreeNode>
@@ -83,7 +89,7 @@ class Organizations extends Component {
       return (
         <TreeNode
           title={`${node.deptName} `} // ${node.online}/${node.total}
-          key={`${node.deptId.high}-${node.deptId.low}`}
+          key={node.deptId.high ? `${node.deptId.high}-${node.deptId.low}` : node.deptId}
         >
           {node.children.map(this.getTreeNodes)}
         </TreeNode>
@@ -101,7 +107,7 @@ class Organizations extends Component {
             <div className={styles.NameBox}>{node.userNickName}</div>
           </div>
         }
-        key={`${node.userId.high}-${node.userId.low}`}
+        key={node.userId.high ? `${node.userId.high}-${node.userId.low}` : node.userId}
       />
     );
   };

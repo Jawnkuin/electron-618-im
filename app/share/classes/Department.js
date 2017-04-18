@@ -49,7 +49,7 @@ export default class Department {
           newList.push(dpt);
         }
       });
-      parent.children.map(child => appendChildren(child, newList));
+      parent.children.forEach(child => appendChildren(child, newList));
     };
 
     appendChildren(virtualRoot, cloneObjList);

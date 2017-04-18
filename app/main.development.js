@@ -20,11 +20,17 @@ if (process.env.NODE_ENV === 'development') {
   require('module').globalPaths.push(p); // eslint-disable-line
 }
 
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    tcpClient.client.destroy((e) => {
+    try {
+      if (tcpClient.client && !tcpClient.client.destroyed) {
+        tcpClient.client.destroy();
+      }
+    } catch (e) {
       console.log(e); // eslint-disable-line no-console
-    });
+    }
+
     app.quit();
   }
 });

@@ -1,9 +1,18 @@
 import protobuf from 'protobufjs';
-import path from 'path';
-import fs from 'fs';
+// import fs from 'fs'; // fs在解析asar文件时候会有bug,需要选择一个一个加
+import { PB_PATH } from '../../../configs';
 
-const protoDir = path.join(process.cwd(), '/app/utils/apis/pb/');
-const protoAddrs = fs.readdirSync(protoDir).map(fname => `${protoDir}${fname}`);
+
+const protoAddrs = [
+  'IM.BaseDefine.proto',
+  'IM.Buddy.proto',
+  'IM.File.proto',
+  'IM.Group.proto',
+  'IM.Login.proto',
+  'IM.Message.proto',
+  'IM.Other.proto',
+  'IM.Server.proto',
+  'IM.SwitchService.proto'].map(pr => `${PB_PATH}${pr}`);
 const pbRoot = protobuf.loadSync(protoAddrs);
 
 

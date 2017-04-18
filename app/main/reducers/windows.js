@@ -60,6 +60,7 @@ const windows = handleActions({
           }
         case 'talk':
           {
+            console.log(action.payload);
             const talkList = _.pullAllBy(state.talk, [{ ...action.payload }], 'windowID');
             return Object.assign({}, state, {
               talk: talkList

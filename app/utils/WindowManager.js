@@ -9,14 +9,14 @@ export class WindowConfigs {
   static base = {
     show: false,
     useContentSize: true,
-    frame: false
+    frame: false // false
   }
 
   // 登录窗配置
   static login = Object.assign({}, WindowConfigs.base, {
     width: 300, // 默认300，dev过程中适当增加宽度来容纳chrome开发者工具
     height: 565,
-    transparent: true,
+    transparent: true, // true
     resizable: false
   })
 

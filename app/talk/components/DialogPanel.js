@@ -34,7 +34,9 @@ class DialogPanel extends Component {
               const isFromSelf = _.isEqual(dlg.fromUserId, selfInfo.userId);
               return (
                 <DlgItem
-                  key={`${dlg.createTime}${dlg.fromUserId.high}${dlg.fromUserId.low}`}
+                  key={dlg.fromUserId.high ?
+                    `${dlg.createTime}${dlg.fromUserId.high}${dlg.fromUserId.low}` :
+                    `${dlg.createTime}${dlg.fromUserId}`}
                   name={
                     isFromSelf ? selfInfo.userNickName : buddyInfo.userNickName
                   }

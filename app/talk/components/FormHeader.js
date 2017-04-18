@@ -3,8 +3,9 @@ import { Icon } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './FormHeader.less';
 import dummyImage from '../../utils/dummyimage';
+import { closeCurrentWindow } from '../../share/rendererWindow';
 
-const FormHeader = ({ buddyInfo }) => {
+const FormHeader = ({ buddyInfo, closeSingleTalk }) => {
   const info = buddyInfo.buddyInfo;
   return (
     <div className={styles.headerContainer}>
@@ -21,7 +22,13 @@ const FormHeader = ({ buddyInfo }) => {
         <button className={styles.fontBtn}>
           <Icon type="scan" />
         </button>
-        <button className={styles.fontBtn}>
+        <button
+          className={styles.fontBtn}
+          onClick={() => {
+            closeSingleTalk(info);
+            closeCurrentWindow();
+          }}
+        >
           <Icon type="close" />
         </button>
       </div>
@@ -35,7 +42,8 @@ FormHeader.propTypes = {
     buddyInfo: PropTypes.shape({
       userId: PropTypes.object.isRequired
     }).isRequired
-  }).isRequired
+  }).isRequired,
+  closeSingleTalk: PropTypes.func.isRequired
 };
 
 export default FormHeader;

@@ -21,8 +21,10 @@ const buddyInfo = handleActions({
   // 用户登录成功
   ON_LOAD_TALK: {
     next: (state = immutableState.buddyInfo, action) => {
-      console.log('ON_LOAD_TALK', action);
-      return _.clone(action.payload);
+      if (typeof state.buddyInfo.userId === 'object' && _.isEmpty(state.buddyInfo.userId)) {
+        return _.clone(action.payload);
+      }
+      return state;
     }
   }
 }, immutableState.buddyInfo);

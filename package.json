@@ -21,7 +21,7 @@
     "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register -r babel-polyfill ./app/main.development",
     "postinstall": "concurrently \"install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
     "dev": "cross-env START_HOT=1 npm run hot-server",
-    "package": "npm run build && build --publish never",
+    "package": "build --publish never",
     "package-win": "npm run build && build --win --x64",
     "package-linux": "npm run build && build --linux",
     "package-all": "npm run build && build -mwl",
@@ -53,6 +53,11 @@
       "app.html",
       "main.js",
       "main.js.map",
+      "login/index.html",
+      "talk/index.html",
+      "stem/index.html",
+      "config.js",
+      "resources/",
       "package.json"
     ],
     "win": {
@@ -175,7 +180,6 @@
   },
   "dependencies": {
     "antd": "^2.9.0",
-    "electron": "^1.6.2",
     "electron-debug": "^1.1.0",
     "electron-redux": "^1.2.5",
     "eslint-plugin-flowtype": "^2.30.4",
