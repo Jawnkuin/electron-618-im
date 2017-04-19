@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import DlgItem from './DlgItem';
+import { generateKeyString } from '../../utils/uint64';
 import InputPanelContainer from '../containers/InputPanelContainer';
 
 import styles from './DialogPanel.less';
@@ -24,6 +25,7 @@ class DialogPanel extends Component {
     const { msgList } = this.props.dlgInfo;
     const { selfInfo, buddyInfo } = this.props.buddyInfo;
 
+
     return (
       <div className={styles.DialogPanel}>
         <div className={styles.DlgListView} >
@@ -34,9 +36,8 @@ class DialogPanel extends Component {
               const isFromSelf = _.isEqual(dlg.fromUserId, selfInfo.userId);
               return (
                 <DlgItem
-                  key={dlg.fromUserId.high ?
-                    `${dlg.createTime}${dlg.fromUserId.high}${dlg.fromUserId.low}` :
-                    `${dlg.createTime}${dlg.fromUserId}`}
+                  key={
+                    `${generateKeyString(dlg.msgId)}${generateKeyString(dlg.fromUserId)}`}
                   name={
                     isFromSelf ? selfInfo.userNickName : buddyInfo.userNickName
                   }

@@ -16,3 +16,14 @@ export const plus = (f, l) => {
     unsigned: true
   };
 };
+
+export const generateKeyString = (uint64Object) => {
+  if (typeof uint64Object === 'number') {
+    return uint64Object.toString();
+  }
+  if (typeof uint64Object === 'object' && typeof uint64Object.high === 'number') {
+    return `${uint64Object.high}${uint64Object.low}`;
+  }
+
+  return Symbol(uint64Object).toString();
+};

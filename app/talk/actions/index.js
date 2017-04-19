@@ -12,10 +12,11 @@ export const CLOSE_SINGLE_TALK = 'CLOSE_SINGLE_TALK';
 export const RECIEVE_MESSAGE = 'RECIEVE_MESSAGE';
 
 export const sendMessage = createAction(SEND_MESSAGE,
-  (fromUserId, createTime, msgData) => ({
+  (fromUserId, createTime, msgData, msgId) => ({
     fromUserId,
     createTime,
-    msgData
+    msgData,
+    msgId
   }),
   () => ({ scope: 'local' })
 );

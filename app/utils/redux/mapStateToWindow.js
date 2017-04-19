@@ -23,7 +23,7 @@ const onReducerInvoke = (store, handlers) => () => {
     if (!newState[key] || _.isEmpty(newState[key])) {
       return;
     }
-    // 登录不需要变化，待改
+
     if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
       if (handlers[key] && typeof handlers[key] === 'function') {
         handlers[key](preState[key], newState[key], store.dispatch, store.getState);

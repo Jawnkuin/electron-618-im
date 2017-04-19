@@ -24,7 +24,8 @@ class InputPanel extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      input: ''
+      input: '',
+      msgId: 0
     };
   }
 
@@ -39,7 +40,7 @@ class InputPanel extends Component {
     // const base64String = buf.toString('base64');
     const sendTime = new Date().getTime();
     // 用于更改本线程内的状态,后期将electron-redux重写之后再合并
-    sendMessage(fromInfo.userId, sendTime, buf);
+    sendMessage(fromInfo.userId, sendTime, buf, this.state.msgId);
     // 用于向服务器发消息
     sendIpcMessage(toInfo.userId, buf);
     this.emitInputEmpty();
@@ -51,7 +52,7 @@ class InputPanel extends Component {
 
   emitInputEmpty () {
     this.contentInput.focus();
-    this.setState({ input: '' });
+    this.setState({ input: '', msgId: this.state.msgId + 1 });
   }
 
   render () {
