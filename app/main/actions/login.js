@@ -6,7 +6,7 @@ export const loginFailActionCreator =
  dispatch => (...args) => {
    // 登录失败
    dispatch(createAction(LOGIN_FAIL, errMsg => errMsg,
-     () => ({ scope: 'local' }))(...args));
+     () => ({ scope: 'login' }))(...args));
  };
 
 

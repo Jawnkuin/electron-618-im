@@ -3,7 +3,7 @@ import { BrowserWindow } from 'electron';
 import actionCreators from '../../main/actions';
 import { stemKeys } from '../reducers/stem';
 import mainStore from '../../main/store';
-import { windowManager, WindowConfigs } from '../../utils/WindowManager';
+import { WindowConfigs, mainWindowManager } from '../../utils/WindowManager';
 import { TALK_PATH } from '../../configs';
 
 const Actions = actionCreators(mainStore);
@@ -33,7 +33,8 @@ export default (preState, newState) => {
             }
 
             const talkWin = new BrowserWindow(WindowConfigs.talk);
-            windowManager.add(talkWin, 'talk', () => {
+
+            mainWindowManager.add(talkWin, 'talk', () => {
               const loadInfo = {
                 buddyInfo: newBuddys[0],
                 selfInfo: mainStore.getState().login.user.userInfo

@@ -5,7 +5,7 @@ import createLogger from 'redux-logger'; // eslint-disable-line import/no-extran
 import {
   forwardToMain,
   replayActionRenderer
-} from 'electron-redux';
+} from 'electron-window-redux';
 
 import rootReducer from '../reducers';
 import * as counterActions from '../actions';

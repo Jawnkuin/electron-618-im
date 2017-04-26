@@ -1,6 +1,6 @@
 import {
   forwardToRenderer
-} from 'electron-redux';
+} from 'electron-window-redux';
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './reducers';
 

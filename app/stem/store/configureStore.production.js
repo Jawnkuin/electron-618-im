@@ -5,7 +5,7 @@ import promiseMiddleware from 'redux-promise';
 import {
   forwardToMain,
   replayActionRenderer
-} from 'electron-redux';
+} from 'electron-window-redux';
 import rootReducer from '../reducers';
 
 const enhancer = applyMiddleware(forwardToMain, promiseMiddleware, thunk);

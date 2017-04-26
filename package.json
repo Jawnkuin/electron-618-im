@@ -181,7 +181,7 @@
   "dependencies": {
     "antd": "^2.9.0",
     "electron-debug": "^1.1.0",
-    "electron-redux": "^1.0.2",
+    "electron-window-redux": "^1.0.4",
     "eslint-plugin-flowtype": "^2.30.4",
     "extract-text-webpack-plugin": "^2.0.0",
     "font-awesome": "^4.7.0",

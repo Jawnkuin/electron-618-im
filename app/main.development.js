@@ -1,8 +1,8 @@
 // @flow
 import { app, BrowserWindow } from 'electron'; // , Tray, Menu
-import { replayActionMain } from 'electron-redux';
+import { replayActionMain } from 'electron-window-redux';
 import mapStateToWindow from './utils/redux/mapStateToWindow';
-import { windowManager, WindowConfigs } from './utils/WindowManager';
+import { WindowConfigs, mainWindowManager } from './utils/WindowManager';
 import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
 import tcpClient from './utils/apis/tcp_client';
@@ -65,11 +65,13 @@ app.on('ready', async () => {
   // 根据修改的state更新window
   mapStateToWindow({}, mainStore, stateChangeHandlers);
 
+
   // 登录窗体
   const loginWindow = new BrowserWindow(WindowConfigs.login);
   // 主窗体
   // const stemWindow = new BrowserWindow(WindowConfigs.stem);
-  windowManager.add(loginWindow, 'login');
+  mainWindowManager.add(loginWindow, 'login');
+  console.log(mainWindowManager.loadedListeners);
   // windowManager.add(stemWindow, 'stem');
 
   // 会话窗体
