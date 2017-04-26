@@ -70,6 +70,7 @@ export const onUnReadMsgCntResponce = res => (resolve, reject) => {
   // 只有已经打开的会话才进行处理
   const openedSessions = mainStore.getState().stem.toBuddys;
   unReadInfoList.forEach((ri) => {
+    console.log('unReadInfo', ri);
     const openedIndex = _.findIndex(openedSessions, session => _.isEqual(session.userId, ri.sessionId));
     if (openedIndex >= 0) {
       resolve(ri);

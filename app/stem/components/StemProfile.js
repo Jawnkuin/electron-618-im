@@ -12,13 +12,13 @@ class StemProfile extends Component {
       userInfo: PropTypes.object
     }).isRequired
   }
+
   render () {
-    console.log(this.props);
     const { userInfo } = this.props.userInfo;
     return (
       <div className={styles.ProfileContainer}>
         <div className={styles.ImgBox}>
-          <img alt="sa" src={dummyimage('招標')} />
+          <img alt={userInfo.userNickName} src={dummyimage(userInfo.userNickName, null, 50)} />
         </div>
         <div className={styles.DetailBox}>
           <div className={styles.NameBox}>

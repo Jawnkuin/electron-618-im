@@ -19,7 +19,7 @@ const customPaddingStyle = (isLeft = true) => ({
 const formatNum = num => num.toLocaleString('cn', { minimumIntegerDigits: 2 });
 
 const dateFormat = (time) => {
-  const date = new Date(time);
+  const date = new Date(time * 1000);
   return `${formatNum(date.getHours())}:${formatNum(date.getMinutes())}:${formatNum(date.getSeconds())}`;
 };
 

@@ -10,6 +10,7 @@ class BasePanel extends Component {
   render () {
     return (
       <div className={styles.panel}>
+        <div className={styles.filter} />
         {this.props.children}
       </div>
     );

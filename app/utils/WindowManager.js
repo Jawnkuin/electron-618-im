@@ -16,8 +16,8 @@ export class WindowConfigs {
   static login = Object.assign({}, WindowConfigs.base, {
     width: 300, // 默认300，dev过程中适当增加宽度来容纳chrome开发者工具
     height: 565,
-    transparent: true, // true
-    resizable: false
+    resizable: false,
+    transparent: true
   })
 
   // 主窗体配置

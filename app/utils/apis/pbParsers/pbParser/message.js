@@ -9,8 +9,10 @@ export default (pbHeader, pbBodyBuffer) => {
   try {
     const IMMessageCmdIDs = IMBaseDefine.MessageCmdID;
     switch (pbHeader.commandId) {
+      // 接收到消息
       case IMMessageCmdIDs.CID_MSG_DATA:
         {
+          console.log('recieve msg', 'CID_MSG_DATA');
           const msgData = {
             header: pbHeader,
             body: IMMessage.IMMsgData.decode(pbBodyBuffer)
@@ -18,19 +20,23 @@ export default (pbHeader, pbBodyBuffer) => {
           Actions.onReceiveMessage(msgData.body);
           break;
         }
+      // 服务器接收消息标识
       case IMMessageCmdIDs.CID_MSG_DATA_ACK:
-        console.log({
+        console.log('msg ack', 'CID_MSG_DATA_ACK');
+        return ({
           header: pbHeader,
           body: IMMessage.IMMsgDataAck.decode(pbBodyBuffer)
         });
-        break;
+      // 消息已读标识
       case IMMessageCmdIDs.CID_MSG_READ_ACK:
-        console.log({
+        console.log('msg read', 'CID_MSG_READ_ACK');
+        return ({
           header: pbHeader,
           body: IMMessage.IMMsgDataReadAck.decode(pbBodyBuffer)
-        })();
-        break;
+        });
+      // 消息未读数量响应
       case IMMessageCmdIDs.CID_MSG_UNREAD_CNT_RESPONSE:
+        console.log('msg unread count responce', 'CID_MSG_UNREAD_CNT_RESPONSE');
         onUnReadMsgCntResponce({
           header: pbHeader,
           body: IMMessage.IMUnreadMsgCntRsp.decode(pbBodyBuffer)
@@ -38,23 +44,23 @@ export default (pbHeader, pbBodyBuffer) => {
           (unreadInfo) => {
             console.log('Opend Session', unreadInfo);
             // 获取消息列表
-            getMsgList(
-              unreadInfo.sessionId,
-              unreadInfo.latestMsgId,
-              unreadInfo.unreadCnt
-            );
+            // getMsgList(
+            //  unreadInfo.sessionId,
+            //  unreadInfo.latestMsgId,
+            //  unreadInfo.unreadCnt
+            // );
           },
           e => console.log('onUnReadMsgCntResponce Failure', e));
         break;
 
-
+      // 消息列表响应
       case IMMessageCmdIDs.CID_MSG_LIST_RESPONSE:
         {
           const msgListRes = {
             header: pbHeader,
             body: IMMessage.IMGetMsgListRsp.decode(pbBodyBuffer)
           };
-          console.log('RECIEVE_MESSAGE_LIST', msgListRes.body);
+          console.log('msg list responce', 'CID_MSG_LIST_RESPONSE');
           onGetMsgListResponce(msgListRes)(
           Actions.onReceiveMessage,
           (e) => { console.log('onGetMsgListResponce Failure', e); }

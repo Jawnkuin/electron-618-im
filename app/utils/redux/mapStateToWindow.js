@@ -4,7 +4,7 @@ import _ from 'lodash';
 //
 let preState = {};
 const loggerState = (prevState, newState) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' && false) {
     console.log('pre', prevState); // eslint-disable-line no-console
     console.log('new', newState); // eslint-disable-line no-console
     console.log(new Date(), '=============='); // eslint-disable-line no-console

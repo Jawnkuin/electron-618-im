@@ -1,3 +1,12 @@
+# 0.0.2 (2017.4.25)
+
+#### Fix
+
+- **BUG:** talk window now will get only one message when another user send only one.
+- **BUG:** talk window now will only show messages from the user talking to.
+- **BUG:** message time tag had been fixed to normally display.
+
+
 
 # 0.0.1 (2017.4.19)
 

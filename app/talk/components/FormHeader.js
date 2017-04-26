@@ -10,7 +10,7 @@ const FormHeader = ({ buddyInfo, closeSingleTalk }) => {
   return (
     <div className={styles.headerContainer}>
       <div className={styles.title}>
-        <img src={dummyImage(info.userNickName)} alt="LOGO" />
+        <img src={dummyImage(info.userNickName, 1)} alt="LOGO" />
         <div className={styles.nameBox}>
           <p>{info.userNickName}</p>
         </div>

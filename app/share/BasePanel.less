@@ -2,11 +2,30 @@
 
 .panel {
 	position: absolute;
-	background:  @primary-background;
 	left: 0;
 	bottom: 0;
 	top: 0;
 	right: 0;
+	width: 100%;
+	margin-bottom: 0;
+	overflow: hidden;
 	display: flex;
 	flex-direction: column;
+	background: transparent;
 }
+.filter{
+	-webkit-filter: blur(2px);
+	-moz-filter: blur(2px);
+	-ms-filter: blur(2px);
+	-o-filter: blur(2px);
+	filter: blur(2px);
+	position: absolute;
+	background: @primary-color;
+	z-index: -1;
+	left: -2px;
+	bottom: -2px;
+	top: -2px;
+	right: -2px;
+}
+
+/*	background:  @primary-background;*/

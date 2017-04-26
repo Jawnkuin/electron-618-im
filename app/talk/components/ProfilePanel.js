@@ -11,11 +11,11 @@ const ProfilePanel = ({ buddyInfo }) => {
   info.email = 'excdn@qq.com';
   return (
     <div className={styles.ProfilePanel}>
-      <img src={dummyImage(info.userNickName)} alt="LOGO" />
+      <img src={dummyImage(info.userNickName, 0, 50)} alt="LOGO" />
       <div className={styles.profileBox}>
         <div className={styles.profileItem}>
           <Tooltip title={'六一八信息科技有限公司'}>
-            <span><Icon type="home" /> {'六一八信息科技有限公司'}</span>
+            <span><Icon type="home" /> {'六一八信息科技'}</span>
           </Tooltip>
         </div>
         <div className={styles.profileItem}>

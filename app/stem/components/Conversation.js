@@ -10,7 +10,7 @@ export default () => (
       console.log('dbclick');
     }}
   >
-    <img src={dummyImage('李四')} alt={'李四'} />
+    <img src={dummyImage('李四', 0, 75)} alt={'李四'} />
     <div className={styles.ConversationDetail}>
       <div className={styles.NameBox}>{'李四'}</div>
       <div className={styles.HistoryBox}>{'好的'}</div>

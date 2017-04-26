@@ -2,11 +2,12 @@
 
 .headerContainer {
 	position: absolute;
-	right: 5px;
+	right: 0px;
 	font-size: 16px;
 	font-weight: 500;
 	.fontBtn {
 		color: @btn-normal-white;
+		padding: 6px 6px 2px;
 	}
 
 	.fontBtn:active {
@@ -19,6 +20,11 @@
 
 	.fontBtn:hover {
 	 color: @btn-normal-white-active;
+	 background:  rgba(255, 255, 255, 0.2);
+	}
+	.fontBtn:nth-last-child(1):hover{
+		color: @btn-normal-white-active;
+		background:  rgba(255, 100, 100, 0.8);
 	}
 
 }

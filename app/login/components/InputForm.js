@@ -58,9 +58,14 @@ class InputForm extends Component {
         >
           登&nbsp;&nbsp;录
         </Button>
-        <div className={styles.ErrorMessage}>
-          {this.props.loginstate.error}
-        </div>
+        {
+          this.props.loginstate.error ?
+          (<div className={styles.ErrorMessage}>
+            <Icon type="exclamation-circle" />
+            {` ${this.props.loginstate.error}`}
+          </div>)
+           : ''
+         }
       </div>
     );
   }

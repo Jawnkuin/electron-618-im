@@ -31,18 +31,24 @@
 .btnGroup {
 	.fontBtn {
 		color: @btn-normal-gray;
+		padding: 6px 6px 2px;
 	}
 
 	.fontBtn:active {
-		color: @btn-normal-gray-active;
+		color: @btn-normal-gray;
 	}
 
 	.fontBtn:focus {
-	 color: @btn-normal-gray-active;
+	 color: @btn-normal-gray;
 	}
 
 	.fontBtn:hover {
-	 color: @btn-normal-gray-active;
+	 color: @btn-normal-gray;
+	 background:  rgba(0, 0, 0, 0.2);
+	}
+	.fontBtn:nth-last-child(1):hover{
+		color: @btn-normal-white;
+		background:  rgba(255, 100, 100, 0.8);
 	}
 }
 
