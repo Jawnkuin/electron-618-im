@@ -9,9 +9,9 @@ const immutableState = {
 
 const stem = handleActions({
   OPEN_SINGLE_TALK: {
+    // 将打开的会话添加到会话里面里面
     next: (state = immutableState, action) => {
       const toBuddy = action.payload.toBuddy;
-      console.log(toBuddy);
       return Object.assign({}, state, {
         toBuddys: _.unionWith(state.toBuddys, [toBuddy], (f, l) => _.isEqual(f.userId, l.userId))
       });

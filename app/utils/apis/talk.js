@@ -41,6 +41,7 @@ export const sendMessage = (toSid, data) => {
 
 // 获取未读消息数量
 export const getUnreadMsgCnt = () => {
+  console.log('Echo', 'IMReadMsgCntReq');
   const selfId = mainStore.getState().login.user.userInfo.userId;
   const unReadMsgCntReq = IMMessage.IMUnreadMsgCntReq.create({
     userId: selfId
@@ -55,6 +56,7 @@ export const getUnreadMsgCnt = () => {
   tcpClient.sendPbToServer(unReadMsgCntReqBuf, serviceId, reqCmdId);
 };
 
+
 // 获得未读消息数量的反馈
 export const onUnReadMsgCntResponce = res => (resolve, reject) => {
   if (!res || !res.header || !res.body) {
@@ -68,14 +70,19 @@ export const onUnReadMsgCntResponce = res => (resolve, reject) => {
 
   const unReadInfoList = res.body.unreadinfoList;
   // 只有已经打开的会话才进行处理
-  const openedSessions = mainStore.getState().stem.toBuddys;
+  // const openedSessions = mainStore.getState().stem.toBuddys;
+  // console.log('openedSessions', openedSessions);
+  console.trace();
+  console.timeEnd('heartbeat');
+  /*
   unReadInfoList.forEach((ri) => {
-    console.log('unReadInfo', ri);
     const openedIndex = _.findIndex(openedSessions, session => _.isEqual(session.userId, ri.sessionId));
+    console.log('openedIndex', openedIndex);
     if (openedIndex >= 0) {
       resolve(ri);
     }
   });
+  */
 };
 
 function getMsgListReqBuf (sessionId, msgIdBegin, msgCnt) {

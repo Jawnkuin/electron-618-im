@@ -1,9 +1,6 @@
 @import "../../share/style/base.less";
 
 
-.BuddyItem li>a:hover:extend(.ListItem:hover){}
-.BuddyItem li>a:focus:extend(.ListItem:focus){}
-.BuddyItem li>a:active:extend(.ListItem:active){}
 .BuddyItem{
 	ul {
 		padding: 0 !important;
@@ -23,11 +20,17 @@
 	}
 }
 
-.TreeNode li > a :focus:extend(.ListItem:focus){}
+
 .TreeNode:extend(.ListItem){
 	font-size: 13px;
 	li a {
 		color: @text-black;
 		opacity: 1;
+	}
+	li a:hover {
+		background: inherit;
+	}
+	.BuddyItem ul.ant-tree-child-tree-open li:hover{
+		background: #cbeaff;
 	}
 }

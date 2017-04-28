@@ -4,23 +4,27 @@
 .ConversationItem:focus:extend(.ListItem:focus){}
 .ConversationItem:active:extend(.ListItem:active){}
 .ConversationItem:extend(.ListItem){
-	height: 45px;
+	height: 48px;
 	display: flex;
 	padding: 5px 0px;
 	img{
 		width: 35px;
 		height: 35px;
 		flex: 0 1 auto;
-		margin: 5px;
+		margin: 0 5px;
 	}
 	.ConversationDetail{
-		margin: 5px;
+		margin: 0 5px;
 		flex: 1 1 auto;
 		.NameBox{
 			color: @text-black;
+			display: inline-block;
 			font-size: 13px;
+			vertical-align: top;
 		}
 		.HistoryBox{
+			position: relative;
+			top:2px;
 			color: @text-gray-a4;
 			font-size: 12px;
 		}

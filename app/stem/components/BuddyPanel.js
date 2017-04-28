@@ -7,9 +7,15 @@ import OrganizationsContainer from '../containers/OrganizationsContainer';
 
 const TabPane = Tabs.TabPane;
 
-const conversations = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12].map(key => (
+const conversations = [
+  { key: 1, name: '李四', history: '[表情]', count: 1 },
+  { key: 2, name: '林巍', history: '好的', count: 0 }
+].map(item => (
   <ConversationItem
-    key={key}
+    key={item.key}
+    name={item.name}
+    history={item.history}
+    count={item.count}
   />
 ));
 

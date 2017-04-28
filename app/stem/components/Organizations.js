@@ -36,7 +36,8 @@ class Organizations extends Component {
       appendedChildren: false,
       expandedKeys: []
     };
-    this.toggleExpand = this.toggleExpand.bind(this);
+    this.onToggleExpand = this.onToggleExpand.bind(this);
+    this.onToggleSelect = this.onToggleSelect.bind(this);
     this.getTreeNodes = this.getTreeNodes.bind(this);
   }
 
@@ -65,19 +66,26 @@ class Organizations extends Component {
             if (!node.members) {
               node.members = [];
             }
-            if (node.members.indexOf(user) < 0) { node.members.push(user); }
+            const index = _.findIndex(node.members, m => _.isEqual(m.userId, user.userId));
+            if (index < 0) { node.members.push(user); }
           }
         });
+        if (node.members && node.members.length) {
+          node.members.sort((a, b) => a.priority >= b.priority);
+        }
       });
       this.setState({ deptTree: newDeptTree, appendedChildren: true });
     }
   }
 
-  toggleExpand (key, e) {
-    global.console.log(key);
-    console.log(e);
-    const keyIndex = this.state.expandedKeys.indexOf(key);
+  onToggleExpand (expandedkeys) {
+    this.setState({ expandedKeys: expandedkeys });
+  }
+
+  onToggleSelect (selectedKeys, e) {
+    const key = e.node.props.eventKey;
     const newArray = Array.from(this.state.expandedKeys);
+    const keyIndex = newArray.indexOf(key);
     if (keyIndex >= 0) {
       newArray.splice(keyIndex, 1);
     } else {
@@ -94,7 +102,6 @@ class Organizations extends Component {
       return (
         <TreeNode
           className={styles.BuddyItem}
-          onSelect={this.toggleExpand}
           title={`${node.deptName} 0/${node.members.length}`}
           key={key}
         >
@@ -107,7 +114,6 @@ class Organizations extends Component {
       const key = node.deptId.low ? `${node.deptId.high}-${node.deptId.low}` : node.deptId;
       return (
         <TreeNode
-          onSelect={this.toggleExpand}
           title={`${node.deptName} `} // ${node.online}/${node.total}
           key={key}
         >
@@ -116,6 +122,7 @@ class Organizations extends Component {
       );
     }
     // 渲染成员
+    const key = node.userId.low ? `${node.userId.high}-${node.userId.low}` : node.userId;
     return (
       <TreeNode
         title={
@@ -127,22 +134,23 @@ class Organizations extends Component {
             <div className={styles.NameBox}>{node.userNickName}</div>
           </div>
         }
-        key={node.userId.low ? `${node.userId.high}-${node.userId.low}` : node.userId}
+        key={key}
       />
     );
   };
 
   render () {
-    console.log(this.state.expandedKeys);
     return (
       <Tree
         className={styles.TreeNode}
+        onSelect={this.onToggleSelect}
+        onExpand={this.onToggleExpand}
+        expandedKeys={this.state.expandedKeys}
       >
         {
           (this.state.deptTree && this.state.deptTree.children) &&
           this.state.deptTree.children.map((node) => {
             const tree = this.getTreeNodes(node);
-            console.log(tree);
             return tree;
           })
         }

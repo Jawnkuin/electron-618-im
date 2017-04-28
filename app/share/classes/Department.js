@@ -49,6 +49,7 @@ export default class Department {
           newList.push(dpt);
         }
       });
+      parent.children.sort((a, b) => a.priority >= b.priority);
       parent.children.forEach(child => appendChildren(child, newList));
     };
 

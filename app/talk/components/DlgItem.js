@@ -25,7 +25,7 @@ const dateFormat = (time) => {
 
 const DlgItem = ({ time, name, msg, isLeft }) => (
   <div className={styles.DlgItem} style={customPaddingStyle(isLeft).DlgItem}>
-    <img src={dummyImage(name)} alt={name} />
+    <img src={dummyImage(name, 1)} alt={name} />
     <div className={styles.DlgDetail} style={customPaddingStyle(isLeft).DlgDetail}>
       <div className={styles.nameBox}>
         {`${name} ${dateFormat(time)}`}

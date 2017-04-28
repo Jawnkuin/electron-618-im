@@ -10,8 +10,6 @@ const Actions = actionCreators(mainStore);
 
 // payload ：userId，latestUpdateTime
 export default (preState, newState) => {
-  console.log('stemhandlers called');
-
   const stateKeys = _.keys(newState);
 
   // 查看每一个子状态 *值* 是否变化，若变化执行对应的handler
