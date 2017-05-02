@@ -2,7 +2,7 @@ import { IMOther, IMBaseDefine } from './pbParsers/pbModules';
 import tcpClient from './tcp_client';
 import { getUnreadMsgCnt } from './talk';
 
-const HEART_BEAT_INTERVAL = 3000; // ms
+const HEART_BEAT_INTERVAL = 8000; // ms, development环境下太频繁会阻塞控制台输出
 
 // 用来获取service id
 const serviceIdEnums = IMBaseDefine.ServiceID;

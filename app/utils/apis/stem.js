@@ -40,9 +40,7 @@ export const getAllUser = (uid, latestUpdateTime) => {
   const allUserReqBuf = getAllUserReqBuf(uid, latestUpdateTime);
   const buddyListServiceId = serviceIdEnums.SID_BUDDY_LIST;
   const allUserReqCmdId = buddyListCmdIdEnums.CID_BUDDY_LIST_ALL_USER_REQUEST;
-  if (!tcpClient.client) {
-    tcpClient.initConnToServer();
-  }
+
   tcpClient.sendPbToServer(allUserReqBuf, buddyListServiceId, allUserReqCmdId);
 };
 
@@ -74,8 +72,6 @@ export const getDepList = (uid, latestUpdateTime) => {
   const reqBuf = getDepListReqBuf(uid, latestUpdateTime);
   const serviceId = serviceIdEnums.SID_BUDDY_LIST;
   const reqCmdId = buddyListCmdIdEnums.CID_BUDDY_LIST_DEPARTMENT_REQUEST;
-  if (!tcpClient.client) {
-    tcpClient.initConnToServer();
-  }
+
   tcpClient.sendPbToServer(reqBuf, serviceId, reqCmdId);
 };

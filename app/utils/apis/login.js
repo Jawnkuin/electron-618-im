@@ -59,9 +59,6 @@ export const doLogin = (name, psw) => {
   const loginServiceId = serviceIdEnums.SID_LOGIN;
   const loginReqCmdId = loginCmdIdEnums.CID_LOGIN_REQ_USERLOGIN;
 
-  if (!tcpClient.client) {
-    tcpClient.initConnToServer();
-  }
 
   tcpClient.sendPbToServer(logReqBuf, loginServiceId, loginReqCmdId);
 };

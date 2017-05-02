@@ -32,9 +32,7 @@ export const sendMessage = (toSid, data) => {
   const reqBuf = getMessageBuf(toSid, data);
   const serviceId = serviceIdEnums.SID_MSG;
   const reqCmdId = messageCmdIdEnums.CID_MSG_DATA;
-  if (!tcpClient.client) {
-    tcpClient.initConnToServer();
-  }
+
   tcpClient.sendPbToServer(reqBuf, serviceId, reqCmdId);
 };
 
@@ -50,9 +48,7 @@ export const getUnreadMsgCnt = () => {
 
   const serviceId = serviceIdEnums.SID_MSG;
   const reqCmdId = messageCmdIdEnums.CID_MSG_UNREAD_CNT_REQUEST;
-  if (!tcpClient.client) {
-    tcpClient.initConnToServer();
-  }
+
   tcpClient.sendPbToServer(unReadMsgCntReqBuf, serviceId, reqCmdId);
 };
 
@@ -70,11 +66,11 @@ export const onUnReadMsgCntResponce = res => (resolve, reject) => {
 
   const unReadInfoList = res.body.unreadinfoList;
   // 只有已经打开的会话才进行处理
-  // const openedSessions = mainStore.getState().stem.toBuddys;
-  // console.log('openedSessions', openedSessions);
+  const openedSessions = mainStore.getState().stem.toBuddys;
+  console.log('openedSessions', openedSessions);
   console.trace();
   console.timeEnd('heartbeat');
-  /*
+
   unReadInfoList.forEach((ri) => {
     const openedIndex = _.findIndex(openedSessions, session => _.isEqual(session.userId, ri.sessionId));
     console.log('openedIndex', openedIndex);
@@ -82,7 +78,6 @@ export const onUnReadMsgCntResponce = res => (resolve, reject) => {
       resolve(ri);
     }
   });
-  */
 };
 
 function getMsgListReqBuf (sessionId, msgIdBegin, msgCnt) {
@@ -104,9 +99,7 @@ export const getMsgList = (sessionId, msgIdBegin, msgCnt) => {
   const reqBodyBuf = getMsgListReqBuf(sessionId, msgIdBegin, msgCnt);
   const serviceId = serviceIdEnums.SID_MSG;
   const reqCmdId = messageCmdIdEnums.CID_MSG_LIST_REQUEST;
-  if (!tcpClient.client) {
-    tcpClient.initConnToServer();
-  }
+
   tcpClient.sendPbToServer(reqBodyBuf, serviceId, reqCmdId);
 };
 
@@ -127,9 +120,7 @@ const msgDataReadAckReq = (senderId, msgId) => {
   const reqBuf = getMsgDataReadAckReqBuf(senderId, msgId);
   const serviceId = serviceIdEnums.SID_MSG;
   const reqCmdId = messageCmdIdEnums.CID_MSG_READ_ACK;
-  if (!tcpClient.client) {
-    tcpClient.initConnToServer();
-  }
+
   tcpClient.sendPbToServer(reqBuf, serviceId, reqCmdId);
 };
 
