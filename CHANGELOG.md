@@ -1,3 +1,13 @@
+# 0.0.3 (2017.5.02)
+
+#### Fix
+
+- **BUG:** organization tree will not get duplicate keys.
+
+#### Features
+
+- **UI:** organization tree, buttons, login window, dialoag history list, background
+
 # 0.0.2 (2017.4.25)
 
 #### Fix
