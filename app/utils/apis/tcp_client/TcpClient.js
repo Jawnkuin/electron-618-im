@@ -1,5 +1,57 @@
-import net from 'net';
-import { HEADER_LENGTH, JKPBHeader } from './JKPBHeader';
+const net = require('net');
+
+
+const HEADER_LENGTH = 16;
+const VERSION = 1;
+
+class JKPBHeader {
+
+  constructor () {
+    this.length = 0; // UINT32
+    this.version = VERSION; // UINT16
+    this.flag = 0; // UINT16
+    this.moduleId = 0; // UINT16
+    this.commandId = 0; // UINT16
+    this.seqNumber = 0; // UINT16
+    this.reserved = 0; // UINT16
+
+    this.HeaderBuff = Buffer.allocUnsafe(HEADER_LENGTH);
+  }
+
+  serialize () {
+    this.HeaderBuff.writeUInt32BE(this.length, 0);
+    this.HeaderBuff.writeUInt16BE(this.version, 4);
+    this.HeaderBuff.writeUInt16BE(this.flag, 6);
+    this.HeaderBuff.writeUInt16BE(this.moduleId, 8);
+    this.HeaderBuff.writeUInt16BE(this.commandId, 10);
+    this.HeaderBuff.writeUInt16BE(this.seqNumber, 12);
+    this.HeaderBuff.writeUInt16BE(this.reserved, 14);
+  }
+
+  getSerializedBuffer () {
+    this.serialize();
+    return this.HeaderBuff;
+  }
+
+  unSerialize (headerBuf) {
+    if (!headerBuf || !headerBuf.length || headerBuf.length !== HEADER_LENGTH) {
+      throw new Error('Error unSerialize header buffer');
+    }
+    try {
+      this.HeaderBuff = Buffer.from(headerBuf);
+      this.length = this.HeaderBuff.readUInt32BE(0);
+      this.version = this.HeaderBuff.readUInt16BE(4);
+      this.flag = this.HeaderBuff.readUInt16BE(6);
+      this.moduleId = this.HeaderBuff.readUInt16BE(8);
+      this.commandId = this.HeaderBuff.readUInt16BE(10);
+      this.seqNumber = this.HeaderBuff.readUInt16BE(12);
+      this.reserved = this.HeaderBuff.readUInt16BE(14);
+    } catch (e) {
+      throw new Error(`Error JKPBHeader unSerialize ${e.message}`);
+    }
+  }
+}
+
 
 const ipaddr = '192.168.8.41';
 const port = 8000;
@@ -15,7 +67,7 @@ class TCPClient {
 
   // 可能一次请求由多个包组成，
   // 根据header声明的长度，来确定是否在某次on data event后执行处理
-  checkShouldHandlePackages = () => {
+  checkShouldHandlePackages () {
     // 连接已经断开需要处理
     if (this.client.destroyed) {
       return true;
@@ -25,7 +77,7 @@ class TCPClient {
 
   // 可能同时会发过来各种东西，需要区分
   // 有多个包的情况
-  onReceiveData = (buff) => {
+  onReceiveData (buff) {
     try {
       if (!this.resPBHeader && buff.length < HEADER_LENGTH) {
         throw new Error(`Buffer length is required lge ${HEADER_LENGTH}, current buffer lenth: ${buff.length}`);
@@ -90,16 +142,16 @@ class TCPClient {
       this.totalLenth = 0;
       throw new Error(`Error on onReceiveData ${e.message}`);
     }
-  };
+  }
 
   initConnToServer () {
     if (!this.client) {
       console.log('initConnToServer'); // eslint-disable-line no-console
       this.client = new net.Socket(); // return a Node socket
       console.log('initConnToServer connecting'); // eslint-disable-line no-console
+      /*
       // this.client.setKeepAlive(true, 10000);
-      this.client.on('connect', () => console.log('onConnect'));
-      this.client.on('data', (chunck) => {
+      this.client.on('data', function (chunck) {
           // 包含header 和 body的 resData
         try {
           this.onReceiveData(chunck);
@@ -107,18 +159,20 @@ class TCPClient {
           console.log('onDataError', e.message);
         }
       });
-      this.client.on('end', () => {
+      this.client.on('end', function () {
         console.log(`client end ${this.seqNumber}`);
       });
       if (!this.client.connecting) {
         this.client.connect(port, ipaddr);
       }
+      */
     }
-
+/*
     if (this.client.destroyed) {
       this.seqNumber = 0;
       this.client.connect(port, ipaddr);
     }
+    */
   }
 
   /**
@@ -137,7 +191,7 @@ class TCPClient {
     }
   }
 
-  static getSendPacket (pbBody, moduleId, cmdId, seq) {
+  getSendPacket (pbBody, moduleId, cmdId, seq) {
     const mJKPBHeader = new JKPBHeader();
 
 
@@ -159,13 +213,16 @@ class TCPClient {
   }
 }
 
-
-const onlyClient = new TCPClient();
-
-// 接受父进程调用
-process.on('message', (m, socket) => {
-  if (m === 'socket') {
-    console.log('child_message', m);
+try {
+  const onlyClient = new TCPClient();
+  // 接受父进程调用
+  process.on('message', (socket) => {
+    console.log('child_message', socket);
+    console.log('onlyClient', onlyClient);
     onlyClient.sendPbToServer(socket.pbbody, socket.moduleId, socket.cmdId);
-  }
-});
+  });
+
+  // process.send({ resPBHeader: 1, pbBodyBuf: 2 });
+} catch (e) {
+  console.log(e);
+}
