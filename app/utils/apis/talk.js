@@ -64,20 +64,20 @@ export const onUnReadMsgCntResponce = res => (resolve, reject) => {
     return;
   }
 
-  const unReadInfoList = res.body.unreadinfoList;
+  console.log('unReadInfoList', res.body.unreadinfoList);
   // 只有已经打开的会话才进行处理
   const openedSessions = mainStore.getState().stem.toBuddys;
   console.log('openedSessions', openedSessions);
-  console.trace();
-  console.timeEnd('heartbeat');
-
+  resolve(res.body.unreadinfoList[0]);
+    /*
   unReadInfoList.forEach((ri) => {
     const openedIndex = _.findIndex(openedSessions, session => _.isEqual(session.userId, ri.sessionId));
-    console.log('openedIndex', openedIndex);
+    // console.log('openedIndex', openedIndex);
     if (openedIndex >= 0) {
       resolve(ri);
     }
   });
+    */
 };
 
 function getMsgListReqBuf (sessionId, msgIdBegin, msgCnt) {
@@ -116,7 +116,7 @@ function getMsgDataReadAckReqBuf (senderId, msgId) {
   return reqBodyBuf;
 }
 
-const msgDataReadAckReq = (senderId, msgId) => {
+export const msgDataReadAckReq = (senderId, msgId) => {
   const reqBuf = getMsgDataReadAckReqBuf(senderId, msgId);
   const serviceId = serviceIdEnums.SID_MSG;
   const reqCmdId = messageCmdIdEnums.CID_MSG_READ_ACK;

@@ -35,7 +35,7 @@ const DlgItem = ({ time, name, msg, isLeft }) => (
       </div>
     </div>
   </div>
-);
+  );
 
 
 DlgItem.propTypes = {

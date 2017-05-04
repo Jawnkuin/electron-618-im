@@ -42,22 +42,39 @@ const dlgInfo = handleActions({
       return state;
     }
   },
+  // 接收到消息
   RECIEVE_MESSAGE: {
     next: (state = immutableState.dlgInfo, action) => {
       const fromUserId = action.payload.fromUserId;
       if (_.isEqual(fromUserId, state.buddyUserId)) {
         const newArray = Array.from(state.msgList);
+        const newMsg = action.payload;
+        newMsg.readAck = false; // 添加未读标记
         newArray.push(action.payload);
         return Object.assign({}, state, { msgList: newArray });
       }
       return state;
     }
   },
+  // 窗体对发送消息事件的响应，与发送到服务器的逻辑
   SEND_MESSAGE: {
     next: (state = immutableState.dlgInfo, action) => {
       const newArray = Array.from(state.msgList);
       newArray.push(action.payload);
       return Object.assign({}, state, { msgList: newArray });
+    }
+  },
+  // 通知服务器已读消息
+  MESSAGE_READ_ACK: {
+    next: (state = immutableState.dlgInfo, action) => {
+      const newArray = Array.from(state.msgList);
+      const msgId = action.payload.msgId;
+      const msgIndex = _.findIndex(newArray, m => _.isEqual(m.msgId, msgId));
+      if (msgIndex >= 0 && !newArray[msgIndex].readAck) {
+        newArray[msgIndex].readAck = true;
+        return Object.assign({}, state, { msgList: newArray });
+      }
+      return state;
     }
   }
 }, immutableState.dlgInfo);

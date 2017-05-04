@@ -6,6 +6,7 @@ import { loginKeys } from '../reducers/login';
 import { WindowConfigs, mainWindowManager } from '../../utils/WindowManager';
 import { STEM_PATH } from '../../configs';
 import { startHeartBeatLooper } from '../../utils/apis/main';
+import { getUnreadMsgCnt } from '../../utils/apis/talk';
 
 const Actions = actionCreators(mainStore);
 
@@ -37,9 +38,10 @@ export default (preState, newState, dispatch, getState) => {
 
             stemWin.loadURL(STEM_PATH);
 
-            // 循环发送心跳，后期放到独立模块
-            global.hearBeatLopper = startHeartBeatLooper;
-            global.hearBeatLopper();
+            // 发送心跳循环
+            startHeartBeatLooper();
+            // 请求未读消息数量
+            getUnreadMsgCnt();
           }
 
           break;

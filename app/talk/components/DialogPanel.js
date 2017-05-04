@@ -18,13 +18,14 @@ class DialogPanel extends Component {
     buddyInfo: PropTypes.shape({
       buddyInfo: PropTypes.object.isRequired,
       selfInfo: PropTypes.object.isRequired
-    }).isRequired
+    }).isRequired,
+    sendMessageReadAck: PropTypes.func.isRequired
   };
 
   render () {
     const { msgList } = this.props.dlgInfo;
     const { selfInfo, buddyInfo } = this.props.buddyInfo;
-
+    const sendMessageReadAck = this.props.sendMessageReadAck;
 
     return (
       <div className={styles.DialogPanel}>
@@ -34,6 +35,9 @@ class DialogPanel extends Component {
               const utf8Buf = Buffer.from(dlg.msgData, 'base64');
               const msgStr = utf8Buf.toString('utf8');
               const isFromSelf = _.isEqual(dlg.fromUserId, selfInfo.userId);
+              if (!isFromSelf && !dlg.readAck) {
+                sendMessageReadAck(dlg.fromUserId, dlg.msgId);
+              }
               return (
                 <DlgItem
                   key={

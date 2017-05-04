@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './InputPanel.less';
-import { sendIpcMessage } from '../apis';
+
 import { closeCurrentWindow } from '../../share/rendererWindow';
 
 
@@ -30,7 +30,6 @@ class InputPanel extends Component {
   }
 
   onSendButtonClick () {
-    const toInfo = this.props.buddyInfo.buddyInfo;
     const fromInfo = this.props.buddyInfo.selfInfo;
     const sendMessage = this.props.sendMessage;
     if (!this.state.input) {
@@ -39,10 +38,9 @@ class InputPanel extends Component {
     const buf = Buffer.from(this.state.input, 'utf8');
     // const base64String = buf.toString('base64');
     const sendTime = new Date().getTime();
-    // 用于更改本线程内的状态,后期将electron-redux重写之后再合并
+    // 用于更改本线程内的状态,并向服务器发送消息
     sendMessage(fromInfo.userId, parseInt(sendTime / 1000, 10), buf, this.state.msgId);
-    // 用于向服务器发消息
-    sendIpcMessage(toInfo.userId, buf);
+
     this.emitInputEmpty();
   }
 

@@ -1,11 +1,11 @@
 const net = require('net');
 
-
+const ipaddr = '192.168.8.41';
+const port = 8000;
 const HEADER_LENGTH = 16;
 const VERSION = 1;
 
 class JKPBHeader {
-
   constructor () {
     this.length = 0; // UINT32
     this.version = VERSION; // UINT16
@@ -52,9 +52,6 @@ class JKPBHeader {
   }
 }
 
-
-const ipaddr = '192.168.8.41';
-const port = 8000;
 
 class TCPClient {
   constructor () {
@@ -144,35 +141,33 @@ class TCPClient {
     }
   }
 
+  // 开启连接
   initConnToServer () {
     if (!this.client) {
       console.log('initConnToServer'); // eslint-disable-line no-console
       this.client = new net.Socket(); // return a Node socket
       console.log('initConnToServer connecting'); // eslint-disable-line no-console
-      /*
-      // this.client.setKeepAlive(true, 10000);
-      this.client.on('data', function (chunck) {
+      this.client.on('connect', () => console.log('onConnect')); // eslint-disable-line no-console
+      this.client.on('data', (chunck) => {
           // 包含header 和 body的 resData
         try {
           this.onReceiveData(chunck);
         } catch (e) {
-          console.log('onDataError', e.message);
+          console.log('onDataError', e.message); // eslint-disable-line no-console
         }
       });
-      this.client.on('end', function () {
-        console.log(`client end ${this.seqNumber}`);
+      this.client.on('end', () => {
+        console.log(`client end ${this.seqNumber}`); // eslint-disable-line no-console
       });
       if (!this.client.connecting) {
         this.client.connect(port, ipaddr);
       }
-      */
     }
-/*
+
     if (this.client.destroyed) {
       this.seqNumber = 0;
       this.client.connect(port, ipaddr);
     }
-    */
   }
 
   /**
@@ -191,7 +186,7 @@ class TCPClient {
     }
   }
 
-  getSendPacket (pbBody, moduleId, cmdId, seq) {
+  static getSendPacket (pbBody, moduleId, cmdId, seq) {
     const mJKPBHeader = new JKPBHeader();
 
 
@@ -199,13 +194,14 @@ class TCPClient {
     cmdId && (mJKPBHeader.commandId = cmdId);
     seq && (mJKPBHeader.seqNumber = seq);
 
-    const socketLength = HEADER_LENGTH + pbBody.length;
+    const socketLength = HEADER_LENGTH + pbBody.data.length;
     mJKPBHeader.length = socketLength;
     try {
       // 由PBHeader和PBBody组成
-      const sendBuffer = Buffer.allocUnsafe(socketLength);
-      mJKPBHeader.getSerializedBuffer().copy(sendBuffer, 0);
-      pbBody.copy(sendBuffer, HEADER_LENGTH);
+
+      const pbBodyBuf = Buffer.from(pbBody.data);
+      const sendBuffer = Buffer.concat([mJKPBHeader.getSerializedBuffer(), pbBodyBuf], socketLength);
+
       return sendBuffer;
     } catch (e) {
       throw new Error(`Error on getSendPacket ${e.message}`);
@@ -213,16 +209,22 @@ class TCPClient {
   }
 }
 
-try {
-  const onlyClient = new TCPClient();
-  // 接受父进程调用
-  process.on('message', (socket) => {
-    console.log('child_message', socket);
-    console.log('onlyClient', onlyClient);
-    onlyClient.sendPbToServer(socket.pbbody, socket.moduleId, socket.cmdId);
-  });
+const tcpClient = new TCPClient();
 
-  // process.send({ resPBHeader: 1, pbBodyBuf: 2 });
-} catch (e) {
-  console.log(e);
-}
+process.on('message', (m) => {
+  try {
+    if (!tcpClient.client || tcpClient.client.destroyed) {
+      tcpClient.initConnToServer();
+    }
+    if (m.s === 'SEND_PB') {
+      tcpClient.sendPbToServer(m.pbObj.pbbody, m.pbObj.moduleId, m.pbObj.cmdId);
+    }
+    if (m.s === 'HEART_BEAT') {
+      setInterval(() => {
+        tcpClient.sendPbToServer(m.pbObj.pbbody, m.pbObj.moduleId, m.pbObj.cmdId);
+      }, m.interval);
+    }
+  } catch (e) {
+    console.log(e); // eslint-disable-line no-console
+  }
+});

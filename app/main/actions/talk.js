@@ -1,7 +1,8 @@
 import { createAction } from 'redux-actions';
 import {
   ON_LOAD_TALK,
-  RECIEVE_MESSAGE
+  RECIEVE_MESSAGE,
+  RECIEVE_UNREAD_MESSAGE
 } from '../../talk/actions';
 
 
