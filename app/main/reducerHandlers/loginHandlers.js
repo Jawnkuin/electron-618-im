@@ -7,6 +7,7 @@ import { WindowConfigs, mainWindowManager } from '../../utils/WindowManager';
 import { STEM_PATH } from '../../configs';
 import { startHeartBeatLooper } from '../../utils/apis/main';
 import { getUnreadMsgCnt } from '../../utils/apis/talk';
+import { getDepList, getAllUser } from '../../utils/apis/stem';
 
 const Actions = actionCreators(mainStore);
 
@@ -22,7 +23,7 @@ export default (preState, newState, dispatch, getState) => {
     if (!newState[key] || _.isEmpty(newState[key])) {
       return;
     }
-    // 登录不需要变化，待改
+    // 发生了变化
     if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
       switch (key) {
         case loginKeys.user:
@@ -34,14 +35,17 @@ export default (preState, newState, dispatch, getState) => {
             mainWindowManager.add(stemWin, 'stem', () => {
               mainWindowManager.close(loginWinId);
               Actions.onLoadUser(newState[key]);
+              const userId = newState[key].userInfo.userId;
+              getDepList(userId, 0);
+              getAllUser(userId, 0);
+              // 请求未读消息数量
+              getUnreadMsgCnt();
             });
 
             stemWin.loadURL(STEM_PATH);
 
             // 发送心跳循环
             startHeartBeatLooper();
-            // 请求未读消息数量
-            getUnreadMsgCnt();
           }
 
           break;

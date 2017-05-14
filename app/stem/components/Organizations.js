@@ -5,7 +5,6 @@ import _ from 'lodash';
 import styles from './Organizations.less';
 import Department from '../../share/classes/Department';
 import dummyImage from '../../utils/dummyimage';
-import { getAllUsers, getDeptList } from '../apis';
 
 const TreeNode = Tree.TreeNode;
 
@@ -16,13 +15,31 @@ const TreeNode = Tree.TreeNode;
 * Use `Number.MAX_SAFE_INTEGER` to check
 **/
 
+
+const appendBuddyToOrg = (deptTree, userList) => {
+  const newDeptTree = _.cloneDeep(deptTree);
+  const leafDepts = newDeptTree.getLeafDescendants();
+  leafDepts.forEach((node) => {
+    userList.forEach((user) => {
+      if (_.isEqual(user.departmentId, node.deptId)) {
+        if (!node.members) {
+          node.members = [];
+        }
+        const index = _.findIndex(node.members, m => _.isEqual(m.userId, user.userId));
+        if (index < 0) { node.members.push(user); }
+      }
+    });
+    if (node.members && node.members.length) {
+      node.members.sort((a, b) => a.priority >= b.priority);
+    }
+  });
+  return newDeptTree;
+};
+
 // 主面板组织列表
 class Organizations extends Component {
   // 类型设置
   static propTypes = {
-    userInfo: PropTypes.shape({
-      userInfo: PropTypes.object
-    }).isRequired,
     allUsersInfo: PropTypes.shape({
       deptListInfo: PropTypes.object,
       userListInfo: PropTypes.object
@@ -32,20 +49,28 @@ class Organizations extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      deptTree: {},
+      // 是否已经添加用户成员
       appendedChildren: false,
       expandedKeys: []
     };
+
+    const { allUsersInfo } = props;
+    let orgTree = {};
+    if (allUsersInfo.deptListInfo.deptList) {
+      orgTree = Department.getDeptTree(allUsersInfo.deptListInfo.deptList);
+      this.state.deptTree = orgTree;
+    }
+
+    if (!this.state.appendedChildren && allUsersInfo.userListInfo.userList) {
+      const userList = allUsersInfo.userListInfo.userList;
+      const newDeptTree = appendBuddyToOrg(orgTree, userList);
+      this.state.deptTree = newDeptTree;
+    }
     this.onToggleExpand = this.onToggleExpand.bind(this);
     this.onToggleSelect = this.onToggleSelect.bind(this);
     this.getTreeNodes = this.getTreeNodes.bind(this);
   }
 
-  componentDidMount () {
-    const { userInfo } = this.props;
-    // 获取部门列表
-    getDeptList(userInfo.userInfo.userId, 0);
-  }
 
   componentWillReceiveProps (nextProps) {
     const { allUsersInfo } = nextProps;
@@ -53,27 +78,12 @@ class Organizations extends Component {
     if (!this.state.deptTree.children && allUsersInfo.deptListInfo.deptList) {
       const deptTree = Department.getDeptTree(allUsersInfo.deptListInfo.deptList);
       this.setState({ deptTree });
-      getAllUsers();
+      // getAllUsers();
     }
 
     if (!this.state.appendedChildren && allUsersInfo.userListInfo.userList) {
       const userList = allUsersInfo.userListInfo.userList;
-      const newDeptTree = _.clone(this.state.deptTree);
-      const leafDepts = newDeptTree.getLeafDescendants();
-      leafDepts.forEach((node) => {
-        userList.forEach((user) => {
-          if (_.isEqual(user.departmentId, node.deptId)) {
-            if (!node.members) {
-              node.members = [];
-            }
-            const index = _.findIndex(node.members, m => _.isEqual(m.userId, user.userId));
-            if (index < 0) { node.members.push(user); }
-          }
-        });
-        if (node.members && node.members.length) {
-          node.members.sort((a, b) => a.priority >= b.priority);
-        }
-      });
+      const newDeptTree = this.appendBuddyToOrg(userList);
       this.setState({ deptTree: newDeptTree, appendedChildren: true });
     }
   }

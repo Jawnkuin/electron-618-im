@@ -21,6 +21,7 @@ class InputPanel extends Component {
     closeSingleTalk: PropTypes.func.isRequired
   }
 
+
   constructor (props) {
     super(props);
     this.state = {
@@ -55,7 +56,15 @@ class InputPanel extends Component {
 
   render () {
     return (
-      <div className={styles.InputPanel}>
+      <div
+        className={styles.InputPanel}
+        onKeyDown={(e) => {
+          if (e.key && e.key === 'Enter') {
+            e.preventDefault();
+            this.onSendButtonClick();
+          }
+        }}
+      >
         <div className={styles.InputControl}>
           <div className={styles.InputControlBtnGroup}>
             <button className={styles.fontBtn}>
@@ -80,7 +89,7 @@ class InputPanel extends Component {
             value={this.state.input}
             onChange={(e) => { this.onChangeInput(e); }}
             ref={(node) => { this.contentInput = node; }}
-            autosize
+            autosize={{ minRows: 5 }}
           />
         </div>
         <div className={styles.InputRooter}>

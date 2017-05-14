@@ -8,7 +8,6 @@ const Actions = actionCreators(mainStore);
 export default (pbHeader, pbBodyBuffer) => {
   try {
     const IMLoginCmdIDs = IMBaseDefine.LoginCmdID;
-    console.log('pbHeader', pbHeader);
     switch (pbHeader.commandId) {
       case IMLoginCmdIDs.CID_LOGIN_RES_USERLOGIN:
         onLoginResponce({

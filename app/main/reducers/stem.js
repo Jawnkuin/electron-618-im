@@ -4,7 +4,8 @@ import _ from 'lodash';
 
 // 从stem窗口打开的对话框
 const immutableState = {
-  toBuddys: []
+  toBuddys: [],
+  userList: []
 };
 
 const stem = handleActions({
@@ -12,8 +13,10 @@ const stem = handleActions({
     // 将打开的会话添加到会话里面里面
     next: (state = immutableState, action) => {
       const toBuddy = action.payload.toBuddy;
+      const copyedToBuddy = Object.assign({}, toBuddy, { userId: Object.assign({}, toBuddy.userId) });
+      const toBuddys = _.unionWith(state.toBuddys, [copyedToBuddy], (f, l) => _.isEqual(f.userId, l.userId));
       return Object.assign({}, state, {
-        toBuddys: _.unionWith(state.toBuddys, [toBuddy], (f, l) => _.isEqual(f.userId, l.userId))
+        toBuddys
       });
     }
   },
@@ -23,6 +26,14 @@ const stem = handleActions({
       const toBuddys = _.pullAllWith(state.toBuddys, [toBuddy], (f, l) => _.isEqual(f.userId, l.userId));
       return Object.assign({}, state, {
         toBuddys
+      });
+    }
+  },
+  GET_ALL_USERS_SUCCESS: {
+    next: (state = immutableState, action) => {
+      const uList = _.cloneDeep(action.payload.userList);
+      return Object.assign({}, state, {
+        userList: uList
       });
     }
   }

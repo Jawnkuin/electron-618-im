@@ -10,12 +10,13 @@
 	img{
 		width: 35px;
 		height: 35px;
-		flex: 0 1 auto;
+		flex: 0 0 auto;
 		margin: 0 5px;
 	}
 	.ConversationDetail{
 		margin: 0 5px;
 		flex: 1 1 auto;
+		overflow: hidden;
 		.NameBox{
 			color: @text-black;
 			display: inline-block;
@@ -23,6 +24,8 @@
 			vertical-align: top;
 		}
 		.HistoryBox{
+			overflow: hidden;
+			text-overflow: clip;
 			position: relative;
 			top:2px;
 			color: @text-gray-a4;
@@ -31,7 +34,7 @@
 	}
 	.Badge{
 		margin: auto 8px;
-		flex: 0 1 auto;
+		flex: 0 0 auto;
 		font-size: 10px;
 		vertical-align: middle;
 		.ant-scroll-number-only > p{

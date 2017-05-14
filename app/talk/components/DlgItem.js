@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './DlgItem.less';
 import dummyImage from '../../utils/dummyimage';
@@ -23,26 +23,44 @@ const dateFormat = (time) => {
   return `${formatNum(date.getHours())}:${formatNum(date.getMinutes())}:${formatNum(date.getSeconds())}`;
 };
 
-const DlgItem = ({ time, name, msg, isLeft }) => (
-  <div className={styles.DlgItem} style={customPaddingStyle(isLeft).DlgItem}>
-    <img src={dummyImage(name, 1)} alt={name} />
-    <div className={styles.DlgDetail} style={customPaddingStyle(isLeft).DlgDetail}>
-      <div className={styles.nameBox}>
-        {`${name} ${dateFormat(time)}`}
-      </div>
-      <div className={styles.msgBox}>
-        <div className={styles.msgBubble} style={customPaddingStyle(isLeft).msgBubble}>{msg}</div>
-      </div>
-    </div>
-  </div>
-  );
+class DlgItem extends Component {
+  static propTypes = {
+    time: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    msg: PropTypes.string.isRequired,
+    isLeft: PropTypes.bool.isRequired,
+    isReadAck: PropTypes.bool.isRequired,
+    sendReadAck: PropTypes.func.isRequired
+  };
+
+  static defaultProps = {
+    isReadAck: true
+  }
 
 
-DlgItem.propTypes = {
-  time: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  msg: PropTypes.string.isRequired,
-  isLeft: PropTypes.bool.isRequired
-};
+  componentWillMount () {
+    if (this.props.isLeft && !this.props.isReadAck) {
+      this.props.sendReadAck();
+    }
+  }
+
+  render () {
+    const { time, name, msg, isLeft } = this.props;
+    return (
+      <div className={styles.DlgItem} style={customPaddingStyle(isLeft).DlgItem}>
+        <img src={dummyImage(name, 1)} alt={name} />
+        <div className={styles.DlgDetail} style={customPaddingStyle(isLeft).DlgDetail}>
+          <div className={styles.nameBox}>
+            {`${name} ${dateFormat(time)}`}
+          </div>
+          <div className={styles.msgBox}>
+            <div className={styles.msgBubble} style={customPaddingStyle(isLeft).msgBubble}>{msg}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 
 export default DlgItem;

@@ -4,7 +4,7 @@ import _ from 'lodash';
 //
 let preState = {};
 const loggerState = (prevState, newState) => {
-  if (process.env.NODE_ENV === 'development' && false) {
+  if (false && process.env.NODE_ENV === 'development') {
     console.log('pre', prevState); // eslint-disable-line no-console
     console.log('new', newState); // eslint-disable-line no-console
     console.log(new Date(), '=============='); // eslint-disable-line no-console
@@ -15,12 +15,15 @@ const loggerState = (prevState, newState) => {
 const onReducerInvoke = (store, handlers) => () => {
   const newState = store.getState();
   loggerState(preState, newState);
-  const stateKeys = _.keys(store.getState());
-
+  const stateKeys = _.keys(newState);
   // 查看每一个子状态 *值* 是否变化，若变化执行对应的handler
   _.forEach(stateKeys, (key) => {
-    // 初始化为空值
-    if (!newState[key] || _.isEmpty(newState[key])) {
+    // if the new one and the previous one are both empty, pass
+    if (
+      (!newState[key] || _.isEmpty(newState[key]))
+      &&
+      (!preState[key] || _.isEmpty(preState[key]))
+    ) {
       return;
     }
 

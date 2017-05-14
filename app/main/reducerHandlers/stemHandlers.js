@@ -37,7 +37,29 @@ export default (preState, newState) => {
                 buddyInfo: newBuddys[0],
                 selfInfo: mainStore.getState().login.user.userInfo
               };
+              const unReadInfos = mainStore.getState().talk.unReadInfos;
+
+              let msgList = null;
+              if (unReadInfos && unReadInfos.length > 0) {
+                const openIndex = _.findIndex(unReadInfos, (uInfo) => {
+                  const uInfoUserId = uInfo.buddyinfo.userId;
+                  console.log('uInfoUserId', uInfoUserId);
+                  return _.isEqual(uInfoUserId, newBuddys[0].userId);
+                });
+                // 打开的talk窗口对话者在unReadInfos里面
+                if (openIndex >= 0) {
+                  msgList = _.cloneDeep(unReadInfos[openIndex].unReadMsgInfo.msgs);
+                }
+              }
+              console.log('msgList', msgList);
+              // talk： 加载会话双方信息
+              // stem:  消除提示
+              // main:  更改main state
               Actions.onLoadTalk(loadInfo);
+
+              if (msgList && msgList.length > 0) {
+                msgList.forEach(msg => Actions.checkUnreadMessage(msg));
+              }
             });
             talkWin.loadURL(TALK_PATH);
           }

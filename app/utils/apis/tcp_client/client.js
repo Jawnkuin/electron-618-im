@@ -76,14 +76,20 @@ class TCPClient {
   // 有多个包的情况
   onReceiveData (buff) {
     try {
-      if (!this.resPBHeader && buff.length < HEADER_LENGTH) {
-        throw new Error(`Buffer length is required lge ${HEADER_LENGTH}, current buffer lenth: ${buff.length}`);
+      this.bufList.push(buff);
+      this.totalLenth += buff.length;
+
+      // buf长度小于header长度
+      if (!this.resPBHeader && this.totalLenth < HEADER_LENGTH) {
+        return;
       }
+
+      const concatedBuff = Buffer.concat(this.bufList, this.totalLenth);
 
       if (!this.resPBHeader) {
         this.resPBHeader = new JKPBHeader();
 
-        const headerBuf = buff.slice(0, HEADER_LENGTH);
+        const headerBuf = concatedBuff.slice(0, HEADER_LENGTH);
         this.resPBHeader.unSerialize(headerBuf);
 
         if (!this.resPBHeader || !this.resPBHeader.moduleId) {
@@ -91,10 +97,9 @@ class TCPClient {
         }
       }
 
-
+      // 不足协议规定的长度
       if (this.totalLenth < this.resPBHeader.length) {
-        this.bufList.push(buff);
-        this.totalLenth += buff.length;
+        return;
         /*
         console.log('onReceiveData', // eslint-disable-line no-console
         `
@@ -109,8 +114,6 @@ class TCPClient {
       }
 
       if (this.totalLenth >= this.resPBHeader.length) {
-        const concatedBuff = Buffer.concat(this.bufList, this.totalLenth);
-
         // 截取固定长度
         const pbBodyBuf = concatedBuff.slice(HEADER_LENGTH, this.resPBHeader.length);
 
@@ -131,7 +134,7 @@ class TCPClient {
 
         return;
       }
-      return;
+      throw new Error('Invalid Response');
     } catch (e) {
       // 还原
       if (this.resPBHeader) { delete this.resPBHeader; }
@@ -144,10 +147,7 @@ class TCPClient {
   // 开启连接
   initConnToServer () {
     if (!this.client) {
-      console.log('initConnToServer'); // eslint-disable-line no-console
       this.client = new net.Socket(); // return a Node socket
-      console.log('initConnToServer connecting'); // eslint-disable-line no-console
-      this.client.on('connect', () => console.log('onConnect')); // eslint-disable-line no-console
       this.client.on('data', (chunck) => {
           // 包含header 和 body的 resData
         try {

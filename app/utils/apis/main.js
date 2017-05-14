@@ -22,10 +22,11 @@ const getHeartBeatPbObj = () => {
   return { pbbody, moduleId, cmdId };
 };
 
-export const heartBeatRecall = () => {
-  console.log('ECHO HEARTBEAT');
-};
-
 export const startHeartBeatLooper = () => {
   tcpClient.startHeartBeatLoop(getHeartBeatPbObj(), HEART_BEAT_INTERVAL);
+};
+
+// 更改托盘状态
+export const updateTrayStatus = () => {
+
 };

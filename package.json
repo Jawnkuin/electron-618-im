@@ -1,8 +1,8 @@
 {
   "name": "electron-618-im",
   "productName": "招标采购集团TT",
-  "version": "0.0.3",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "version": "0.0.5",
+  "description": "IM based on electron",
   "main": "main.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 node --trace-warnings ./test/runTests.js",
@@ -29,7 +29,7 @@
   },
   "browserslist": "electron 1.4",
   "build": {
-    "productName": "招标采购集团TT",
+    "productName": "招标采购集团即时通",
     "appId": "org.fjbid.ElectronIM",
     "category": "public.app-category.tools",
     "dmg": {
@@ -58,7 +58,8 @@
       "stem/index.html",
       "config.js",
       "resources/",
-      "package.json"
+      "package.json",
+      "utils/apis/tcp_client/client.js"
     ],
     "win": {
       "target": "nsis"
@@ -181,7 +182,7 @@
   "dependencies": {
     "antd": "^2.9.0",
     "electron-debug": "^1.1.0",
-    "electron-window-redux": "^1.0.5",
+    "electron-window-redux": "^1.0.6",
     "eslint-plugin-flowtype": "^2.30.4",
     "extract-text-webpack-plugin": "^2.0.0",
     "font-awesome": "^4.7.0",

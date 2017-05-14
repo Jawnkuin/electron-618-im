@@ -6,3 +6,8 @@ export const TALK_PATH = `${__dirname}/talk/index.html`;
 
 // 开发路径和运行路径不同
 export const PB_PATH = path.join(__dirname, './resources/pb/');
+
+export const TCP_CHILD_PATH = path.join(__dirname, './utils/apis/tcp_client/client');
+
+
+export const ICON_PATH = path.join(__dirname, './resources/icons/');

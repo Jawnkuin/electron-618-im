@@ -39,7 +39,9 @@ export class WindowConfigs {
 
 
 const Actions = actionsCreators(mainStore);
+// 窗体打开
 windowManager.subscribeWindowLoadedListener(Actions.addWindow);
+// 窗体关闭
 windowManager.subscribeWindowCloseedListener(Actions.closeWindow);
 
 export const mainWindowManager = windowManager;

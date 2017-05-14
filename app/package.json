@@ -1,8 +1,8 @@
 {
   "name": "electron-618-im",
-  "productName": "招标采购集团TT",
-  "version": "0.0.3",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "productName": "招标采购集团即时通",
+  "version": "0.0.5",
+  "description": "IM based on electron",
   "main": "./main.js",
   "author": {
     "name": "Joseph Ku",

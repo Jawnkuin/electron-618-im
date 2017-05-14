@@ -5,8 +5,9 @@ body {
   height: 100vh;
   background: transparent;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
-  overflow-y: hidden;
+  overflow: hidden;
   margin: 0;
+  word-break: break-all;
   border: 1px solid rgba(22,22,22,0.4);
 }
 

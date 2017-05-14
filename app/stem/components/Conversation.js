@@ -4,14 +4,14 @@ import { Badge } from 'antd';
 import styles from './Conversation.less';
 import dummyImage from '../../utils/dummyimage';
 // 主面板列表项
-const Conversation = ({ name, history, count = 0 }) => (
+const Conversation = ({ name, history, count = 0, openSesssion }) => (
   <div
     className={styles.ConversationItem}
     onDoubleClick={() => {
-      console.log('dbclick');
+      openSesssion();
     }}
   >
-    <img src={dummyImage(name, 0, 75)} alt={name} />
+    <img src={dummyImage(name, 1, 100)} alt={name} />
     <div className={styles.ConversationDetail}>
       <div className={styles.NameBox}>{name}</div>
       <div className={styles.HistoryBox}>{history}</div>
@@ -23,7 +23,8 @@ const Conversation = ({ name, history, count = 0 }) => (
 Conversation.propTypes = {
   name: PropTypes.string.isRequired,
   history: PropTypes.string.isRequired,
-  count: PropTypes.number.isRequired
+  count: PropTypes.number.isRequired,
+  openSesssion: PropTypes.func.isRequired
 };
 
 export default Conversation;

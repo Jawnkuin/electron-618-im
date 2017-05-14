@@ -1,5 +1,4 @@
 import { IMBaseDefine } from '../pbModules';
-import { heartBeatRecall } from '../../main';
 
 export default (pbHeader) => {
   try {
@@ -7,10 +6,7 @@ export default (pbHeader) => {
     switch (pbHeader.commandId) {
       // 接收到HeartBeat Echo
       case IMOtherCmdIDs.CID_OTHER_HEARTBEAT:
-        {
-          heartBeatRecall();
-          break;
-        }
+        break;
       default:
         throw new Error('Error parse other res');
     }

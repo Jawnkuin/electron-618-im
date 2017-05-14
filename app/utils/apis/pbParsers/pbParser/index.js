@@ -17,7 +17,6 @@ export default (pbHeader, pbBodyBuffer) => {
     case IMServiceIDs.SID_OTHER:
       return otherParser(pbHeader, pbBodyBuffer);
     default:
-      // throw new Error('Unknow MouduleId');
-      console.log('Unknow MouduleId');
+      throw new Error('Unknow MouduleId');
   }
 };

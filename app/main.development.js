@@ -1,11 +1,13 @@
 // @flow
-import { app, BrowserWindow } from 'electron'; // , Tray, Menu
+import { app, BrowserWindow } from 'electron';
 import { replayActionMain } from 'electron-window-redux';
+import path from 'path';
 import mapStateToWindow from './utils/redux/mapStateToWindow';
 import { WindowConfigs, mainWindowManager } from './utils/WindowManager';
 import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
-import tcpClient from './utils/apis/tcp_client';
+import trayManager from './utils/Tray';
+import { ICON_PATH } from './configs';
 import './utils/ipcMainResponces';
 
 if (process.env.NODE_ENV === 'production') {
@@ -23,14 +25,6 @@ if (process.env.NODE_ENV === 'development') {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    try {
-      if (tcpClient.client && !tcpClient.client.destroyed) {
-        tcpClient.client.destroy();
-      }
-    } catch (e) {
-      console.log(e); // eslint-disable-line no-console
-    }
-
     app.quit();
   }
 });
@@ -56,7 +50,6 @@ const installExtensions = async () => {
   }
 };
 
-// const appTray = null;
 
 app.on('ready', async () => {
   await installExtensions();
@@ -65,35 +58,12 @@ app.on('ready', async () => {
   // 根据修改的state更新window
   mapStateToWindow({}, mainStore, stateChangeHandlers);
 
-
   // 登录窗体
   const loginWindow = new BrowserWindow(WindowConfigs.login);
-  // 主窗体
-  // const stemWindow = new BrowserWindow(WindowConfigs.stem);
   mainWindowManager.add(loginWindow, 'login');
-  console.log(mainWindowManager.loadedListeners);
-  // windowManager.add(stemWindow, 'stem');
 
-  // 会话窗体
-  // const talkWindow = new BrowserWindow(WindowConfigs.talk);
-  // windowManager.add(talkWindow, 'talk');
 
   loginWindow.loadURL(`${__dirname}/login/index.html`);
 
-
-  /* 托盘
-  appTray = new Tray(path.join(__dirname, '../resources/icon.ico'));
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1IsVeryVeryVeryLong', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' }
-  ]);
-  appTray.setToolTip('Tray');
-  appTray.setContextMenu(contextMenu);
-  appTray.displayBalloon({
-    title: 'Title',
-    content: 'Lorem ipsum'
-  });
-  */
+  trayManager.initTray(path.join(ICON_PATH, 'tray.png'));
 });

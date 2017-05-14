@@ -43,6 +43,7 @@ const dlgInfo = handleActions({
     }
   },
   // 接收到消息
+  // 单个消息每一个都需要标记未读，接收到列表只对最后一个标记未读
   RECIEVE_MESSAGE: {
     next: (state = immutableState.dlgInfo, action) => {
       const fromUserId = action.payload.fromUserId;

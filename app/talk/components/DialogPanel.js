@@ -35,9 +35,6 @@ class DialogPanel extends Component {
               const utf8Buf = Buffer.from(dlg.msgData, 'base64');
               const msgStr = utf8Buf.toString('utf8');
               const isFromSelf = _.isEqual(dlg.fromUserId, selfInfo.userId);
-              if (!isFromSelf && !dlg.readAck) {
-                sendMessageReadAck(dlg.fromUserId, dlg.msgId);
-              }
               return (
                 <DlgItem
                   key={
@@ -48,6 +45,8 @@ class DialogPanel extends Component {
                   time={dlg.createTime}
                   msg={msgStr}
                   isLeft={!isFromSelf}
+                  isReadAck={dlg.readAck}
+                  sendReadAck={() => { sendMessageReadAck(dlg.fromUserId, dlg.msgId); }}
                 />
               );
             }

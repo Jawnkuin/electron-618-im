@@ -4,7 +4,8 @@ import {
   GET_ALL_USERS_FAIL,
   GET_DEPT_LIST_SUCCESS,
   GET_DEPT_LIST_FAIL,
-  ON_LOAD_USER
+  ON_LOAD_USER,
+  OPEN_SINGLE_TALK
 } from '../../stem/actions';
 
 
@@ -18,7 +19,7 @@ dispatch(createAction(GET_ALL_USERS_FAIL, errMsg => ({ errMsg }), () => ({ scope
 
 export const getAllUserSuccessActionCreator =
 dispatch => (...args) => {
-  dispatch(createAction(GET_ALL_USERS_SUCCESS, res => res, () => ({ scope: 'stem' }))(...args));
+  dispatch(createAction(GET_ALL_USERS_SUCCESS, res => res, () => ({ scope: '__ALL__' }))(...args));
 };
 
 export const getDepFailActionCreator =
@@ -28,4 +29,16 @@ dispatch(createAction(GET_DEPT_LIST_FAIL, errMsg => ({ errMsg }), () => ({ scope
 export const getDepSuccessActionCreator =
 dispatch => (...args) => {
   dispatch(createAction(GET_DEPT_LIST_SUCCESS, res => res[0], () => ({ scope: 'stem' }))(args));
+};
+
+// 托盘或者其它方式打开会话窗口
+export const openSingleTalkActionCreator =
+dispatch => (...args) => {
+  dispatch(createAction(
+    OPEN_SINGLE_TALK,
+    toBuddy => ({
+      toBuddy
+    }),
+    () => ({ scope: '__ALL__' })
+)(...args));
 };
