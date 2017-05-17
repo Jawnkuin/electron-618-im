@@ -49,23 +49,24 @@ class Organizations extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      // 是否已经添加用户成员
-      appendedChildren: false,
-      expandedKeys: []
+      expandedKeys: [],
+      deptTree: {},
+      deptTreeWithBuddys: {}
     };
 
     const { allUsersInfo } = props;
-    let orgTree = {};
+
     if (allUsersInfo.deptListInfo.deptList) {
-      orgTree = Department.getDeptTree(allUsersInfo.deptListInfo.deptList);
-      this.state.deptTree = orgTree;
+      this.state.deptTree = Department.getDeptTree(allUsersInfo.deptListInfo.deptList);
     }
 
-    if (!this.state.appendedChildren && allUsersInfo.userListInfo.userList) {
+    if (allUsersInfo.userListInfo.userList) {
       const userList = allUsersInfo.userListInfo.userList;
-      const newDeptTree = appendBuddyToOrg(orgTree, userList);
-      this.state.deptTree = newDeptTree;
+      const newDeptTree = appendBuddyToOrg(this.state.deptTree, userList);
+      this.state.deptTreeWithBuddys = newDeptTree;
     }
+
+
     this.onToggleExpand = this.onToggleExpand.bind(this);
     this.onToggleSelect = this.onToggleSelect.bind(this);
     this.getTreeNodes = this.getTreeNodes.bind(this);
@@ -74,17 +75,11 @@ class Organizations extends Component {
 
   componentWillReceiveProps (nextProps) {
     const { allUsersInfo } = nextProps;
-    // department tree含数据再做所有用户请求
-    if (!this.state.deptTree.children && allUsersInfo.deptListInfo.deptList) {
-      const deptTree = Department.getDeptTree(allUsersInfo.deptListInfo.deptList);
-      this.setState({ deptTree });
-      // getAllUsers();
-    }
 
-    if (!this.state.appendedChildren && allUsersInfo.userListInfo.userList) {
+    if (allUsersInfo.userListInfo.userList) {
       const userList = allUsersInfo.userListInfo.userList;
-      const newDeptTree = this.appendBuddyToOrg(userList);
-      this.setState({ deptTree: newDeptTree, appendedChildren: true });
+      const newDeptTree = appendBuddyToOrg(this.state.deptTree, userList);
+      this.setState({ deptTreeWithBuddys: newDeptTree });
     }
   }
 
@@ -102,6 +97,7 @@ class Organizations extends Component {
       newArray.push(key);
     }
     this.setState({ expandedKeys: newArray });
+    console.log('expandedKeys', newArray);
   }
 
   // 递归函数生成树
@@ -112,7 +108,7 @@ class Organizations extends Component {
       return (
         <TreeNode
           className={styles.BuddyItem}
-          title={`${node.deptName} 0/${node.members.length}`}
+          title={`${node.deptName} ${node.getMembersCount(m => m.onlineStatus === 1)}/${node.members.length}`}
           key={key}
         >
           {node.members.map(this.getTreeNodes)}
@@ -124,7 +120,9 @@ class Organizations extends Component {
       const key = node.deptId.low ? `${node.deptId.high}-${node.deptId.low}` : node.deptId;
       return (
         <TreeNode
-          title={`${node.deptName} `} // ${node.online}/${node.total}
+          title={
+            `${node.deptName} ${node.getMembersCount(m => m.onlineStatus === 1)}/${node.getMembersCount()}`
+          } // ${node.online}/${node.total}
           key={key}
         >
           {node.children.map(this.getTreeNodes)}
@@ -140,7 +138,10 @@ class Organizations extends Component {
             className={styles.MemberItem}
             onDoubleClick={() => { this.props.openSingleTalk(node); }}
           >
-            <img src={dummyImage(node.userNickName, 1)} alt={node.userNickName} />
+            <img
+              src={dummyImage(node.userNickName, 1, undefined, node.onlineStatus === 2)}
+              alt={node.userNickName}
+            />
             <div className={styles.NameBox}>{node.userNickName}</div>
           </div>
         }
@@ -158,8 +159,8 @@ class Organizations extends Component {
         expandedKeys={this.state.expandedKeys}
       >
         {
-          (this.state.deptTree && this.state.deptTree.children) &&
-          this.state.deptTree.children.map((node) => {
+          (this.state.deptTreeWithBuddys && this.state.deptTreeWithBuddys.children) &&
+          this.state.deptTreeWithBuddys.children.map((node) => {
             const tree = this.getTreeNodes(node);
             return tree;
           })

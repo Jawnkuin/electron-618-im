@@ -12,6 +12,8 @@ export const ON_LOAD_USER = 'ON_LOAD_USER';
 
 export const OPEN_SINGLE_TALK = 'OPEN_SINGLE_TALK';
 
+export const GET_USERS_STATE_SUCCESS = 'GET_USERS_STATE_SUCCESS';
+
 /*
 export const doLoginMain = createAction(LOGIN, async (name, psw) => {
   const resbody = await doLogin(name, psw);

@@ -41,11 +41,11 @@ export default (pbHeader, pbBodyBuffer) => {
         })(
           (unreadInfo) => {
             // 获取消息列表
-            // getMsgList(
-            //  unreadInfo.sessionId,
-            //  unreadInfo.latestMsgId,
-            //  unreadInfo.unreadCnt
-            // );
+            Talk.getMsgList(
+              unreadInfo.sessionId,
+              unreadInfo.latestMsgId,
+              unreadInfo.unreadCnt
+            );
           },
           (e) => { throw new Error(`onUnReadMsgCntResponce Failure ${e.message}`); }
         );
@@ -69,6 +69,6 @@ export default (pbHeader, pbBodyBuffer) => {
         throw new Error('Error parse message res');
     }
   } catch (e) {
-    console.log(`messageParser ${e.message}`); // eslint-disable-line no-console
+    console.log('messageParser', e); // eslint-disable-line no-console
   }
 };

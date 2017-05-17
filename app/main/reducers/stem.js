@@ -13,7 +13,14 @@ const stem = handleActions({
     // 将打开的会话添加到会话里面里面
     next: (state = immutableState, action) => {
       const toBuddy = action.payload.toBuddy;
-      const copyedToBuddy = Object.assign({}, toBuddy, { userId: Object.assign({}, toBuddy.userId) });
+
+      let userId;
+      if (typeof toBuddy.userId === 'object') {
+        userId = Object.assign({}, toBuddy.userId);
+      } else {
+        userId = toBuddy.userId;
+      }
+      const copyedToBuddy = Object.assign({}, toBuddy, { userId });
       const toBuddys = _.unionWith(state.toBuddys, [copyedToBuddy], (f, l) => _.isEqual(f.userId, l.userId));
       return Object.assign({}, state, {
         toBuddys

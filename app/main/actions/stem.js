@@ -5,7 +5,8 @@ import {
   GET_DEPT_LIST_SUCCESS,
   GET_DEPT_LIST_FAIL,
   ON_LOAD_USER,
-  OPEN_SINGLE_TALK
+  OPEN_SINGLE_TALK,
+  GET_USERS_STATE_SUCCESS
 } from '../../stem/actions';
 
 
@@ -28,7 +29,16 @@ dispatch(createAction(GET_DEPT_LIST_FAIL, errMsg => ({ errMsg }), () => ({ scope
 
 export const getDepSuccessActionCreator =
 dispatch => (...args) => {
-  dispatch(createAction(GET_DEPT_LIST_SUCCESS, res => res[0], () => ({ scope: 'stem' }))(args));
+  dispatch(createAction(GET_DEPT_LIST_SUCCESS, res => res, () => ({ scope: 'stem' }))(...args));
+};
+
+// res:
+// {
+//  userStatList
+// }
+export const getUsersStatSuccessActionCreator =
+dispatch => (...args) => {
+  dispatch(createAction(GET_USERS_STATE_SUCCESS, res => res, () => ({ scope: '__ALL__' }))(...args));
 };
 
 // 托盘或者其它方式打开会话窗口

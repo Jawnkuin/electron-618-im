@@ -7,10 +7,11 @@ const color = {
   peach: 'd994f1'
 };
 
-export default (text, length, fsize) => {
+const defaultGray = '909090';
+
+export default (text, length, fsize, isGray) => {
   if (!text) {
     return 'https://placeholdit.imgix.net/~text?txtsize=120&bg=9fa5ff&txtclr=9fa5ff&txt=null&w=180&h=180&txttrack=0';
-    // return 'http://ipsumimage.appspot.com/180x180,9fa5ff?f=9fa5ff';
   }
   let charCodeLength = 0;
   for (let i = 0; i < text.length; i += 1) {
@@ -18,7 +19,7 @@ export default (text, length, fsize) => {
   }
   const keys = Object.keys(color);
   // eslint-disable-next-line no-unused-vars
-  const colorText = color[keys[charCodeLength % keys.length]];
+  const bgColor = isGray ? defaultGray : color[keys[charCodeLength % keys.length]];
   let showText;
   if (length) {
     showText = text.slice(0, length);
@@ -26,10 +27,7 @@ export default (text, length, fsize) => {
     showText = text;
   }
   if (fsize && typeof fsize === 'number') {
-    return `https://placeholdit.imgix.net/~text?txtsize=${fsize}&bg=${colorText}&txtclr=ffffff&txt=${showText}&w=180&h=180&txttrack=0`;
-    // return `http://ipsumimage.appspot.com/180x180,${colorText}?l=${showText}&f=ffffff&s=${fsize}`;
+    return `https://placeholdit.imgix.net/~text?txtsize=${fsize}&bg=${bgColor}&txtclr=ffffff&txt=${showText}&w=180&h=180&txttrack=0`;
   }
-  return `https://placeholdit.imgix.net/~text?txtsize=120&bg=${colorText}&txtclr=ffffff&txt=${showText}&w=180&h=180&txttrack=0`;
-  // `https://dummyimage.com/180x180/${colorText}/787878.png&text=${text}`
-  // return `http://ipsumimage.appspot.com/180x180,${colorText}?l=${showText}&f=ffffff`;
+  return `https://placeholdit.imgix.net/~text?txtsize=120&bg=${bgColor}&txtclr=ffffff&txt=${showText}&w=180&h=180&txttrack=0`;
 };

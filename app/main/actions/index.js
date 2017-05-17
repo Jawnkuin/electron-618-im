@@ -9,7 +9,8 @@ import {
   getAllUserSuccessActionCreator,
   getDepFailActionCreator,
   getDepSuccessActionCreator,
-  openSingleTalkActionCreator
+  openSingleTalkActionCreator,
+  getUsersStatSuccessActionCreator
 } from './stem';
 import {
   onLoadTalkActionCreator,
@@ -30,6 +31,7 @@ export default store => ({
   getDepFail: getDepFailActionCreator(store.dispatch, store.getState),
   getDepSuccess: getDepSuccessActionCreator(store.dispatch, store.getState),
   openSingleTalk: openSingleTalkActionCreator(store.dispatch, store.getState),
+  getUserStatSuccess: getUsersStatSuccessActionCreator(store.dispatch, store.getState),
 
   onLoadTalk: onLoadTalkActionCreator(store.dispatch, store.getState),
   onReceiveMessage: onReceiveMessageActionCreator(store.dispatch, store.getState),

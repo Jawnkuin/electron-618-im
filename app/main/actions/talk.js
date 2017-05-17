@@ -33,7 +33,7 @@ export const onReceiveMessageActionCreator =
   const index = _.findIndex(toBuddys, bd => _.isEqual(msgFromUserId, bd.userId));
   if (index >= 0) {
     // to renderer process
-    dispatch(createAction(RECIEVE_MESSAGE, msg => msg, () => ({ scope: 'talk' }))(inMsg));
+    dispatch(createAction(RECIEVE_MESSAGE, msg => msg, () => ({ scope: '__ALL__' }))(inMsg));
   } else {
     // to main process & renderer
     dispatch(createAction(RECIEVE_UNREAD_MESSAGE, msg => msg, () => ({ scope: 'stem' }))(inMsg));

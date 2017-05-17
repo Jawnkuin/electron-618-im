@@ -45,6 +45,7 @@ const talk = handleActions({
     }
   },
   ON_LOAD_TALK: {
+    // 清除mainStore中的对应unReadInfo
     next: (state = immutableState, action) => {
       const openedTalkId = action.payload.buddyInfo.userId;
       const newReadInfos = _.cloneDeep(state.unReadInfos);

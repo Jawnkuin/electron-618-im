@@ -35,6 +35,30 @@ const allUsersInfo = handleActions(
       next: (state = allUsersInfoState, action) => Object.assign({}, state, {
         deptListInfo: action.payload
       })
+    },
+    GET_USERS_STATE_SUCCESS: {
+      // action.payload: [{userId,status}]
+      // status: 1-ONLINE,2-OFFLINE,3-LEAVE
+      next: (state = allUsersInfoState, action) => {
+        const userStatList = action.payload;
+        if (userStatList && userStatList.length >= 0) {
+          const newUserList = _.cloneDeep(state.userListInfo.userList);
+          newUserList.map((user) => {
+            if (!user.onlineStatus) {
+              user.onlineStatus = 2; // 在线状态初始化为2
+            }
+            const userIndexInStateList = _.findIndex(userStatList, s => _.isEqual(s.userId, user.userId));
+            if (userIndexInStateList >= 0) {
+              user.onlineStatus = userStatList[userIndexInStateList].status;
+            }
+            return user;
+          });
+          return Object.assign({}, state, { userListInfo:
+            Object.assign({}, state.userListInfo, { userList: newUserList }) }
+          );
+        }
+        return state;
+      }
     }
   },
   allUsersInfoState
@@ -42,6 +66,29 @@ const allUsersInfo = handleActions(
 
 
 const historySessions = handleActions({
+  // 已接受通知
+  RECIEVE_MESSAGE: {
+    next: (state = [], action) => {
+      const newState = _.cloneDeep(state);
+      const msgSessionId = action.payload.fromUserId;
+      const sessionIndex = _.findIndex(newState, session =>
+        _.isEqual(session.fromUserId, msgSessionId)
+      );
+      // session exists
+      if (sessionIndex >= 0) {
+        newState[sessionIndex].msgList.push(action.payload);
+        newState[sessionIndex].unReadCnt += 0;
+      } else {
+        const newSession = {
+          fromUserId: action.payload.fromUserId,
+          msgList: [action.payload],
+          unReadCnt: 0
+        };
+        newState.push(newSession);
+      }
+      return newState;
+    }
+  },
   // 用户未接收通知
   RECIEVE_UNREAD_MESSAGE: {
     next: (state = [], action) => {

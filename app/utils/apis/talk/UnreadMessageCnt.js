@@ -34,19 +34,11 @@ export const onUnReadMsgCntResponce = res => (resolve, reject) => {
     reject('Wrong cmdId');
     return;
   }
+  const unReadInfoList = res.body.unreadinfoList;
 
-  // console.log('unReadInfoList', res.body.unreadinfoList);
-  // 只有已经打开的会话才进行处理
-  // const openedSessions = mainStore.getState().stem.toBuddys;
-  // console.log('openedSessions', openedSessions);
-  resolve(res.body.unreadinfoList[0]);
-    /*
-  unReadInfoList.forEach((ri) => {
-    const openedIndex = _.findIndex(openedSessions, session => _.isEqual(session.userId, ri.sessionId));
-    // console.log('openedIndex', openedIndex);
-    if (openedIndex >= 0) {
-      resolve(ri);
-    }
-  });
-    */
+  if (unReadInfoList && unReadInfoList.length >= 0) {
+    unReadInfoList.forEach((unReadInfo) => {
+      resolve(unReadInfo);
+    });
+  }
 };

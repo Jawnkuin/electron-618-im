@@ -18,6 +18,23 @@ export default class Department {
     this.children = [];
   }
 
+  getMembersCount (testFunc) {
+    const hasTest = (testFunc && typeof testFunc === 'function');
+    if (this.members && this.members.length > 0) {
+      return this.members.reduce((pre, m) => {
+        if (hasTest) {
+          const delta = testFunc(m) ? 1 : 0;
+          return pre + delta;
+        }
+        return pre + 1;
+      }, 0);
+    }
+    if (this.children && this.children.length > 0) {
+      return this.children.reduce((pre, child) => pre + child.getMembersCount(testFunc), 0);
+    }
+    return 0;
+  }
+
   getLeafDescendants () {
     const leafNodeList = [];
     dfs(this, leafNodeList);

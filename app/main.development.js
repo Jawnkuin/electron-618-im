@@ -65,5 +65,6 @@ app.on('ready', async () => {
 
   loginWindow.loadURL(`${__dirname}/login/index.html`);
 
+  // 初始化托盘
   trayManager.initTray(path.join(ICON_PATH, 'tray.png'));
 });

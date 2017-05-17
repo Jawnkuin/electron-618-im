@@ -1,7 +1,6 @@
 import { IMMessage, IMBaseDefine } from '../pbParsers/pbModules';
 import mainStore from '../../../main/store';
 import tcpClient from '../tcp_client';
-import { msgDataReadAckReq } from './Message';
 
 // 用来获取service id
 const serviceIdEnums = IMBaseDefine.ServiceID;
@@ -41,10 +40,7 @@ export const onGetMsgListResponce = res => (resolve, reject) => {
     return;
   }
 
-  const msgList = res.body.msgList;
+  resolve(res.body.msgList);
+  // console.log(msgList);
   // 处理每一条消息
-  msgList.forEach((msg) => {
-    msgDataReadAckReq(msg.fromSessionId, msg.msgId);
-    resolve(msg);
-  });
 };
