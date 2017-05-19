@@ -21,8 +21,7 @@ const BuddyPanel = ({ historySessions, allUsersInfo, openSingleTalk }) => (
         {
           historySessions.map((item) => {
             const key = item.fromUserId.low ? `${item.fromUserId.high}-${item.fromUserId.low}` : item.fromUserId;
-            const count = item.msgList.length;
-            const lastData = item.msgList[count - 1].msgData;
+            const lastData = item.latestMsg.msgData;
 
             const userIndex = _.findIndex(allUsersInfo.userListInfo.userList,
             user => _.isEqual(user.userId, item.fromUserId));
@@ -36,6 +35,7 @@ const BuddyPanel = ({ historySessions, allUsersInfo, openSingleTalk }) => (
                 name={buddy.userNickName}
                 history={msgStr}
                 count={item.unReadCnt}
+                onlineStatus={buddy.onlineStatus}
                 openSesssion={() => openSingleTalk(buddy)}
               />
             );
@@ -61,7 +61,7 @@ BuddyPanel.propTypes = {
   }).isRequired,
   historySessions: PropTypes.arrayOf(PropTypes.shape({
     fromUserId: PropTypes.any,
-    msgList: PropTypes.array.isRequired
+    latestMsg: PropTypes.any.isRequired
   })).isRequired,
   openSingleTalk: PropTypes.func.isRequired
 };

@@ -70,18 +70,30 @@ const historySessions = handleActions({
   RECIEVE_MESSAGE: {
     next: (state = [], action) => {
       const newState = _.cloneDeep(state);
-      const msgSessionId = action.payload.fromUserId;
+      const infoType = action.payload.infoType;
+      // 发送者Id
+      let msgSessionId;
+      // 最新消息
+      let latestMsg;
+      if (infoType === 'LIST') {
+        msgSessionId = action.payload.msgList[0].fromUserId;
+        latestMsg = action.payload.msgList[0];
+      }
+      if (infoType === 'SINGLE') {
+        msgSessionId = action.payload.msg.fromUserId;
+        latestMsg = action.payload.msg;
+      }
+
       const sessionIndex = _.findIndex(newState, session =>
         _.isEqual(session.fromUserId, msgSessionId)
       );
       // session exists
       if (sessionIndex >= 0) {
-        newState[sessionIndex].msgList.push(action.payload);
-        newState[sessionIndex].unReadCnt += 0;
+        newState[sessionIndex].latestMsg = latestMsg;
       } else {
         const newSession = {
-          fromUserId: action.payload.fromUserId,
-          msgList: [action.payload],
+          fromUserId: msgSessionId,
+          latestMsg,
           unReadCnt: 0
         };
         newState.push(newSession);
@@ -99,12 +111,12 @@ const historySessions = handleActions({
       );
       // session exists
       if (sessionIndex >= 0) {
-        newState[sessionIndex].msgList.push(action.payload);
+        newState[sessionIndex].latestMsg = action.payload;
         newState[sessionIndex].unReadCnt += 1;
       } else {
         const newSession = {
           fromUserId: action.payload.fromUserId,
-          msgList: [action.payload],
+          latestMsg: action.payload,
           unReadCnt: 1
         };
         newState.push(newSession);
@@ -125,6 +137,28 @@ const historySessions = handleActions({
         return newState;
       }
       return state;
+    }
+  },
+  RECIEVE_UNREAD_MSG_LIST: {
+    next: (state = [], action) => {
+      const newState = _.cloneDeep(state);
+      const unreadSessionId = action.payload.sessionId;
+      const sessionIndex = _.findIndex(newState, session =>
+        _.isEqual(session.fromUserId, unreadSessionId)
+      );
+      const listLength = action.payload.msgList.length;
+      if (sessionIndex >= 0) {
+        newState[sessionIndex].latestMsg = action.payload.msgList[listLength - 1];
+        newState[sessionIndex].unReadCnt += listLength;
+      } else {
+        const newSession = {
+          fromUserId: unreadSessionId,
+          latestMsg: action.payload.msgList[listLength - 1],
+          unReadCnt: listLength
+        };
+        newState.push(newSession);
+      }
+      return newState;
     }
   }
 }, []);

@@ -30,8 +30,8 @@ const getMessageBuf = (toSid, data, msgType = IMBaseDefine.MsgType.MSG_TYPE_SING
 function getMsgDataReadAckReqBuf (senderId, msgId, sessionType = IMBaseDefine.SessionType.SESSION_TYPE_SINGLE) {
   const selfId = mainStore.getState().login.user.userInfo.userId;
   const reqBody = IMMessage.IMMsgDataReadAck.create({
-    userId: senderId,
-    sessionId: selfId,
+    userId: selfId,
+    sessionId: senderId,
     msgId,
     sessionType
   });

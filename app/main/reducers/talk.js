@@ -18,21 +18,22 @@ const talk = handleActions({
   RECIEVE_UNREAD_MESSAGE: {
     // 将打开的会话添加到会话里面里面
     next: (state = immutableState, action) => {
-      const toBuddyId = action.payload.fromUserId;
+      const msg = action.payload.msg;
+      const toBuddyId = msg.fromUserId;
       const newArray = _.cloneDeep(state.unReadInfos);
 
 
-      const infoIndex = _.findIndex(state.unReadInfos, uInfo => _.isEqual(uInfo.buddyinfo.userId, toBuddyId));
+      const infoIndex = _.findIndex(newArray, uInfo => _.isEqual(uInfo.buddyinfo.userId, toBuddyId));
 
       if (infoIndex >= 0) {
-        newArray[infoIndex].unReadMsgInfo.msgs.push(action.payload);
+        newArray[infoIndex].unReadMsgInfo.msgs.push(msg);
       } else {
         const info = {
           buddyinfo: {
             userId: toBuddyId
           },
           unReadMsgInfo: {
-            msgs: [action.payload]
+            msgs: [msg]
           }
         };
         newArray.push(info);
@@ -57,6 +58,32 @@ const talk = handleActions({
         });
       }
       return state;
+    }
+  },
+  RECIEVE_UNREAD_MSG_LIST: {
+    next: (state = immutableState, action) => {
+      const msgListRsp = action.payload;
+
+      const toBuddyId = Object.assign({}, msgListRsp.sessionId);
+      const newArray = _.cloneDeep(state.unReadInfos);
+
+      const infoIndex = _.findIndex(newArray, uInfo => _.isEqual(uInfo.buddyinfo.userId, toBuddyId));
+      if (infoIndex >= 0) {
+        newArray[infoIndex].unReadMsgInfo.msgs.concat(msgListRsp.msgList);
+      } else {
+        const info = {
+          buddyinfo: {
+            userId: toBuddyId
+          },
+          unReadMsgInfo: {
+            msgs: msgListRsp.msgList
+          }
+        };
+        newArray.push(info);
+      }
+      return Object.assign({}, state, {
+        unReadInfos: newArray
+      });
     }
   }
 }, immutableState);

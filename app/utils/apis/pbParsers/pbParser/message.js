@@ -59,7 +59,16 @@ export default (pbHeader, pbBodyBuffer) => {
             body: IMMessage.IMGetMsgListRsp.decode(pbBodyBuffer)
           };
           Talk.onGetMsgListResponce(msgListRes)(
-            Actions.onReceiveMessage,
+            (msgListRsp) => {
+              msgListRsp.msgList.reverse(); // 修改顺序
+              // 保证message格式兼容
+              msgListRsp.msgList.forEach((e) => {
+                e.fromUserId = msgListRsp.sessionId;
+                e.toSessionId = msgListRsp.userId;
+              });
+              Actions.onReceiveUnReadMsgList(msgListRsp);
+            }
+            ,
             (e) => { throw new Error(`onGetMsgListResponce Failure ${e.message}`); }
           );
           break;

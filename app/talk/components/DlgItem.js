@@ -30,7 +30,8 @@ class DlgItem extends Component {
     msg: PropTypes.string.isRequired,
     isLeft: PropTypes.bool.isRequired,
     isReadAck: PropTypes.bool.isRequired,
-    sendReadAck: PropTypes.func.isRequired
+    sendReadAck: PropTypes.func.isRequired,
+    onlineStatus: PropTypes.number.isRequired
   };
 
   static defaultProps = {
@@ -45,10 +46,10 @@ class DlgItem extends Component {
   }
 
   render () {
-    const { time, name, msg, isLeft } = this.props;
+    const { time, name, msg, isLeft, onlineStatus } = this.props;
     return (
       <div className={styles.DlgItem} style={customPaddingStyle(isLeft).DlgItem}>
-        <img src={dummyImage(name, 1)} alt={name} />
+        <img src={dummyImage(name, 1, undefined, onlineStatus === 2)} alt={name} />
         <div className={styles.DlgDetail} style={customPaddingStyle(isLeft).DlgDetail}>
           <div className={styles.nameBox}>
             {`${name} ${dateFormat(time)}`}

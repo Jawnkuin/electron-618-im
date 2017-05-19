@@ -27,6 +27,25 @@ const buddyInfo = handleActions({
       }
       return state;
     }
+  },
+  GET_USERS_STATE_SUCCESS: {
+    // action.payload: [{userId,status}]
+    // status: 1-ONLINE,2-OFFLINE,3-LEAVE
+    next: (state = immutableState.buddyInfo, action) => {
+      const userStatList = action.payload;
+      if (userStatList && userStatList.length >= 0) {
+        const userIndexInStateList = _.findIndex(userStatList, s => _.isEqual(s.userId, state.userId));
+        if (userIndexInStateList >= 0) {
+          const sessionBuddy = Object.assign(
+            {},
+            state.buddyInfo,
+            { onlineStatus: userStatList[userIndexInStateList].status }
+          );
+          return Object.assign({}, state, { buddyInfo: sessionBuddy });
+        }
+      }
+      return state;
+    }
   }
 }, immutableState.buddyInfo);
 
@@ -46,12 +65,30 @@ const dlgInfo = handleActions({
   // 单个消息每一个都需要标记未读，接收到列表只对最后一个标记未读
   RECIEVE_MESSAGE: {
     next: (state = immutableState.dlgInfo, action) => {
-      const fromUserId = action.payload.fromUserId;
-      if (_.isEqual(fromUserId, state.buddyUserId)) {
-        const newArray = Array.from(state.msgList);
-        const newMsg = action.payload;
-        newMsg.readAck = false; // 添加未读标记
-        newArray.push(action.payload);
+      const infoType = action.payload.infoType;
+      let fromUserId;
+
+      if (infoType === 'LIST') {
+        fromUserId = action.payload.msgList[0].fromUserId;
+      }
+      if (infoType === 'SINGLE') {
+        fromUserId = action.payload.msg.fromUserId;
+      }
+
+      if (fromUserId && _.isEqual(fromUserId, state.buddyUserId)) {
+        let newArray = _.cloneDeep(state.msgList);
+        if (infoType === 'SINGLE') {
+          const newMsg = action.payload.msg;
+          newMsg.readAck = false; // 添加未读标记
+          newArray.push(newMsg);
+        }
+        if (infoType === 'LIST') {
+          const newMsgList = action.payload.msgList;
+          newMsgList.forEach((msg) => { msg.readAck = true; });
+          newMsgList[newMsgList.length - 1].readAck = false; // 最新标记未读
+          newArray = newArray.concat(newMsgList);
+        }
+
         return Object.assign({}, state, { msgList: newArray });
       }
       return state;

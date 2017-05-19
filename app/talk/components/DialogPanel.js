@@ -26,6 +26,8 @@ class DialogPanel extends Component {
     const { msgList } = this.props.dlgInfo;
     const { selfInfo, buddyInfo } = this.props.buddyInfo;
     const sendMessageReadAck = this.props.sendMessageReadAck;
+    const onlineStatus = buddyInfo.onlineStatus;
+
 
     return (
       <div className={styles.DialogPanel}>
@@ -47,6 +49,7 @@ class DialogPanel extends Component {
                   isLeft={!isFromSelf}
                   isReadAck={dlg.readAck}
                   sendReadAck={() => { sendMessageReadAck(dlg.fromUserId, dlg.msgId); }}
+                  onlineStatus={onlineStatus}
                 />
               );
             }

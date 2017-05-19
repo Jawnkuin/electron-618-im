@@ -15,7 +15,8 @@ import {
 import {
   onLoadTalkActionCreator,
   onReceiveMessageActionCreator,
-  checkUnreadMessageActionCreator
+  checkUnreadMessageActionCreator,
+  onReceiveUnReadMsgListActionCreator
 } from './talk';
 
 export default store => ({
@@ -35,6 +36,7 @@ export default store => ({
 
   onLoadTalk: onLoadTalkActionCreator(store.dispatch, store.getState),
   onReceiveMessage: onReceiveMessageActionCreator(store.dispatch, store.getState),
-  checkUnreadMessage: checkUnreadMessageActionCreator(store.dispatch, store.getState)
+  checkUnreadMessage: checkUnreadMessageActionCreator(store.dispatch, store.getState),
+  onReceiveUnReadMsgList: onReceiveUnReadMsgListActionCreator(store.dispatch, store.getState)
 
 });

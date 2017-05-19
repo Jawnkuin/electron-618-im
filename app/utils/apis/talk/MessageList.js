@@ -39,8 +39,8 @@ export const onGetMsgListResponce = res => (resolve, reject) => {
     reject('Wrong cmdId');
     return;
   }
-
-  resolve(res.body.msgList);
+  // console.log('msgListBody', res.body);
+  resolve(res.body);
   // console.log(msgList);
   // 处理每一条消息
 };
