@@ -19,7 +19,7 @@
     "flow": "flow",
     "flow-typed": "flow-typed install",
     "start-hot": "cross-env HOT=1 NODE_ENV=development electron -r babel-register -r babel-polyfill ./app/main.development",
-    "postinstall": "concurrently \"install-app-deps\" \"node node_modules/fbjs-scripts/node/check-dev-engines.js package.json\"",
+    "postinstall": "install-app-deps",
     "dev": "cross-env START_HOT=1 npm run hot-server",
     "package": "build --publish never",
     "package-win": "npm run build && build --win --x64",
@@ -187,11 +187,10 @@
     "extract-text-webpack-plugin": "^2.0.0",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
+    "long": "^3.2.0",
     "prop-types": "^15.5.6",
     "protobufjs": "^6.6.5",
     "react": "^15.4.2",
-    "sequelize": "^3.30.4",
-    "sqlite3": "^3.1.8",
     "react-dom": "^15.4.2",
     "react-hot-loader": "3.0.0-beta.6",
     "react-redux": "^5.0.2",
@@ -201,7 +200,9 @@
     "redux-actions": "^2.0.1",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
-    "source-map-support": "^0.4.10"
+    "sequelize": "^3.30.4",
+    "source-map-support": "^0.4.10",
+    "sqlite3": "^3.1.8"
   },
   "devEngines": {
     "node": ">=6.x",
