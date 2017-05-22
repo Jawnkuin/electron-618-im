@@ -43,3 +43,6 @@ app/dist
 
 .idea
 npm-debug.log.*
+
+# user data
+app/userdata

@@ -1,6 +1,9 @@
+import _ from 'lodash';
+import Long from 'long';
 import { IMBuddy, IMBaseDefine } from './pbParsers/pbModules';
 import mainStore from '../../main/store';
 import tcpClient from './tcp_client';
+import { getLocalDb, getAccountConfigDb } from '../../utils/database';
 
 // 用来获取service id
 const serviceIdEnums = IMBaseDefine.ServiceID;
@@ -26,7 +29,7 @@ const getAllUserReqBuf = (userId, latestUpdateTime) => {
 };
 
 // 响应接口
-export const onBuddyListResponce = res => (resolve, reject) => {
+export const onBuddyListResponce = res => async (resolve, reject) => {
   if (!res || !res.header || !res.body) {
     reject(new Error('Error Empty res'));
   }
@@ -34,7 +37,37 @@ export const onBuddyListResponce = res => (resolve, reject) => {
   if (buddyListCmdIdEnums.CID_BUDDY_LIST_ALL_USER_RESPONSE !== res.header.commandId) {
     reject(new Error('unmatch commandId'));
   }
-  resolve(res.body);
+
+  try {
+    let buddyList = null;
+    // const localDb = await getLocalDb();
+    buddyList = res.body.userList;
+    // 如果请求里面含有buddyList插入
+    // 没有则从数据库获取
+    /*
+    if (!buddyList || _.isEmpty(buddyList)) {
+      console.time('getAllDepartmentInfo');
+      const deptListsModel = await localDb.getAllDepartmentInfo();
+      console.timeEnd('getAllDepartmentInfo');
+      // 转回long型
+      deptList = deptListsModel.map((dept) => {
+        const deptObj = dept.toJSON();
+        deptObj.deptId = Long.fromString(deptObj.deptId, true);
+        deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
+        return deptObj;
+      });
+    } else {
+      await Promise.all(deptList.map(dept => localDb.insertDepartmentInfoEntity(dept)));
+      const configDb = getAccountConfigDb();
+      configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);
+    }
+    */
+    if (buddyList) {
+      resolve(buddyList);
+    }
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 // 执行tcp获取用户
@@ -57,7 +90,7 @@ const getDepListReqBuf = (userId, latestUpdateTime) => {
   return reqBuf;
 };
 
-export const onDepListResponce = res => (onResolve, onReject) => {
+export const onDepListResponce = res => async (onResolve, onReject) => {
   if (!res || !res.header || !res.body) {
     onReject(new Error('Error Empty res'));
   }
@@ -66,12 +99,44 @@ export const onDepListResponce = res => (onResolve, onReject) => {
     onReject(new Error('Wrong cmd Id'));
     return;
   }
-  onResolve(res.body);
+
+  try {
+    let deptList = null;
+    const localDb = await getLocalDb();
+    deptList = res.body.deptList;
+    // 如果请求里面含有deptlist插入
+    // 没有则从数据库获取
+    if (!deptList || _.isEmpty(deptList)) {
+      console.time('getAllDepartmentInfo');
+      const deptListsModel = await localDb.getAllDepartmentInfo();
+      console.timeEnd('getAllDepartmentInfo');
+      // 转回long型
+      deptList = deptListsModel.map((dept) => {
+        const deptObj = dept.toJSON();
+        deptObj.deptId = Long.fromString(deptObj.deptId, true);
+        deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
+        return deptObj;
+      });
+    } else {
+      await Promise.all(deptList.map(dept => localDb.insertDepartmentInfoEntity(dept)));
+      const configDb = getAccountConfigDb();
+      configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);
+    }
+
+    if (deptList) {
+      onResolve(deptList);
+    }
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 // 执行tcp获取部门
-export const getDepList = (uid, latestUpdateTime) => {
-  const reqBuf = getDepListReqBuf(uid, latestUpdateTime);
+export const getDepList = (uid) => {
+  // 获取最新的时间，configDb放到函数里面
+  const configDb = getAccountConfigDb();
+  const deptLatestUpdateTime = configDb.getDepartmentLastUpdateTime();
+  const reqBuf = getDepListReqBuf(uid, deptLatestUpdateTime);
   const serviceId = serviceIdEnums.SID_BUDDY_LIST;
   const reqCmdId = buddyListCmdIdEnums.CID_BUDDY_LIST_DEPARTMENT_REQUEST;
 

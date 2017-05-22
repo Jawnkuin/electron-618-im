@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 export const STEM_PATH = `${__dirname}/stem/index.html`;
 export const LOGIN_PATH = `${__dirname}/login/index.html`;
@@ -9,26 +10,43 @@ export const PB_PATH = path.join(__dirname, './resources/pb/');
 
 export const TCP_CHILD_PATH = path.join(__dirname, './utils/apis/tcp_client/client');
 
-
 export const ICON_PATH = path.join(__dirname, './resources/icons/');
 
 let LOCAL_DB_CONFIG = null;
+let GLOBAL_DB_CONFIG = null;
+let LOCAL_ACCOUT_CONFIG = null;
+
+// init global data dir
+const globalDataDir = `${__dirname}/userdata`; // ${userIdStr}
+if (!fs.existsSync(globalDataDir) || !fs.statSync(globalDataDir).isDirectory()) {
+  fs.mkdirSync(globalDataDir);
+}
+
 // process.env.LOCALAPPDATA
-export const setLocalDbPath = (userIdStr) => {
-  LOCAL_DB_CONFIG = {
-    development: {
-      dialect: 'sqlite',
-      storage: `userdata/${userIdStr}/${userIdStr}.db`
-    },
-    test: {
-      dialect: 'sqlite',
-      storage: `userdata/${userIdStr}/${userIdStr}.db`
-    },
-    production: {
-      dialect: 'sqlite',
-      storage: `userdata/${userIdStr}/${userIdStr}.db`
-    }
-  };
+export const setLocalDataPath = (userIdStr) => {
+  const localDataDir = `${globalDataDir}/${userIdStr}`;
+  if (!fs.existsSync(localDataDir) || !fs.statSync(localDataDir).isDirectory()) {
+    fs.mkdirSync(localDataDir);
+  }
+  if (!LOCAL_ACCOUT_CONFIG) {
+    LOCAL_ACCOUT_CONFIG = `${localDataDir}/account.json`;
+  }
+  if (!LOCAL_DB_CONFIG) {
+    LOCAL_DB_CONFIG = {
+      development: {
+        dialect: 'sqlite',
+        storage: `${localDataDir}/${userIdStr}.db`
+      },
+      test: {
+        dialect: 'sqlite',
+        storage: `${localDataDir}/${userIdStr}.db`
+      },
+      production: {
+        dialect: 'sqlite',
+        storage: `${localDataDir}/${userIdStr}.db`
+      }
+    };
+  }
 };
 
 export const getLocalDbConfig = () => {
@@ -36,4 +54,32 @@ export const getLocalDbConfig = () => {
     throw new Error('LOCAL_DB_CONFIG not setted');
   }
   return LOCAL_DB_CONFIG;
+};
+
+export const getGlobalDbConfig = () => {
+  if (!GLOBAL_DB_CONFIG) {
+    GLOBAL_DB_CONFIG = {
+      development: {
+        dialect: 'sqlite',
+        storage: `${globalDataDir}/global.db`
+      },
+      test: {
+        dialect: 'sqlite',
+        storage: `${globalDataDir}/global.db`
+      },
+      production: {
+        dialect: 'sqlite',
+        storage: `${globalDataDir}/global.db`
+      }
+    };
+  }
+  return GLOBAL_DB_CONFIG;
+};
+
+export const getLocalAccountConfig = () => {
+  if (!LOCAL_ACCOUT_CONFIG) {
+    throw new Error('LOCAL_ACCOUT_CONFIG not setted');
+  }
+
+  return LOCAL_ACCOUT_CONFIG;
 };

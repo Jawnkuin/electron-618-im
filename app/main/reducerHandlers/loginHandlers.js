@@ -5,11 +5,10 @@ import actionCreators from '../../main/actions';
 import mainStore from '../../main/store';
 import { loginKeys } from '../reducers/login';
 import { WindowConfigs, mainWindowManager } from '../../utils/WindowManager';
-import { STEM_PATH, setLocalDbPath } from '../../configs';
+import { STEM_PATH, setLocalDataPath } from '../../configs';
 import { startHeartBeatLooper } from '../../utils/apis/main';
 import { getUnreadMsgCnt } from '../../utils/apis/talk';
 import { getDepList, getAllUser } from '../../utils/apis/stem';
-import getLocalDb from '../../utils/database';
 
 const Actions = actionCreators(mainStore);
 
@@ -31,16 +30,10 @@ export default (preState, newState, dispatch, getState) => {
         case loginKeys.user:
           {
             // 登录成功
-            // 设置数据库
+            // 设置用户数据库
             const userId = newState[key].userInfo.userId;
+            setLocalDataPath(Long.fromValue(userId).toString());
 
-            setLocalDbPath(Long.fromValue(userId).toString());
-            try {
-              const allUsers = await getLocalDb().getAllUsersInfo();
-              console.log('allUsers', allUsers);
-            } catch (e) {
-              console.log(e);
-            }
 
             // 打开主窗体，关闭登录窗体
             const stemWin = new BrowserWindow(WindowConfigs.stem);

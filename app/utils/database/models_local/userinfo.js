@@ -11,11 +11,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    name: {
+    userRealName: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    nickName: {
+    userNickName: {
       type: DataTypes.TEXT,
       allowNull: true
     },
@@ -35,16 +35,16 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    gender: {
+    userGender: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: '1'
     },
-    user_domain: {
+    userDomain: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    telephone: {
+    userTel: {
       type: DataTypes.TEXT,
       allowNull: true
     },
@@ -53,15 +53,15 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: '0'
     },
-    reserve1: {
+    signInfo: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    reserve2: {
+    reserve1: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    reserve3: {
+    reserve2: {
       type: DataTypes.INTEGER,
       allowNull: true
     }

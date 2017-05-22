@@ -41,7 +41,7 @@ class Organizations extends Component {
   // 类型设置
   static propTypes = {
     allUsersInfo: PropTypes.shape({
-      deptListInfo: PropTypes.object,
+      deptListInfo: PropTypes.array,
       userListInfo: PropTypes.object
     }).isRequired,
     openSingleTalk: PropTypes.func.isRequired
@@ -56,8 +56,8 @@ class Organizations extends Component {
 
     const { allUsersInfo } = props;
 
-    if (allUsersInfo.deptListInfo.deptList) {
-      this.state.deptTree = Department.getDeptTree(allUsersInfo.deptListInfo.deptList);
+    if (allUsersInfo.deptListInfo) {
+      this.state.deptTree = Department.getDeptTree(allUsersInfo.deptListInfo);
     }
 
     if (allUsersInfo.userListInfo.userList) {

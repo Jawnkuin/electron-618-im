@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    dId: {
+    deptId: {
       type: DataTypes.TEXT,
       allowNull: false
     },
@@ -16,15 +16,15 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: '0'
     },
-    name: {
+    deptName: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    parentDepartId: {
+    parentDeptId: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    status: {
+    deptStatus: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: '0'
