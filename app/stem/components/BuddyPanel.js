@@ -23,12 +23,12 @@ const BuddyPanel = ({ historySessions, allUsersInfo, openSingleTalk }) => (
             const key = item.fromUserId.low ? `${item.fromUserId.high}-${item.fromUserId.low}` : item.fromUserId;
             const lastData = item.latestMsg.msgData;
 
-            const userIndex = _.findIndex(allUsersInfo.userListInfo.userList,
+            const userIndex = _.findIndex(allUsersInfo.userListInfo,
             user => _.isEqual(user.userId, item.fromUserId));
-            const buddy = allUsersInfo.userListInfo.userList[userIndex];
+            const buddy = allUsersInfo.userListInfo[userIndex];
 
             const utf8Buf = Buffer.from(lastData, 'base64');
-            const msgStr = utf8Buf.toString('utf8');
+            const msgStr = atob(utf8Buf.toString('utf8'));
             return (
               <ConversationItem
                 key={key}
@@ -57,7 +57,7 @@ const BuddyPanel = ({ historySessions, allUsersInfo, openSingleTalk }) => (
 
 BuddyPanel.propTypes = {
   allUsersInfo: PropTypes.shape({
-    userListInfo: PropTypes.object
+    userListInfo: PropTypes.array
   }).isRequired,
   historySessions: PropTypes.arrayOf(PropTypes.shape({
     fromUserId: PropTypes.any,

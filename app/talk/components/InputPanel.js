@@ -36,7 +36,8 @@ class InputPanel extends Component {
     if (!this.state.input) {
       return;
     }
-    const buf = Buffer.from(this.state.input, 'utf8');
+    const base64Str = btoa(this.state.input);
+    const buf = Buffer.from(base64Str, 'utf8');
     // const base64String = buf.toString('base64');
     const sendTime = new Date().getTime();
     // 用于更改本线程内的状态,并向服务器发送消息

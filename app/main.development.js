@@ -2,12 +2,13 @@
 import { app, BrowserWindow } from 'electron';
 import { replayActionMain } from 'electron-window-redux';
 import path from 'path';
+import trayManager from './utils/Tray';
 import mapStateToWindow from './utils/redux/mapStateToWindow';
 import { WindowConfigs, mainWindowManager } from './utils/WindowManager';
 import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
-import trayManager from './utils/Tray';
 import { ICON_PATH } from './configs';
+
 import './utils/ipcMainResponces';
 
 if (process.env.NODE_ENV === 'production') {
@@ -58,13 +59,22 @@ app.on('ready', async () => {
   // 根据修改的state更新window
   mapStateToWindow({}, mainStore, stateChangeHandlers);
 
+
   // 登录窗体
   const loginWindow = new BrowserWindow(WindowConfigs.login);
-  mainWindowManager.add(loginWindow, 'login');
+  mainWindowManager.add(loginWindow, 'login', () => {
+    trayManager.initTray(path.join(ICON_PATH, 'tray_gray.png'));
+      // 默认托盘点击事件为登录显示
+    trayManager.setClickDefaultHandler(() => {
+      if (loginWindow.isMinimized()) {
+        loginWindow.restore();
+      }
+      if (!loginWindow.isFocused()) {
+        loginWindow.focus();
+      }
+    });
+  });
 
 
   loginWindow.loadURL(`${__dirname}/login/index.html`);
-
-  // 初始化托盘
-  trayManager.initTray(path.join(ICON_PATH, 'tray.png'));
 });

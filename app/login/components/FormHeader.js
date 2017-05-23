@@ -1,14 +1,17 @@
 import React from 'react';
 import { Icon } from 'antd';
 import styles from './FormHeader.less';
-import { closeCurrentWindow } from '../../share/rendererWindow';
+import { closeCurrentWindow, minimizeCurrentWindow } from '../../share/rendererWindow';
 
 const FormHeader = () => (
   <div className={styles.headerContainer}>
     <button className={styles.fontBtn}>
-      <Icon type="setting" />
+      <Icon type="caret-down" />
     </button>
-    <button className={styles.fontBtn}>
+    <button
+      onClick={() => { minimizeCurrentWindow(); }}
+      className={styles.fontBtn}
+    >
       <Icon type="minus" />
     </button>
     <button className={styles.fontBtn} onClick={() => { closeCurrentWindow(); }}>

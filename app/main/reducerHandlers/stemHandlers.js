@@ -40,12 +40,11 @@ export default (preState, newState) => {
               const unReadInfos = mainStore.getState().talk.unReadInfos;
 
               let msgList = null;
-              console.log('newBuddys[0].userId', newBuddys[0].userId);
+
               if (unReadInfos && unReadInfos.length > 0) {
                 const openIndex = _.findIndex(unReadInfos, (uInfo) => {
                   const uInfoUserId = uInfo.buddyinfo.userId;
 
-                  console.log('uInfoUserId', uInfoUserId);
                   return _.isEqual(uInfoUserId, newBuddys[0].userId);
                 });
                 // 打开的talk窗口对话者在unReadInfos里面
@@ -67,8 +66,7 @@ export default (preState, newState) => {
 
           break;
         default:
-
-
+          console.warn(`unhandled key ${key} in stem handlers`);
       }
     }
   });

@@ -40,28 +40,30 @@ export const onBuddyListResponce = res => async (resolve, reject) => {
 
   try {
     let buddyList = null;
-    // const localDb = await getLocalDb();
+    const localDb = await getLocalDb();
     buddyList = res.body.userList;
     // 如果请求里面含有buddyList插入
     // 没有则从数据库获取
-    /*
+
     if (!buddyList || _.isEmpty(buddyList)) {
-      console.time('getAllDepartmentInfo');
-      const deptListsModel = await localDb.getAllDepartmentInfo();
-      console.timeEnd('getAllDepartmentInfo');
+      console.time('getAllUsersInfo');
+      const allUsersModelList = await localDb.getAllUsersInfo();
+      console.timeEnd('getAllUsersInfo');
       // 转回long型
-      deptList = deptListsModel.map((dept) => {
-        const deptObj = dept.toJSON();
-        deptObj.deptId = Long.fromString(deptObj.deptId, true);
-        deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
-        return deptObj;
+      buddyList = allUsersModelList.map((user) => {
+        const userObj = user.toJSON();
+        userObj.userId = Long.fromString(userObj.userId, true);
+        userObj.departmentId = Long.fromString(userObj.departmentId, true);
+        return userObj;
       });
     } else {
-      await Promise.all(deptList.map(dept => localDb.insertDepartmentInfoEntity(dept)));
+      console.time('insertUserInfoEntitys');
+      await Promise.all(buddyList.map(user => localDb.insertUserInfoEntity(user)));
+      console.timeEnd('insertUserInfoEntitys');
       const configDb = getAccountConfigDb();
-      configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);
+      configDb.setUserLastUpdateTime(res.body.latestUpdateTime);
     }
-    */
+
     if (buddyList) {
       resolve(buddyList);
     }
@@ -71,8 +73,11 @@ export const onBuddyListResponce = res => async (resolve, reject) => {
 };
 
 // 执行tcp获取用户
-export const getAllUser = (uid, latestUpdateTime) => {
-  const allUserReqBuf = getAllUserReqBuf(uid, latestUpdateTime);
+export const getAllUser = (uid) => {
+  // 获取最新的时间，configDb放到函数里面
+  const configDb = getAccountConfigDb();
+  const userLatestUpdateTime = configDb.getUserLastUpdateTime();
+  const allUserReqBuf = getAllUserReqBuf(uid, userLatestUpdateTime);
   const buddyListServiceId = serviceIdEnums.SID_BUDDY_LIST;
   const allUserReqCmdId = buddyListCmdIdEnums.CID_BUDDY_LIST_ALL_USER_REQUEST;
 
@@ -108,17 +113,19 @@ export const onDepListResponce = res => async (onResolve, onReject) => {
     // 没有则从数据库获取
     if (!deptList || _.isEmpty(deptList)) {
       console.time('getAllDepartmentInfo');
-      const deptListsModel = await localDb.getAllDepartmentInfo();
+      const deptModelLists = await localDb.getAllDepartmentInfo();
       console.timeEnd('getAllDepartmentInfo');
       // 转回long型
-      deptList = deptListsModel.map((dept) => {
+      deptList = deptModelLists.map((dept) => {
         const deptObj = dept.toJSON();
         deptObj.deptId = Long.fromString(deptObj.deptId, true);
         deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
         return deptObj;
       });
     } else {
+      console.time('insertDepartmentInfoEntitys');
       await Promise.all(deptList.map(dept => localDb.insertDepartmentInfoEntity(dept)));
+      console.timeEnd('insertDepartmentInfoEntitys');
       const configDb = getAccountConfigDb();
       configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);
     }

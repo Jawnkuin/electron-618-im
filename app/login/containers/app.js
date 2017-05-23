@@ -1,16 +1,14 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import BasePanel from '../../share/BasePanel';
+import LoginPanel from '../components/LoginPanel';
 import FormHeader from '../components/FormHeader';
-import LogoBox from '../components/LogoBox';
 import InputFormContainer from './InputFormContainer';
 
 const App = () => (
-  <BasePanel>
+  <LoginPanel>
     <FormHeader />
-    <LogoBox />
     <InputFormContainer />
-  </BasePanel>
+  </LoginPanel>
 );
 
 // eslint-disable-next-line react/prop-types

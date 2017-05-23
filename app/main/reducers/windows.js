@@ -73,4 +73,10 @@ const windows = handleActions({
   }
 }, immutableState);
 
+export const windowsKeys = {
+  login: 'login',
+  stem: 'stem',
+  talk: 'talk'
+};
+
 export default windows;

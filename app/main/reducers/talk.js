@@ -18,7 +18,8 @@ const talk = handleActions({
   RECIEVE_UNREAD_MESSAGE: {
     // 将打开的会话添加到会话里面里面
     next: (state = immutableState, action) => {
-      const msg = action.payload.msg;
+      const msg = action.payload;
+      console.log('RECIEVE_UNREAD_MESSAGE', msg);
       const toBuddyId = msg.fromUserId;
       const newArray = _.cloneDeep(state.unReadInfos);
 

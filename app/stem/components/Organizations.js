@@ -42,7 +42,7 @@ class Organizations extends Component {
   static propTypes = {
     allUsersInfo: PropTypes.shape({
       deptListInfo: PropTypes.array,
-      userListInfo: PropTypes.object
+      userListInfo: PropTypes.array
     }).isRequired,
     openSingleTalk: PropTypes.func.isRequired
   }
@@ -56,12 +56,12 @@ class Organizations extends Component {
 
     const { allUsersInfo } = props;
 
-    if (allUsersInfo.deptListInfo) {
+    if (!_.isEmpty(allUsersInfo.deptListInfo)) {
       this.state.deptTree = Department.getDeptTree(allUsersInfo.deptListInfo);
     }
 
-    if (allUsersInfo.userListInfo.userList) {
-      const userList = allUsersInfo.userListInfo.userList;
+    if (!_.isEmpty(allUsersInfo.userListInfo)) {
+      const userList = allUsersInfo.userListInfo;
       const newDeptTree = appendBuddyToOrg(this.state.deptTree, userList);
       this.state.deptTreeWithBuddys = newDeptTree;
     }
@@ -76,8 +76,8 @@ class Organizations extends Component {
   componentWillReceiveProps (nextProps) {
     const { allUsersInfo } = nextProps;
 
-    if (allUsersInfo.userListInfo.userList) {
-      const userList = allUsersInfo.userListInfo.userList;
+    if (!_.isEmpty(allUsersInfo.userListInfo)) {
+      const userList = allUsersInfo.userListInfo;
       const newDeptTree = appendBuddyToOrg(this.state.deptTree, userList);
       this.setState({ deptTreeWithBuddys: newDeptTree });
     }

@@ -6,8 +6,9 @@ class TrayManager {
   constructor () {
     this.tray = null;
     this.canFlash = false;
-    this.iconPath = '';
+    this.defaultIconPath = '';
     this.clickHandler = () => {};
+    this.defaultClickHandler = () => {};
   }
 
   flashTray () {
@@ -16,12 +17,12 @@ class TrayManager {
     }
     this.canFlash = true;
     const f = () => {
-      this.tray.setImage(this.iconPath);
+      this.tray.setImage(this.defaultIconPath);
       if (this.canFlash) {
         setTimeout(() => {
           this.tray.setImage(path.join(ICON_PATH, 'tray_empty.png'));
-        }, 300);
-        setTimeout(f, 600);
+        }, 450);
+        setTimeout(f, 900);
       }
     };
     f();
@@ -29,21 +30,30 @@ class TrayManager {
 
   stopFlash () {
     this.canFlash = false;
-    this.clickHandler = () => {};
+    this.clickHandler = this.defaultClickHandler;
   }
 
   setToolTip (text) {
     this.tray.setToolTip(text);
   }
 
-  setClickHandler (func) {
+  setClickInstantHandler (func) {
     this.clickHandler = func;
+  }
+
+  setDefaultTrayIcon (iconPath) {
+    this.defaultIconPath = iconPath;
+    this.tray.setImage(this.defaultIconPath);
+  }
+
+  setClickDefaultHandler (func) {
+    this.defaultClickHandler = func;
   }
 
 
   initTray (iconPath) {
     this.tray = new Tray(iconPath);
-    this.iconPath = iconPath;
+    this.defaultIconPath = iconPath;
 
     this.tray.setToolTip(
 `v0.0.5
@@ -55,11 +65,8 @@ class TrayManager {
     });
 
     this.tray.on('click', () => {
-      console.log(this.clickHandler);
       this.clickHandler();
-      this.clickHandler = () => {
-        console.log('empty');
-      };
+      this.clickHandler = this.defaultClickHandler;
     });
   }
 

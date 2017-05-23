@@ -1,11 +1,13 @@
 import _ from 'lodash';
 import { BrowserWindow } from 'electron';
 import Long from 'long';
+import path from 'path';
+import trayManager from '../../utils/Tray';
 import actionCreators from '../../main/actions';
 import mainStore from '../../main/store';
 import { loginKeys } from '../reducers/login';
 import { WindowConfigs, mainWindowManager } from '../../utils/WindowManager';
-import { STEM_PATH, setLocalDataPath } from '../../configs';
+import { ICON_PATH, STEM_PATH, setLocalDataPath } from '../../configs';
 import { startHeartBeatLooper } from '../../utils/apis/main';
 import { getUnreadMsgCnt } from '../../utils/apis/talk';
 import { getDepList, getAllUser } from '../../utils/apis/stem';
@@ -19,7 +21,7 @@ export default (preState, newState, dispatch, getState) => {
   const stateKeys = _.keys(newState);
 
   // 查看每一个子状态 *值* 是否变化，若变化执行对应的handler
-  _.forEach(stateKeys, async (key) => {
+  _.forEach(stateKeys, (key) => {
     // 初始化为空值
     if (!newState[key] || _.isEmpty(newState[key])) {
       return;
@@ -30,6 +32,9 @@ export default (preState, newState, dispatch, getState) => {
         case loginKeys.user:
           {
             // 登录成功
+            // 初始化托盘
+            trayManager.setDefaultTrayIcon(path.join(ICON_PATH, 'tray.png'));
+
             // 设置用户数据库
             const userId = newState[key].userInfo.userId;
             setLocalDataPath(Long.fromValue(userId).toString());
@@ -41,10 +46,22 @@ export default (preState, newState, dispatch, getState) => {
 
             mainWindowManager.add(stemWin, 'stem', () => {
               mainWindowManager.close(loginWinId);
-              Actions.onLoadUser(newState[key]);
 
-              getDepList(userId, 0);
-              getAllUser(userId, 0);
+              // 默认托盘点击事件为主窗体显示
+              trayManager.setClickDefaultHandler(() => {
+                if (stemWin.isMinimized()) {
+                  stemWin.restore();
+                }
+                if (!stemWin.isFocused()) {
+                  stemWin.focus();
+                }
+              });
+
+              Actions.onLoadUser(newState[key]);
+              // 请求部门列表
+              getDepList(userId);
+              // 请求所有用户
+              getAllUser(userId);
               // 请求未读消息数量
               getUnreadMsgCnt();
             });

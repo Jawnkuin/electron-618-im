@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'antd';
 import styles from './FormHeader.less';
-import { closeCurrentWindow } from '../../share/rendererWindow';
+import { closeCurrentWindow, minimizeCurrentWindow } from '../../share/rendererWindow';
 
 const FormHeader = () => (
   <div className={styles.headerContainer}>
@@ -13,7 +13,10 @@ const FormHeader = () => (
       <button className={styles.fontBtn}>
         <Icon type="setting" />
       </button>
-      <button className={styles.fontBtn}>
+      <button
+        className={styles.fontBtn}
+        onClick={() => { minimizeCurrentWindow(); }}
+      >
         <Icon type="minus" />
       </button>
       <button

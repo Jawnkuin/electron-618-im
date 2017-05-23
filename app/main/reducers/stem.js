@@ -38,7 +38,7 @@ const stem = handleActions({
   },
   GET_ALL_USERS_SUCCESS: {
     next: (state = immutableState, action) => {
-      const uList = _.cloneDeep(action.payload.userList);
+      const uList = _.cloneDeep(action.payload);
       return Object.assign({}, state, {
         userList: uList
       });

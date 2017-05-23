@@ -9,4 +9,5 @@ export default {
   login: loginHandlers,
   stem: stemHandlers,
   talk: talkHandlers
+  // windows: windowsHandlers
 };

@@ -1,0 +1,89 @@
+@import "../../share/style/base.less";
+
+/*
+
+*/
+.InputPanel{
+	overflow: hidden;
+	margin-top: 180px;
+	text-align: left;
+	font-family: SimHei;
+	color: @text-gray-4d;
+	text-align: center;
+	font-size: 11px;
+	display: flex;
+	padding-top: 15px;
+	.Avatar{
+		flex: 0 0 130px;
+		text-align: right;
+		padding-right: 15px;
+		img{
+			height: 100px;
+			width: 100px;
+		}
+	}
+	.InputForm{
+		flex: 0 0 195px;
+		.ant-input{
+			font-size: 18px;
+			color: @text-black;
+		}
+		.ant-input::-webkit-input-placeholder {
+			font-size: 13px;
+			color: @text-gray-70;
+		}
+		.ant-input-affix-wrapper:first-child{
+			.ant-input{
+				border-bottom-left-radius: 0px;
+				border-bottom-right-radius: 0px;
+			}
+		}
+		.ant-input-affix-wrapper:nth-child(2){
+			.ant-input{
+				border-top-left-radius: 0px;
+				border-top-right-radius: 0px;
+			}
+		}
+		.CheckContainer {
+			margin-top: 5px;
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+
+}
+
+
+
+.ErrorMessage{
+	position: absolute;
+	display: inline-block;
+	text-align: center;
+	font-size: 15px;
+	color: #EF5350;
+	left: 0;
+	right: 0;
+}
+
+.loginBtn {
+	width: 100%;
+	font-size: 15px;
+	margin-top: 10px;
+	height: 30px;
+	color: #ffffff;
+	background-color: #08a3db;
+}
+
+.loginBtn:active{
+	background-color: #098cbc;
+}
+
+.loginBtn:focus{
+	color: #ffffff;
+	background-color: #08a3db;
+}
+
+.loginBtn:hover{
+		color: #ffffff;
+	background-color: #3cc3f5;
+}

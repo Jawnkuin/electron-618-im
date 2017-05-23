@@ -15,20 +15,20 @@
       }());
     </script>
   </head>
-  <body>
+  <body style="border:0px">
     <div id="container">
       <div id="root"></div>
-      <script>
-        {
-          const script = document.createElement('script');
-          const port = process.env.PORT || 3000;
-          script.src = (process.env.HOT)
-            ? 'http://localhost:' + port + '/dist/login.js'
-            : '../dist/login.js';
-          // HACK: Writing the script path should be done with webpack
-          document.body.appendChild(script);
-        }
-      </script>
     </div>
+    <script>
+      {
+        const script = document.createElement('script');
+        const port = process.env.PORT || 3000;
+        script.src = (process.env.HOT)
+          ? 'http://localhost:' + port + '/dist/login.js'
+          : '../dist/login.js';
+        // HACK: Writing the script path should be done with webpack
+        document.body.appendChild(script);
+      }
+    </script>
   </body>
 </html>

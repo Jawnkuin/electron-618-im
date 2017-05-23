@@ -27,9 +27,9 @@ export default (pbHeader, pbBodyBuffer) => {
         onBuddyListResponce({
           header: pbHeader,
           body: IMBuddy.IMAllUserRsp.decode(pbBodyBuffer)
-        })((body) => {
-          Actions.getAllUserSuccess(body); // 成功，发送相应的action
-          const userIdList = body.userList.map(e => e.userId);
+        })((userList) => {
+          Actions.getAllUserSuccess(userList); // 成功，发送相应的action
+          const userIdList = userList.map(e => e.userId);
           getUsersStatReq(userIdList);
         },
         Actions.getAllUserFail);

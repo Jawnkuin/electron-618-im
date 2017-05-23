@@ -15,8 +15,8 @@ const userInfo = handleActions({
 
 
 export const allUsersInfoState = {
-  userListInfo: {},
-  deptListInfo: {}
+  userListInfo: [],
+  deptListInfo: []
 };
 
 const allUsersInfo = handleActions(
@@ -42,7 +42,7 @@ const allUsersInfo = handleActions(
       next: (state = allUsersInfoState, action) => {
         const userStatList = action.payload;
         if (userStatList && userStatList.length >= 0) {
-          const newUserList = _.cloneDeep(state.userListInfo.userList);
+          const newUserList = _.cloneDeep(state.userListInfo);
           newUserList.map((user) => {
             if (!user.onlineStatus) {
               user.onlineStatus = 2; // 在线状态初始化为2
@@ -53,9 +53,7 @@ const allUsersInfo = handleActions(
             }
             return user;
           });
-          return Object.assign({}, state, { userListInfo:
-            Object.assign({}, state.userListInfo, { userList: newUserList }) }
-          );
+          return Object.assign({}, state, { userListInfo: newUserList });
         }
         return state;
       }

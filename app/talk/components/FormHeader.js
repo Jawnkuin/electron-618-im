@@ -3,7 +3,7 @@ import { Icon } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './FormHeader.less';
 import dummyImage from '../../utils/dummyimage';
-import { closeCurrentWindow } from '../../share/rendererWindow';
+import { closeCurrentWindow, minimizeCurrentWindow } from '../../share/rendererWindow';
 
 const FormHeader = ({ buddyInfo, closeSingleTalk }) => {
   const info = buddyInfo.buddyInfo;
@@ -16,7 +16,10 @@ const FormHeader = ({ buddyInfo, closeSingleTalk }) => {
         </div>
       </div>
       <div className={styles.btnGroup}>
-        <button className={styles.fontBtn}>
+        <button
+          onClick={() => { minimizeCurrentWindow(); }}
+          className={styles.fontBtn}
+        >
           <Icon type="minus" />
         </button>
         <button className={styles.fontBtn}>

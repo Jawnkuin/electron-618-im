@@ -14,12 +14,14 @@ export const ICON_PATH = path.join(__dirname, './resources/icons/');
 
 let LOCAL_DB_CONFIG = null;
 let GLOBAL_DB_CONFIG = null;
-let LOCAL_ACCOUT_CONFIG = null;
+let LOCAL_ACCOUNT_CONFIG = null;
+let GLOBAL_CONFIG = null;
 
 // init global data dir
 const globalDataDir = `${__dirname}/userdata`; // ${userIdStr}
 if (!fs.existsSync(globalDataDir) || !fs.statSync(globalDataDir).isDirectory()) {
   fs.mkdirSync(globalDataDir);
+  GLOBAL_CONFIG = `${globalDataDir}/globalConfig.json`;
 }
 
 // process.env.LOCALAPPDATA
@@ -28,8 +30,8 @@ export const setLocalDataPath = (userIdStr) => {
   if (!fs.existsSync(localDataDir) || !fs.statSync(localDataDir).isDirectory()) {
     fs.mkdirSync(localDataDir);
   }
-  if (!LOCAL_ACCOUT_CONFIG) {
-    LOCAL_ACCOUT_CONFIG = `${localDataDir}/account.json`;
+  if (!LOCAL_ACCOUNT_CONFIG) {
+    LOCAL_ACCOUNT_CONFIG = `${localDataDir}/account.json`;
   }
   if (!LOCAL_DB_CONFIG) {
     LOCAL_DB_CONFIG = {
@@ -77,9 +79,17 @@ export const getGlobalDbConfig = () => {
 };
 
 export const getLocalAccountConfig = () => {
-  if (!LOCAL_ACCOUT_CONFIG) {
+  if (!LOCAL_ACCOUNT_CONFIG) {
     throw new Error('LOCAL_ACCOUT_CONFIG not setted');
   }
 
-  return LOCAL_ACCOUT_CONFIG;
+  return LOCAL_ACCOUNT_CONFIG;
+};
+
+export const getGlobalConfig = () => {
+  if (!GLOBAL_CONFIG) {
+    throw new Error('GLOBAL_CONFIG not setted');
+  }
+
+  return GLOBAL_CONFIG;
 };
