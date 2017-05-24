@@ -52,5 +52,15 @@ export default merge(baseConfig, {
   node: {
     __dirname: false,
     __filename: false
+  },
+
+
+  externals: {
+    sequelize: {
+      commonjs: 'sequelize',
+      commonjs2: 'sequelize',
+      amd: 'sequelize',
+      root: 'Sequelize' // indicates global variable
+    }
   }
 });

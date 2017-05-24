@@ -35,7 +35,15 @@ class DialogPanel extends Component {
           {
             msgList.map((dlg) => {
               const utf8Buf = Buffer.from(dlg.msgData, 'base64');
-              const msgStr = atob(utf8Buf.toString('utf8'));
+
+              let msgStr = '';
+              try {
+                msgStr = atob(utf8Buf.toString('utf8'));
+              } catch (e) {
+                console.warn(e.message);
+                msgStr = utf8Buf.toString('utf8');
+              }
+
               const isFromSelf = _.isEqual(dlg.fromUserId, selfInfo.userId);
               return (
                 <DlgItem

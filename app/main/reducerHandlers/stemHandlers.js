@@ -1,17 +1,16 @@
 import _ from 'lodash';
 import { BrowserWindow } from 'electron';
-import actionCreators from '../../main/actions';
+import getActionCreators from '../../main/actions';
 import { stemKeys } from '../reducers/stem';
 import mainStore from '../../main/store';
 import { WindowConfigs, mainWindowManager } from '../../utils/WindowManager';
 import { TALK_PATH } from '../../configs';
 
-const Actions = actionCreators(mainStore);
 
 // payload ：userId，latestUpdateTime
 export default (preState, newState) => {
   const stateKeys = _.keys(newState);
-
+  const Actions = getActionCreators();
   // 查看每一个子状态 *值* 是否变化，若变化执行对应的handler
   _.forEach(stateKeys, (key) => {
     // 初始化为空值

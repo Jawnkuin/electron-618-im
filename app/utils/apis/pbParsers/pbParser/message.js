@@ -1,11 +1,9 @@
 import { IMBaseDefine, IMMessage } from '../pbModules';
 import Talk from '../../talk';
-import actionCreators from '../../../../main/actions';
-import mainStore from '../../../../main/store';
-
-const Actions = actionCreators(mainStore);
+import getActionCreators from '../../../../main/actions';
 
 export default (pbHeader, pbBodyBuffer) => {
+  const Actions = getActionCreators();
   try {
     const IMMessageCmdIDs = IMBaseDefine.MessageCmdID;
     switch (pbHeader.commandId) {

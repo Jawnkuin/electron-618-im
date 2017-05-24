@@ -8,6 +8,8 @@ import '../app.global.css';
 
 const store = configureStore(immutableState);
 
+// store.subscribe()
+
 render(
   <AppContainer>
     <Root store={store} />

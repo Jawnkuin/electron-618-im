@@ -1,12 +1,12 @@
 import { IMBaseDefine, IMBuddy } from '../pbModules';
-import actionCreators from '../../../../main/actions';
-import mainStore from '../../../../main/store';
+import getActionCreators from '../../../../main/actions';
 import { onBuddyListResponce, onDepListResponce, getUsersStatReq, onUsersStatResponce } from '../../stem';
 
-const Actions = actionCreators(mainStore);
 
 // 好友列表响应解析
 export default (pbHeader, pbBodyBuffer) => {
+  const Actions = getActionCreators();
+
   const BCmdIDs = IMBaseDefine.BuddyListCmdID;
   switch (pbHeader.commandId) {
     case BCmdIDs.CID_BUDDY_LIST_RECENT_CONTACT_SESSION_RESPONSE:

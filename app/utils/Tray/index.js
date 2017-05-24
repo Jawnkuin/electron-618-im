@@ -12,7 +12,7 @@ class TrayManager {
   }
 
   flashTray () {
-    if (!this.tray || !this.iconPath) {
+    if (!this.tray || !this.defaultIconPath) {
       throw new Error('Tray aint initialized');
     }
     this.canFlash = true;
@@ -48,6 +48,7 @@ class TrayManager {
 
   setClickDefaultHandler (func) {
     this.defaultClickHandler = func;
+    this.clickHandler = this.defaultClickHandler;
   }
 
 

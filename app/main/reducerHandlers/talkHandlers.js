@@ -1,16 +1,14 @@
 import _ from 'lodash';
 import { talkKeys } from '../reducers/talk';
 import trayManager from '../../utils/Tray';
-import actionCreators from '../../main/actions';
+import getActionCreators from '../../main/actions';
 import mainStore from '../../main/store';
-
-const Actions = actionCreators(mainStore);
 
 
 // payload ：userId，latestUpdateTime
-export default (preState, newState, dispatch, getState) => {
+export default (preState, newState) => {
   console.log('talkhandlers called');
-
+  const Actions = getActionCreators();
   const stateKeys = _.keys(newState);
   _.forEach(stateKeys, (key) => {
     // if the new one and the previous one are both empty, pass
@@ -32,7 +30,7 @@ export default (preState, newState, dispatch, getState) => {
                 trayManager.stopFlash();
               }
             } else {
-              const { userList } = getState().stem;
+              const { userList } = mainStore.getState().stem;
               trayManager.flashTray();
               // 设置托盘点击打开对应会话窗体
               const lastOne = unReadInfos[unReadInfos.length - 1];
@@ -51,7 +49,7 @@ export default (preState, newState, dispatch, getState) => {
                 const userItem = userList[userItemIndex];
                 const copyItem = Object.assign({}, userItem, { userId: userItem.userId });
 
-                trayManager.setClickHandler(() => Actions.openSingleTalk(copyItem));
+                trayManager.setClickInstantHandler(() => Actions.openSingleTalk(copyItem));
               }
             }
           }

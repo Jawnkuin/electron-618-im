@@ -1,5 +1,6 @@
 const getGlobalConfig = require('../../configs').getGlobalConfig;
 const low = require('lowdb');
+const _ = require('lodash');
 // models.recentSessionInfo.findAll().then(function(recentSessionInfos) {
 // console.log(recentSessionInfos);
 //  });
@@ -11,7 +12,6 @@ let globalConfigDb = null;
 function getGlobalConfigDb () {
   if (!globalConfigDb) {
     const initObj = {
-      defaultId: '',
       users: []
     };
     globalConfigDb = low(getGlobalConfig());
@@ -19,14 +19,37 @@ function getGlobalConfigDb () {
   }
 
   return {
-    getDepartmentLastUpdateTime: () => globalConfigDb.get('department.lastUpdateTime').value(),
-    setDepartmentLastUpdateTime: t => globalConfigDb.set('department.lastUpdateTime', t).write(),
+    // 获取所有用户
+    getAllUsers: () => globalConfigDb.get('users').value(),
 
-    getUserLastUpdateTime: () => globalConfigDb.get('user.lastUpdateTime').value(),
-    setUserLastUpdateTime: t => globalConfigDb.set('user.lastUpdateTime', t).write(),
+    setUserRememberPsw: name => globalConfigDb.get('users')
+      .find({ name })
+      .assign({ remember: true })
+      .write(),
 
-    getRecentSessionLastUpdateTime: () => globalConfigDb.get('recentSession.lastUpdateTime').value(),
-    setRecentSessionLastUpdateTime: t => globalConfigDb.set('recentSession.lastUpdateTime', t).write()
+    setUserAutoLogin: name => globalConfigDb.get('users')
+      .find({ name })
+      .assign({ autoLogin: true, remember: true })
+      .write(),
+
+    removeUserByName: name => globalConfigDb.get('users').remove({ name }).write(),
+
+    addOrUpdateUser: (user) => {
+      const newUser = _.cloneDeep(user);
+      if (!newUser.name) {
+        newUser.name = newUser.realName;
+      }
+      if ((!newUser.name && !newUser.realName) || !newUser.avatarPath) {
+        throw new Error('unsetted user name or avart');
+      }
+      newUser.logging = true;
+      globalConfigDb.get('users').remove({ name }).write();
+      globalConfigDb.get('users').push(newUser).write();
+    },
+
+    setLogoutByName: name => globalConfigDb.get('users')
+      .find({ name })
+      .assign({ logging: false })
   };
 }
 

@@ -1,7 +1,6 @@
 import { windowManager } from 'electron-window-redux';
 import { shell } from 'electron';
-import actionsCreators from '../main/actions';
-import mainStore from '../main/store';
+import getActionCreators from '../main/actions';
 
 
 export class WindowConfigs {
@@ -48,14 +47,18 @@ const handleRedirect = lwindow => (e, url) => {
   }
 };
 
-const Actions = actionsCreators(mainStore);
+
 // 窗体打开
 windowManager.subscribeWindowLoadedListener((newID, name) => {
+  const Actions = getActionCreators();
   Actions.addWindow(newID, name);
   const idWindow = windowManager.get(newID);
   idWindow.webContents.on('will-navigate', handleRedirect(idWindow));
 });
 // 窗体关闭
-windowManager.subscribeWindowCloseedListener(Actions.closeWindow);
+windowManager.subscribeWindowCloseedListener((newID, name) => {
+  const Actions = getActionCreators();
+  Actions.closeWindow(newID, name);
+});
 
 export const mainWindowManager = windowManager;

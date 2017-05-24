@@ -7,6 +7,7 @@ import mapStateToWindow from './utils/redux/mapStateToWindow';
 import { WindowConfigs, mainWindowManager } from './utils/WindowManager';
 import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
+import { getGlobalConfig } from './utils/database';
 import { ICON_PATH } from './configs';
 
 import './utils/ipcMainResponces';
@@ -77,4 +78,14 @@ app.on('ready', async () => {
 
 
   loginWindow.loadURL(`${__dirname}/login/index.html`);
+});
+
+app.on('will-quit', () => {
+  const globalConfigDb = getGlobalConfig();
+  const loginUser = mainStore.login.user;
+  if (!loginUser || !loginUser.userInfo) {
+    return;
+  }
+  const loginName = loginUser.userInfo.userNickName;
+  globalConfigDb.setLogoutByName(loginName);
 });

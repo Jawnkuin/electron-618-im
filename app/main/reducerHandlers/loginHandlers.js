@@ -3,7 +3,7 @@ import { BrowserWindow } from 'electron';
 import Long from 'long';
 import path from 'path';
 import trayManager from '../../utils/Tray';
-import actionCreators from '../../main/actions';
+import getActionCreators from '../../main/actions';
 import mainStore from '../../main/store';
 import { loginKeys } from '../reducers/login';
 import { WindowConfigs, mainWindowManager } from '../../utils/WindowManager';
@@ -12,12 +12,11 @@ import { startHeartBeatLooper } from '../../utils/apis/main';
 import { getUnreadMsgCnt } from '../../utils/apis/talk';
 import { getDepList, getAllUser } from '../../utils/apis/stem';
 
-const Actions = actionCreators(mainStore);
 
 // payload ：userId，latestUpdateTime
-export default (preState, newState, dispatch, getState) => {
+export default (preState, newState) => {
   console.log('loginhandlers called');
-
+  const Actions = getActionCreators();
   const stateKeys = _.keys(newState);
 
   // 查看每一个子状态 *值* 是否变化，若变化执行对应的handler
@@ -42,7 +41,7 @@ export default (preState, newState, dispatch, getState) => {
 
             // 打开主窗体，关闭登录窗体
             const stemWin = new BrowserWindow(WindowConfigs.stem);
-            const loginWinId = getState().windows.login.windowID;
+            const loginWinId = mainStore.getState().windows.login.windowID;
 
             mainWindowManager.add(stemWin, 'stem', () => {
               mainWindowManager.close(loginWinId);
@@ -74,8 +73,6 @@ export default (preState, newState, dispatch, getState) => {
 
           break;
         default:
-
-
       }
     }
   });

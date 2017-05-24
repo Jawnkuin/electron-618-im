@@ -6,9 +6,6 @@ import { TCP_CHILD_PATH } from '../../../configs';
 // 将tcp所有的行为放到子进程中，用send和on与子进程通信
 const tcpProcess = fork(TCP_CHILD_PATH);
 
-
-console.log(`${__dirname}/client.js`);
-
 const SEND_PB = 'SEND_PB';
 const HEART_BEAT = 'HEART_BEAT';
 

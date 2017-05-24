@@ -1,11 +1,11 @@
 import { onLoginResponce } from '../../login';
-import actionCreators from '../../../../main/actions';
-import mainStore from '../../../../main/store';
+import getActionCreators from '../../../../main/actions';
 import { IMBaseDefine, IMLogin } from '../pbModules';
 
-const Actions = actionCreators(mainStore);
+
 // 登录模块响应解析
 export default (pbHeader, pbBodyBuffer) => {
+  const Actions = getActionCreators();
   try {
     const IMLoginCmdIDs = IMBaseDefine.LoginCmdID;
     switch (pbHeader.commandId) {

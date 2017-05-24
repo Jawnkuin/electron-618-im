@@ -27,15 +27,14 @@ const onReducerInvoke = (store, handlers) => () => {
       return;
     }
 
-    if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
+    if (!preState[key] || !_.isEqual(preState[key], newState[key])) {
       if (handlers[key] && typeof handlers[key] === 'function') {
-        handlers[key](preState[key], newState[key], store.dispatch, store.getState);
+        handlers[key](preState[key], newState[key]);
       }
     }
   });
 
   preState = _.cloneDeep(newState);
-  // await Actions.doLoginServer(action.payload.name, action.payload.psw)(mainStore.dispatch);
 };
 
 export default (initState = {}, store, handlers) => {
