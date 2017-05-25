@@ -57,6 +57,13 @@
       "package.json",
       "utils/apis/tcp_client/client.js"
     ],
+    "extraResources":[
+      {
+        "from":"app/node_modules/",
+        "to":"node_modules/"
+      }
+
+    ],
     "win": {
       "target": "nsis"
     },
@@ -111,6 +118,7 @@
   },
   "devDependencies": {
     "asar": "^0.13.0",
+    "aws-sdk": "^2.57.0",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
     "babel-jest": "^19.0.0",
@@ -140,7 +148,6 @@
     "electron-devtools-installer": "^2.0.1",
     "electron-inspector": "^0.1.4",
     "electron-rebuild": "^1.2.1",
-    "enzyme": "^2.7.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.0.0",
     "eslint-formatter-pretty": "^1.1.0",
@@ -162,7 +169,6 @@
     "html-webpack-plugin": "^2.26.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^19.0.2",
-    "jsdom": "^9.9.1",
     "less": "^2.7.2",
     "less-loader": "^4.0.2",
     "minimist": "^1.2.0",

@@ -17,8 +17,15 @@ let GLOBAL_DB_CONFIG = null;
 let LOCAL_ACCOUNT_CONFIG = null;
 let GLOBAL_CONFIG = null;
 
+
+let globalDataDir;
 // init global data dir
-const globalDataDir = `${process.env.ProgramData}/ZBCGJST`; // ${userIdStr}
+if (process.platform === 'darwin') {
+  globalDataDir = `${process.env.HOME}/ZBCGJST`; // ${userIdStr}
+} else {
+  globalDataDir = `${process.env.ProgramData}/ZBCGJST`; // ${userIdStr}
+}
+
 console.log(globalDataDir);
 if (!fs.existsSync(globalDataDir) || !fs.statSync(globalDataDir).isDirectory()) {
   fs.mkdirSync(globalDataDir);

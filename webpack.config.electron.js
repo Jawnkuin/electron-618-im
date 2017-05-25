@@ -34,6 +34,9 @@ export default merge(baseConfig, {
      * development checks
      */
     new webpack.DefinePlugin({
+      '#! /usr/bin/env node': ''
+    }),
+    new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     })
   ],
@@ -60,7 +63,19 @@ export default merge(baseConfig, {
       commonjs: 'sequelize',
       commonjs2: 'sequelize',
       amd: 'sequelize',
-      root: 'Sequelize' // indicates global variable
+      root: 'sequelize' // indicates global variable
     }
+    /*
+
+    'node-pre-gyp': {
+      commonjs: 'node-pre-gyp'
+    }
+    ,
+    sqlite3: {
+      commonjs: 'sqlite3',
+      commonjs2: 'sqlite3',
+      amd: 'sqlite3',
+      root: 'sqlite3'
+    }*/
   }
 });
