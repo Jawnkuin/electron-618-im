@@ -11,6 +11,8 @@ import { ICON_PATH, STEM_PATH, setLocalDataPath } from '../../configs';
 import { startHeartBeatLooper } from '../../utils/apis/main';
 import { getUnreadMsgCnt } from '../../utils/apis/talk';
 import { getDepList, getAllUser } from '../../utils/apis/stem';
+import { doLogin } from '../../utils/apis/login';
+import { getGlobalConfigDb } from '../../utils/database';
 
 
 // payload ：userId，latestUpdateTime
@@ -30,12 +32,20 @@ export default (preState, newState) => {
       switch (key) {
         case loginKeys.user:
           {
+            try {
+              const reserveUserData = mainStore.getState().login.reserveUserData;
+              const globalConfigDb = getGlobalConfigDb();
+              globalConfigDb.addOrUpdateUser(Object.assign({}, reserveUserData, { logging: true }));
+            } catch (e) {
+              console.warn('Insert User Data Failed to "globalConfigDb"', e.message);
+            }
+
             // 登录成功
             // 初始化托盘
             trayManager.setDefaultTrayIcon(path.join(ICON_PATH, 'tray.png'));
 
             // 设置用户数据库
-            const userId = newState[key].userInfo.userId;
+            const userId = newState[key].userId;
             setLocalDataPath(Long.fromValue(userId).toString());
 
 
@@ -45,14 +55,18 @@ export default (preState, newState) => {
 
             mainWindowManager.add(stemWin, 'stem', () => {
               mainWindowManager.close(loginWinId);
-
+              stemWin.webContents.openDevTools();
               // 默认托盘点击事件为主窗体显示
               trayManager.setClickDefaultHandler(() => {
-                if (stemWin.isMinimized()) {
-                  stemWin.restore();
+                const theStem = mainWindowManager.getAll('stem')[0];
+                if (!theStem) {
+                  return;
                 }
-                if (!stemWin.isFocused()) {
-                  stemWin.focus();
+                if (theStem.isMinimized()) {
+                  theStem.restore();
+                }
+                if (!theStem.isFocused()) {
+                  theStem.focus();
                 }
               });
 
@@ -72,6 +86,13 @@ export default (preState, newState) => {
           }
 
           break;
+        case loginKeys.attempt:
+          {
+            // 尝试登录
+            const newAttemptor = newState[key];
+            doLogin(newAttemptor.name, newAttemptor.psw);
+            break;
+          }
         default:
       }
     }

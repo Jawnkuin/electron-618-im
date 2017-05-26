@@ -12,7 +12,7 @@ const stem = handleActions({
   OPEN_SINGLE_TALK: {
     // 将打开的会话添加到会话里面里面
     next: (state = immutableState, action) => {
-      const toBuddy = action.payload.toBuddy;
+      const toBuddy = action.payload;
 
       let userId;
       if (typeof toBuddy.userId === 'object') {
@@ -22,6 +22,7 @@ const stem = handleActions({
       }
       const copyedToBuddy = Object.assign({}, toBuddy, { userId });
       const toBuddys = _.unionWith(state.toBuddys, [copyedToBuddy], (f, l) => _.isEqual(f.userId, l.userId));
+      console.log(toBuddys);
       return Object.assign({}, state, {
         toBuddys
       });

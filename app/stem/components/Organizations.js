@@ -88,6 +88,10 @@ class Organizations extends Component {
   }
 
   onToggleSelect (selectedKeys, e) {
+    console.log(e);
+    if (e.node.props.isLeaf) {
+      return;
+    }
     const key = e.node.props.eventKey;
     const newArray = Array.from(this.state.expandedKeys);
     const keyIndex = newArray.indexOf(key);
@@ -145,6 +149,7 @@ class Organizations extends Component {
             <div className={styles.NameBox}>{node.userNickName}</div>
           </div>
         }
+        isLeaf
         key={key}
       />
     );
@@ -155,6 +160,7 @@ class Organizations extends Component {
       <Tree
         className={styles.TreeNode}
         onSelect={this.onToggleSelect}
+        onClick={(e) => { console.log(e); }}
         onExpand={this.onToggleExpand}
         expandedKeys={this.state.expandedKeys}
       >

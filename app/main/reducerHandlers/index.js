@@ -1,5 +1,5 @@
 import loginHandlers from './loginHandlers';
-// import windowsHandlers from './windowsHandlers';
+import windowsHandlers from './windowsHandlers';
 import stemHandlers from './stemHandlers';
 import talkHandlers from './talkHandlers';
 
@@ -8,6 +8,6 @@ import talkHandlers from './talkHandlers';
 export default {
   login: loginHandlers,
   stem: stemHandlers,
-  talk: talkHandlers
-  // windows: windowsHandlers
+  talk: talkHandlers,
+  windows: windowsHandlers
 };

@@ -1,7 +1,7 @@
 {
   "name": "electron-618-im",
-  "productName": "招标采购集团TT",
-  "version": "0.0.5",
+  "productName": "招标采购集团即时通",
+  "version": "0.0.6",
   "description": "IM based on electron",
   "main": "main.js",
   "scripts": {
@@ -57,12 +57,11 @@
       "package.json",
       "utils/apis/tcp_client/client.js"
     ],
-    "extraResources":[
+    "extraResources": [
       {
-        "from":"app/node_modules/",
-        "to":"node_modules/"
+        "from": "app/node_modules/",
+        "to": "node_modules/"
       }
-
     ],
     "win": {
       "target": "nsis"
@@ -172,6 +171,8 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.2",
     "minimist": "^1.2.0",
+    "node-inspector": "^1.1.1",
+    "node-pre-gyp": "^0.6.34",
     "react-addons-test-utils": "^15.4.2",
     "react-test-renderer": "^15.4.2",
     "redux-logger": "^2.7.4",

@@ -1,4 +1,8 @@
-import { loginFailActionCreator, loginSuccessActionCreator } from './login';
+import {
+  loginFailActionCreator,
+  loginSuccessActionCreator,
+  loginHistoryLoadSuccessActionCreator
+} from './login';
 import {
   addWindowActionCreator,
   closeWindowActionCreator
@@ -26,6 +30,7 @@ export const wrapActions = (store) => {
     actions = {
       loginFail: loginFailActionCreator(store.dispatch, store.getState),
       loginSuccess: loginSuccessActionCreator(store.dispatch, store.getState),
+      loginHistoryLoadSuccess: loginHistoryLoadSuccessActionCreator(store.dispatch, store.getState),
 
       addWindow: addWindowActionCreator(store.dispatch, store.getState),
       closeWindow: closeWindowActionCreator(store.dispatch, store.getState),

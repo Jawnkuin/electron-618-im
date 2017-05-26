@@ -58,10 +58,21 @@ export const onBuddyListResponce = res => async (resolve, reject) => {
       });
     } else {
       console.time('insertUserInfoEntitys');
-      await Promise.all(buddyList.map(user => localDb.insertUserInfoEntity(user)));
+      // await Promise.all(buddyList.map(user => localDb.insertUserInfoEntity(user)));
+      localDb.insertMultiUserInfoEntity(buddyList);
       console.timeEnd('insertUserInfoEntitys');
       const configDb = getAccountConfigDb();
       configDb.setUserLastUpdateTime(res.body.latestUpdateTime);
+
+      buddyList = buddyList.map((buddy) => {
+        if (typeof buddy.userId !== 'object') {
+          buddy.userId = Long.fromValue(buddy.userId).toUnsigned();
+        }
+        if (typeof buddy.departmentId !== 'object') {
+          buddy.departmentId = Long.fromValue(buddy.departmentId).toUnsigned();
+        }
+        return buddy;
+      });
     }
 
     if (buddyList) {
@@ -124,10 +135,21 @@ export const onDepListResponce = res => async (onResolve, onReject) => {
       });
     } else {
       console.time('insertDepartmentInfoEntitys');
-      await Promise.all(deptList.map(dept => localDb.insertDepartmentInfoEntity(dept)));
+      // await Promise.all(deptList.map(dept => localDb.insertDepartmentInfoEntity(dept)));
+      localDb.insertMultiDepartmentInfoEntity(deptList);
       console.timeEnd('insertDepartmentInfoEntitys');
       const configDb = getAccountConfigDb();
       configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);
+      // change num to obj
+      deptList = deptList.map((dept) => {
+        if (typeof dept.deptId !== 'object') {
+          dept.deptId = Long.fromValue(dept.deptId).toUnsigned();
+        }
+        if (typeof dept.parentDeptId !== 'object') {
+          dept.parentDeptId = Long.fromValue(dept.parentDeptId).toUnsigned();
+        }
+        return dept;
+      });
     }
 
     if (deptList) {
@@ -162,7 +184,7 @@ const getUsersStatReqBuf = (userId, userIdList) => {
 
 // 获取用户状态
 export const getUsersStatReq = (userIdList) => {
-  const userId = mainStore.getState().login.user.userInfo.userId;
+  const userId = mainStore.getState().login.user.userId;
   const reqBuf = getUsersStatReqBuf(userId, userIdList);
   const serviceId = serviceIdEnums.SID_BUDDY_LIST;
   const reqCmdId = buddyListCmdIdEnums.CID_BUDDY_LIST_USERS_STATUS_REQUEST;
@@ -180,5 +202,19 @@ export const onUsersStatResponce = res => (resolve, reject) => {
     reject(new Error('Wrong cmd Id'));
     return;
   }
+
+  // change num to obj
+  let userStateList = res.body.userStatList;
+  if (userStateList) {
+    userStateList = userStateList.map((state) => {
+      if (typeof state.userId !== 'object') {
+        state.userId = Long.fromValue(state.userId).toUnsigned();
+      }
+      return state;
+    });
+    res.body.userStatList = userStateList;
+  }
+
+
   resolve(res.body);
 };

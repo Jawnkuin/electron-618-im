@@ -4,10 +4,11 @@ import { replayActionMain } from 'electron-window-redux';
 import path from 'path';
 import trayManager from './utils/Tray';
 import mapStateToWindow from './utils/redux/mapStateToWindow';
+import getActionCreators from './main/actions';
 import { WindowConfigs, mainWindowManager } from './utils/WindowManager';
 import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
-import { getGlobalConfig } from './utils/database';
+import { getGlobalConfigDb } from './utils/database';
 import { ICON_PATH } from './configs';
 
 import './utils/ipcMainResponces';
@@ -25,9 +26,19 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
-    app.quit();
+    const globalConfigDb = getGlobalConfigDb();
+    const loginState = mainStore.getState().login;
+    console.log(loginState);
+    if (!loginState || !loginState.user || !loginState.user.userRealName) {
+      console.log(loginState.user.userRealName);
+      app.quit();
+    } else {
+      const loginName = loginState.user.userRealName;
+      await globalConfigDb.setLogoutByName(loginName);
+      app.quit();
+    }
   }
 });
 
@@ -74,18 +85,16 @@ app.on('ready', async () => {
         loginWindow.focus();
       }
     });
+    const globalConfigDb = getGlobalConfigDb();
+    const allUsers = globalConfigDb.getAllUsers();
+    const Actions = getActionCreators();
+    Actions.loginHistoryLoadSuccess(allUsers);
   });
 
 
   loginWindow.loadURL(`${__dirname}/login/index.html`);
 });
 
-app.on('will-quit', () => {
-  const globalConfigDb = getGlobalConfig();
-  const loginUser = mainStore.login.user;
-  if (!loginUser || !loginUser.userInfo) {
-    return;
-  }
-  const loginName = loginUser.userInfo.userNickName;
-  globalConfigDb.setLogoutByName(loginName);
+app.on('quit', () => {
+
 });

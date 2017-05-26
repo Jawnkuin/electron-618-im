@@ -64,8 +64,12 @@ const talk = handleActions({
   RECIEVE_UNREAD_MSG_LIST: {
     next: (state = immutableState, action) => {
       const msgListRsp = action.payload;
-
-      const toBuddyId = Object.assign({}, msgListRsp.sessionId);
+      let toBuddyId;
+      if (typeof msgListRsp.sessionId === 'object') {
+        toBuddyId = Object.assign({}, msgListRsp.sessionId);
+      } else {
+        toBuddyId = msgListRsp.sessionId;
+      }
       const newArray = _.cloneDeep(state.unReadInfos);
 
       const infoIndex = _.findIndex(newArray, uInfo => _.isEqual(uInfo.buddyinfo.userId, toBuddyId));

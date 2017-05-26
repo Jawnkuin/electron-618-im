@@ -46,9 +46,7 @@ export const openSingleTalkActionCreator =
 dispatch => (...args) => {
   dispatch(createAction(
     OPEN_SINGLE_TALK,
-    toBuddy => ({
-      toBuddy
-    }),
+    toBuddy => toBuddy,
     () => ({ scope: '__ALL__' })
 )(...args));
 };

@@ -63,6 +63,21 @@ async function getLocalDb () {
         }
         return models.userinfo.create(userInfo);
       },
+      insertMultiUserInfoEntity: (userObjList) => {
+        const newObjList = [];
+        userObjList.forEach((e) => {
+          const userInfo = Object.assign({}, e);
+          if (typeof userInfo.userId === 'object') {
+            userInfo.userId = Long.fromValue(userInfo.userId).toString();
+          }
+          if (typeof userInfo.departmentId === 'object') {
+            userInfo.departmentId = Long.fromValue(userInfo.departmentId).toString();
+          }
+          newObjList.push(userInfo);
+        });
+
+        return models.userinfo.bulkCreate(newObjList);
+      },
       // update userinfo set name=?,nickName=?,avatarUrl=?,departmentId=?,
       // departmentName=?,email=?,gender=?,user_domain=?,telephone=?,status=?,reserve1=? where userId=?
       updateUserInfoEntity: function UpdateUserInfoEntity (userInfo) {
@@ -106,6 +121,21 @@ async function getLocalDb () {
           departmentInfo.parentDeptId = Long.fromValue(departmentInfo.parentDeptId).toString();
         }
         return models.departmentinfo.create(departmentInfo);
+      },
+      insertMultiDepartmentInfoEntity: (deptList) => {
+        const newObjList = [];
+        deptList.forEach((e) => {
+          const departmentInfo = Object.assign({}, e);
+          if (typeof departmentInfo.deptId === 'object') {
+            departmentInfo.deptId = Long.fromValue(departmentInfo.deptId).toString();
+          }
+          if (typeof departmentInfo.parentDeptId === 'object') {
+            departmentInfo.parentDeptId = Long.fromValue(departmentInfo.parentDeptId).toString();
+          }
+          newObjList.push(departmentInfo);
+        });
+
+        return models.departmentinfo.bulkCreate(newObjList);
       },
       // update departmentinfo set dId=?,priority=?
       // ,name=?,departmentId=?,parentDepartId=?,status=? where dId=?

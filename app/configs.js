@@ -23,14 +23,15 @@ let globalDataDir;
 if (process.platform === 'darwin') {
   globalDataDir = `${process.env.HOME}/ZBCGJST`; // ${userIdStr}
 } else {
-  globalDataDir = `${process.env.ProgramData}/ZBCGJST`; // ${userIdStr}
+  // globalDataDir = `${process.env.ProgramData}/ZBCGJST`; // ${userIdStr}
+  globalDataDir = `${process.env.ProgramData}/ZBCGJST`;
 }
 
-console.log(globalDataDir);
 if (!fs.existsSync(globalDataDir) || !fs.statSync(globalDataDir).isDirectory()) {
   fs.mkdirSync(globalDataDir);
-  GLOBAL_CONFIG = `${globalDataDir}/globalConfig.json`;
 }
+
+GLOBAL_CONFIG = `${globalDataDir}/globalConfig.json`;
 
 // process.env.LOCALAPPDATA
 export const setLocalDataPath = (userIdStr) => {
@@ -45,7 +46,8 @@ export const setLocalDataPath = (userIdStr) => {
     LOCAL_DB_CONFIG = {
       development: {
         dialect: 'sqlite',
-        storage: `${localDataDir}/${userIdStr}.db`
+        storage: `${localDataDir}/${userIdStr}.db`,
+        logging: false
       },
       test: {
         dialect: 'sqlite',
@@ -53,7 +55,8 @@ export const setLocalDataPath = (userIdStr) => {
       },
       production: {
         dialect: 'sqlite',
-        storage: `${localDataDir}/${userIdStr}.db`
+        storage: `${localDataDir}/${userIdStr}.db`,
+        logging: false
       }
     };
   }

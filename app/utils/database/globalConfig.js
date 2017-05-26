@@ -34,22 +34,28 @@ function getGlobalConfigDb () {
 
     removeUserByName: name => globalConfigDb.get('users').remove({ name }).write(),
 
-    addOrUpdateUser: (user) => {
+    addOrUpdateUser: async (user) => {
       const newUser = _.cloneDeep(user);
       if (!newUser.name) {
-        newUser.name = newUser.realName;
+        newUser.name = newUser.userRealName;
       }
-      if ((!newUser.name && !newUser.realName) || !newUser.avatarPath) {
+      if (!newUser.name && !newUser.userRealName) {
         throw new Error('unsetted user name or avart');
       }
       newUser.logging = true;
-      globalConfigDb.get('users').remove({ name }).write();
-      globalConfigDb.get('users').push(newUser).write();
+      await globalConfigDb.get('users').remove({ name: newUser.name }).write();
+      await globalConfigDb.get('users').push(newUser).write();
     },
 
-    setLogoutByName: name => globalConfigDb.get('users')
-      .find({ name })
-      .assign({ logging: false })
+    setLogoutByName: (name) => {
+      console.log('setLogoutByName': name);
+
+      return globalConfigDb.get('users')
+          .find({ name })
+          .assign({ logging: false })
+          .write();
+    }
+
   };
 }
 

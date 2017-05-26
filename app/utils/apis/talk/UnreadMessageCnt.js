@@ -11,7 +11,7 @@ const messageCmdIdEnums = IMBaseDefine.MessageCmdID;
 // 获取未读消息数量
 export const getUnreadMsgCnt = () => {
   // console.log('Echo', 'IMReadMsgCntReq');
-  const selfId = mainStore.getState().login.user.userInfo.userId;
+  const selfId = mainStore.getState().login.user.userId;
   const unReadMsgCntReq = IMMessage.IMUnreadMsgCntReq.create({
     userId: selfId
   });

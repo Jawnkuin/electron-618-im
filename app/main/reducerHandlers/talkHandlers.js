@@ -20,7 +20,7 @@ export default (preState, newState) => {
       return;
     }
 
-    if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
+    if (!preState || !preState[key] || !_.isEqualWith(preState[key], newState[key])) {
       switch (key) {
         case talkKeys.unReadInfos:
           {
@@ -31,7 +31,7 @@ export default (preState, newState) => {
               }
             } else {
               const { userList } = mainStore.getState().stem;
-              trayManager.flashTray();
+
               // 设置托盘点击打开对应会话窗体
               const lastOne = unReadInfos[unReadInfos.length - 1];
               const userItemIndex = _.findIndex(userList, (u) => {
@@ -48,8 +48,8 @@ export default (preState, newState) => {
               if (userItemIndex >= 0) {
                 const userItem = userList[userItemIndex];
                 const copyItem = Object.assign({}, userItem, { userId: userItem.userId });
-
-                trayManager.setClickInstantHandler(() => Actions.openSingleTalk(copyItem));
+                trayManager.flashTray();
+                trayManager.setClickInstantHandler(() => { Actions.openSingleTalk(copyItem); });
               }
             }
           }

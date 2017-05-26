@@ -21,10 +21,17 @@ export const doLoginMain = createAction(LOGIN, async (name, psw) => {
 });
 */
 
-export const openSingleTalk = createAction(OPEN_SINGLE_TALK, toBuddy => ({
-  toBuddy
-}),
-(toBuddy, isLocal = false) => (
-  isLocal ? { scope: 'local' } : {}
-)
-);
+export const openSingleTalk = toOpenBuddy => (dispatch, getState) => {
+  // 若已经在添加新窗口不响应打开操作避免冲突
+  const { handleState } = getState();
+  if (handleState.loadingNewTalk) {
+    return;
+  }
+  dispatch(createAction(
+    OPEN_SINGLE_TALK,
+    toBuddy => toBuddy,
+    (toBuddy, isLocal = false) => (
+      isLocal ? { scope: 'local' } : {}
+    )
+  )(toOpenBuddy));
+};

@@ -13,16 +13,19 @@ export default (preState, newState) => {
   const Actions = getActionCreators();
   // 查看每一个子状态 *值* 是否变化，若变化执行对应的handler
   _.forEach(stateKeys, (key) => {
-    // 初始化为空值
-    if (!newState[key] || _.isEmpty(newState[key])) {
+    const preEmptyFlag = !!(!preState || !preState[key] || _.isEmpty(preState[key]));
+    const newEmptyFlag = !!((!preState || !newState[key] || _.isEmpty(newState[key])));
+    // if the new one and the previous one are both empty, pass
+    if (newEmptyFlag && preEmptyFlag) {
       return;
     }
-    // 登录不需要变化，待改
-    if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
+
+    if (preEmptyFlag || !_.isEqualWith(preState[key], newState[key])) {
       switch (key) {
         // toBuddys 为数组
         case stemKeys.toBuddys:
           {
+            // toBuddys 减少一位 differenceWith结果为空
             const newBuddys = _.differenceWith(newState[key], preState[key],
               (f, l) => _.isEqual(f.userId, l.userId));
             if (!newBuddys || newBuddys.length === 0) {
@@ -34,7 +37,7 @@ export default (preState, newState) => {
             mainWindowManager.add(talkWin, 'talk', () => {
               const loadInfo = {
                 buddyInfo: newBuddys[0],
-                selfInfo: mainStore.getState().login.user.userInfo
+                selfInfo: mainStore.getState().login.user
               };
               const unReadInfos = mainStore.getState().talk.unReadInfos;
 

@@ -8,7 +8,7 @@ const serviceIdEnums = IMBaseDefine.ServiceID;
 const messageCmdIdEnums = IMBaseDefine.MessageCmdID;
 
 function getMsgListReqBuf (sessionId, msgIdBegin, msgCnt) {
-  const selfId = mainStore.getState().login.user.userInfo.userId;
+  const selfId = mainStore.getState().login.user.userId;
   const reqBody = IMMessage.IMGetMsgListReq.create({
     userId: selfId,
     sessionType: IMBaseDefine.SessionType.SESSION_TYPE_SINGLE,

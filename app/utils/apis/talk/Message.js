@@ -11,7 +11,7 @@ const IMMsgData = IMMessage.IMMsgData;
 
 const getMessageBuf = (toSid, data, msgType = IMBaseDefine.MsgType.MSG_TYPE_SINGLE_TEXT) => {
   // console.log(mainStore.getState().login.userInfo);
-  const fromId = mainStore.getState().login.user.userInfo.userId;
+  const fromId = mainStore.getState().login.user.userId;
 
   const messageData = IMMsgData.create({
     fromUserId: fromId,
@@ -28,7 +28,7 @@ const getMessageBuf = (toSid, data, msgType = IMBaseDefine.MsgType.MSG_TYPE_SING
 
 // 构造已读信令的消息
 function getMsgDataReadAckReqBuf (senderId, msgId, sessionType = IMBaseDefine.SessionType.SESSION_TYPE_SINGLE) {
-  const selfId = mainStore.getState().login.user.userInfo.userId;
+  const selfId = mainStore.getState().login.user.userId;
   const reqBody = IMMessage.IMMsgDataReadAck.create({
     userId: selfId,
     sessionId: senderId,
@@ -50,7 +50,7 @@ export const sendMessage = (toSid, data) => {
 
 // 对接收的消息标记已收到
 const sendMessageAck = (senderId, msgId, sessionType = IMBaseDefine.SessionType.SESSION_TYPE_SINGLE) => {
-  const selfId = mainStore.getState().login.user.userInfo.userId;
+  const selfId = mainStore.getState().login.user.userId;
   const reqBody = IMMessage.IMMsgDataAck.create({
     userId: senderId,
     sessionId: selfId,
