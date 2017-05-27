@@ -88,7 +88,6 @@ class Organizations extends Component {
   }
 
   onToggleSelect (selectedKeys, e) {
-    console.log(e);
     if (e.node.props.isLeaf) {
       return;
     }
@@ -101,7 +100,6 @@ class Organizations extends Component {
       newArray.push(key);
     }
     this.setState({ expandedKeys: newArray });
-    console.log('expandedKeys', newArray);
   }
 
   // 递归函数生成树
@@ -160,7 +158,6 @@ class Organizations extends Component {
       <Tree
         className={styles.TreeNode}
         onSelect={this.onToggleSelect}
-        onClick={(e) => { console.log(e); }}
         onExpand={this.onToggleExpand}
         expandedKeys={this.state.expandedKeys}
       >

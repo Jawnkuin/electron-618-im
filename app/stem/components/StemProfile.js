@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './StemProfile.less';
 import dummyimage from '../../utils/dummyimage';
@@ -19,7 +19,12 @@ const StemProfile = ({ userInfo }) => (
           编辑个性签名
         </div>
       <div className={styles.ToolBox}>
-        <Button icon="message" ghost />
+        <div className={styles.LeftBox}>
+          <a href="http://192.168.8.41:8080/fjbidoa"><Icon type="home" /></a>
+        </div>
+        <div className={styles.RightBox}>
+          <Button icon="message" ghost />
+        </div>
       </div>
     </div>
   </div>

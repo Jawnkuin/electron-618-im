@@ -49,10 +49,21 @@
 	}
 
 	.ToolBox{
-		text-align: right;
+		a:hover{
+			color:@btn-normal-white-active;
+		}
+		display: flex;
+		justify-content: space-between;
 		.ant-btn {
 			color: @btn-normal-white;
 		}
+		.LeftBox{
+			text-align: left;
+		}
+		.RightBox{
+			text-align: right;
+		}
+
 		font-size: 15px;
 	}
 }

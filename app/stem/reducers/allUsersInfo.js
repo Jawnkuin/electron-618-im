@@ -28,8 +28,6 @@ export default handleActions(
       // status: 1-ONLINE,2-OFFLINE,3-LEAVE
       next: (state = allUsersInfoState, action) => {
         const userStatList = action.payload;
-        console.log('userStatList', userStatList);
-        console.log('state', state);
         if (userStatList && userStatList.length >= 0) {
           const newUserList = _.cloneDeep(state.userListInfo);
           newUserList.map((user) => {

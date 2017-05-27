@@ -26,7 +26,6 @@ const getConversations = (userListInfo, historySessions, openSingleTalk) => {
     try {
       msgStr = atob(utf8Buf.toString('utf8'));
     } catch (e) {
-      console.warn(e.message);
       msgStr = utf8Buf.toString('utf8');
     }
 
