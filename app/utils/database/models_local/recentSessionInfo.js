@@ -4,12 +4,12 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('recentSessionInfo', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     sessionId: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     },
     sessionType: {
       type: DataTypes.INTEGER,

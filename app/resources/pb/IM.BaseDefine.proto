@@ -12,7 +12,7 @@ enum ServiceID{
     SID_FILE            = 0x0005;
     SID_SWITCH_SERVICE  = 0x0006;
     SID_OTHER           = 0x0007;
-    SID_INTERNAL        = 0x0008;		     
+    SID_INTERNAL        = 0x0008;
 }
 
 // command id for login
@@ -300,7 +300,7 @@ message MsgInfo{
 message GroupVersionInfo{
 	required uint64 group_id = 1;
 	required uint32 version = 2;
-	
+
 }
 
 message GroupInfo{
@@ -310,7 +310,7 @@ message GroupInfo{
 	required string group_avatar = 4;
 	required uint64 group_creator_id = 5;
 	required GroupType group_type = 6;
-	required uint32 shield_status = 7;		//1: shield  0: not shield 
+	required uint32 shield_status = 7;		//1: shield  0: not shield
 	repeated uint64 group_member_list = 8;
 }
 
@@ -328,9 +328,9 @@ message PushResult{
 }
 
 message ShieldStatus{
-	required uint64 user_id = 1;		
-	required uint64 group_id = 2;	
-	required uint32 shield_status = 3;		//1: shield  0: not shield 
+	required uint64 user_id = 1;
+	required uint64 group_id = 2;
+	required uint32 shield_status = 3;		//1: shield  0: not shield
 }
 
 message OfflineFileInfo{

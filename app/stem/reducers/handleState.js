@@ -1,7 +1,8 @@
 import { handleActions } from 'redux-actions';
 
 const initHandleState = {
-  loadingNewTalk: false
+  loadingNewTalk: false, // 防止同时打开多个相同窗口
+  requestingRecentContactSessions: false // 防止多次请求最近会话
 };
 
 export default handleActions(

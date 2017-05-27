@@ -55,7 +55,6 @@ export default (preState, newState) => {
 
             mainWindowManager.add(stemWin, 'stem', () => {
               mainWindowManager.close(loginWinId);
-              stemWin.webContents.openDevTools();
               // 默认托盘点击事件为主窗体显示
               trayManager.setClickDefaultHandler(() => {
                 const theStem = mainWindowManager.getAll('stem')[0];

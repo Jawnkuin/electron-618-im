@@ -4,12 +4,12 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('userinfo', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     userId: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     },
     userRealName: {
       type: DataTypes.TEXT,

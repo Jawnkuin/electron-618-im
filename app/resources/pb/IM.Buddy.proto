@@ -67,7 +67,7 @@ message IMAllUserRsp{
 	//cmd id:		0x0209
 	required uint64 user_id = 1;
 	required uint32 latest_update_time = 2;
-	repeated IM.BaseDefine.UserInfo user_list = 3;
+	repeated IM.BaseDefine.UserInfo user_list = 3;		
 	optional bytes attach_data = 20;
 }
 

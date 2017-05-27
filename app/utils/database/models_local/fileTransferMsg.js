@@ -4,7 +4,6 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('fileTransferMsg', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
       primaryKey: true
     },
     taskid: {

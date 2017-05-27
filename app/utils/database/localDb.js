@@ -53,7 +53,7 @@ async function getLocalDb () {
       // INSERT OR REPLACE into userinfo
       // (userId,name,nickName,avatarUrl,departmentId,departmentName,email,gender,
       // user_domain,telephone,status,reserve1) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
-      insertUserInfoEntity: function InsertUserInfoEntity (userObj) {
+      upsertUserInfoEntity: function UpsertUserInfoEntity (userObj) {
         const userInfo = Object.assign({}, userObj);
         if (typeof userInfo.userId === 'object') {
           userInfo.userId = Long.fromValue(userInfo.userId).toString();
@@ -61,7 +61,7 @@ async function getLocalDb () {
         if (typeof userInfo.departmentId === 'object') {
           userInfo.departmentId = Long.fromValue(userInfo.departmentId).toString();
         }
-        return models.userinfo.create(userInfo);
+        return models.userinfo.upsert(userInfo);
       },
       insertMultiUserInfoEntity: (userObjList) => {
         const newObjList = [];
@@ -112,7 +112,7 @@ async function getLocalDb () {
         return models.departmentinfo.findAll({ limit: 1, where: { deptId } });
       },
       // INSERT OR REPLACE into departmentinfo(dId,priority,name,parentDepartId,status)
-      insertDepartmentInfoEntity: function InsertDepartmentInfoEntity (departmentObj) {
+      upsertDepartmentInfoEntity: function UpsetDepartmentInfoEntity (departmentObj) {
         const departmentInfo = Object.assign({}, departmentObj);
         if (typeof departmentInfo.deptId === 'object') {
           departmentInfo.deptId = Long.fromValue(departmentInfo.deptId).toString();
@@ -120,7 +120,7 @@ async function getLocalDb () {
         if (typeof departmentInfo.parentDeptId === 'object') {
           departmentInfo.parentDeptId = Long.fromValue(departmentInfo.parentDeptId).toString();
         }
-        return models.departmentinfo.create(departmentInfo);
+        return models.departmentinfo.upsert(departmentInfo);
       },
       insertMultiDepartmentInfoEntity: (deptList) => {
         const newObjList = [];

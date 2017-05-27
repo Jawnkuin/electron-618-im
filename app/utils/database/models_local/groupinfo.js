@@ -4,12 +4,12 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('groupinfo', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     groupId: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     },
     name: {
       type: DataTypes.TEXT,

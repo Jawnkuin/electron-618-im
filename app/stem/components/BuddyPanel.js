@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Tabs, Icon } from 'antd';
 import _ from 'lodash';
@@ -45,45 +45,72 @@ const getConversations = (userListInfo, historySessions, openSingleTalk) => {
   );
 };
 
-// 好友会话列表等等
-const BuddyPanel = ({ historySessions, allUsersInfo, openSingleTalk }) => {
-  const { userListInfo } = allUsersInfo;
-  if (!userListInfo || userListInfo.length === 0) {
-    return (<div>loading</div>);
-  }
-  const conversationItems = getConversations(userListInfo, historySessions, openSingleTalk);
-  return (
-    <div className={styles.BuddyPanel}>
-      <Tabs>
-        <TabPane
-          tab={<Icon type="message" />}
-          key="1"
-        >
-          {conversationItems}
-        </TabPane>
-        <TabPane tab={<Icon type="user" />} key="2" >
-          <Tabs>
-            <TabPane tab="组织构架" key="a1">
-              <OrganizationsContainer />
-            </TabPane>
-            <TabPane tab="所属企业" key="a2" />
-          </Tabs>
-        </TabPane>
-        <TabPane tab={<Icon type="team" />} key="3" />
-      </Tabs>
-    </div>
-  );
-};
+class BuddyPanel extends Component {
+  static propTypes = {
+    allUsersInfo: PropTypes.shape({
+      userListInfo: PropTypes.array
+    }).isRequired,
+    historySessions: PropTypes.arrayOf(PropTypes.shape({
+      fromUserId: PropTypes.any,
+      latestMsg: PropTypes.any.isRequired
+    })).isRequired,
+    openSingleTalk: PropTypes.func.isRequired
+  };
 
-BuddyPanel.propTypes = {
-  allUsersInfo: PropTypes.shape({
-    userListInfo: PropTypes.array
-  }).isRequired,
-  historySessions: PropTypes.arrayOf(PropTypes.shape({
-    fromUserId: PropTypes.any,
-    latestMsg: PropTypes.any.isRequired
-  })).isRequired,
-  openSingleTalk: PropTypes.func.isRequired
-};
+  shouldComponentUpdate (nextProps) {
+    const { allUsersInfo } = nextProps;
+    const { userListInfo } = allUsersInfo;
+    if (!userListInfo || userListInfo.length === 0) {
+      return false;
+    }
+    return true;
+  }
+  /*
+  componentDidUpdate () {
+    const { allUsersInfo } = this.props;
+    const { userListInfo } = allUsersInfo;
+    // 已经接收到用户列表再做最新会话请求
+    if (userListInfo && userListInfo.length > 0) {
+      return (<div>loading</div>);
+    }
+  }
+  */
+
+  render () {
+    const { historySessions, allUsersInfo, openSingleTalk } = this.props;
+    const { userListInfo } = allUsersInfo;
+    if (!userListInfo || userListInfo.length === 0) {
+      return (
+        <div className={styles.Loading}>
+          <Icon type="loading" />
+          <div>加载中...</div>
+        </div>
+      );
+    }
+    const conversationItems = getConversations(userListInfo, historySessions, openSingleTalk);
+    return (
+      <div className={styles.BuddyPanel}>
+        <Tabs>
+          <TabPane
+            tab={<Icon type="message" />}
+            key="1"
+          >
+            {conversationItems}
+          </TabPane>
+          <TabPane tab={<Icon type="user" />} key="2" >
+            <Tabs>
+              <TabPane tab="组织构架" key="a1">
+                <OrganizationsContainer />
+              </TabPane>
+              <TabPane tab="所属企业" key="a2" />
+            </Tabs>
+          </TabPane>
+          <TabPane tab={<Icon type="team" />} key="3" />
+        </Tabs>
+      </div>
+    );
+  }
+}
+
 
 export default BuddyPanel;

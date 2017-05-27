@@ -5,11 +5,11 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      primaryKey: true
     },
     deptId: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     },
     priority: {
       type: DataTypes.INTEGER,

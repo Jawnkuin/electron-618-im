@@ -58,8 +58,8 @@ export const onBuddyListResponce = res => async (resolve, reject) => {
       });
     } else {
       console.time('insertUserInfoEntitys');
-      // await Promise.all(buddyList.map(user => localDb.insertUserInfoEntity(user)));
-      localDb.insertMultiUserInfoEntity(buddyList);
+      buddyList.map(user => localDb.upsertUserInfoEntity(user));
+      // localDb.insertMultiUserInfoEntity(buddyList);
       console.timeEnd('insertUserInfoEntitys');
       const configDb = getAccountConfigDb();
       configDb.setUserLastUpdateTime(res.body.latestUpdateTime);
@@ -135,8 +135,8 @@ export const onDepListResponce = res => async (onResolve, onReject) => {
       });
     } else {
       console.time('insertDepartmentInfoEntitys');
-      // await Promise.all(deptList.map(dept => localDb.insertDepartmentInfoEntity(dept)));
-      localDb.insertMultiDepartmentInfoEntity(deptList);
+      deptList.map(dept => localDb.upsertDepartmentInfoEntity(dept));
+      // localDb.insertMultiDepartmentInfoEntity(deptList);
       console.timeEnd('insertDepartmentInfoEntitys');
       const configDb = getAccountConfigDb();
       configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);

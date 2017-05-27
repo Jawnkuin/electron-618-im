@@ -14,6 +14,8 @@ export const OPEN_SINGLE_TALK = 'OPEN_SINGLE_TALK';
 
 export const GET_USERS_STATE_SUCCESS = 'GET_USERS_STATE_SUCCESS';
 
+export const GET_RECENT_CONTACT_SESSION = 'GET_RECENT_CONTACT_SESSION';
+
 /*
 export const doLoginMain = createAction(LOGIN, async (name, psw) => {
   const resbody = await doLogin(name, psw);
@@ -23,8 +25,8 @@ export const doLoginMain = createAction(LOGIN, async (name, psw) => {
 
 export const openSingleTalk = toOpenBuddy => (dispatch, getState) => {
   // 若已经在添加新窗口不响应打开操作避免冲突
-  const { handleState } = getState();
-  if (handleState.loadingNewTalk) {
+  const { loadingNewTalk } = getState().handleState;
+  if (loadingNewTalk) {
     return;
   }
   dispatch(createAction(
@@ -34,4 +36,12 @@ export const openSingleTalk = toOpenBuddy => (dispatch, getState) => {
       isLocal ? { scope: 'local' } : {}
     )
   )(toOpenBuddy));
+};
+
+export const getRecentContactSessions = () => (dispatch, getState) => {
+  const { requestingRecentContactSessions } = getState().handleState;
+  if (requestingRecentContactSessions) {
+    return;
+  }
+  dispatch(createAction('GET_RECENT_CONTACT_SESSION')());
 };

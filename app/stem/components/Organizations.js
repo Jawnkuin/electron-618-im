@@ -26,7 +26,7 @@ const appendBuddyToOrg = (deptTree, userList) => {
           node.members = [];
         }
         const index = _.findIndex(node.members, m => _.isEqual(m.userId, user.userId));
-        if (index < 0) { node.members.push(user); }
+        if (index < 0) { node.members.push(Object.assign({}, user, { department: node })); }
       }
     });
     if (node.members && node.members.length) {
@@ -84,7 +84,8 @@ class Organizations extends Component {
   }
 
   onToggleExpand (expandedkeys) {
-    this.setState({ expandedKeys: expandedkeys });
+    // this.setState({ expandedKeys: expandedkeys });
+    console.log(expandedkeys);
   }
 
   onToggleSelect (selectedKeys, e) {

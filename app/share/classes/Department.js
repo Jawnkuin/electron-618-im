@@ -9,10 +9,11 @@ const dfs = (node, arr) => {
 };
 
 export default class Department {
-  constructor ({ deptId, deptName, deptStatus, parentDeptId, priority }) {
+  constructor ({ deptId, parent, deptName, deptStatus, priority, parentDeptId }) {
     this.deptId = deptId;
     deptName && (this.deptName = deptName);
     deptStatus && (this.deptStatus = deptStatus);
+    parent && (this.parent = parent);
     parentDeptId && (this.parentDeptId = parentDeptId);
     priority && (this.priority = priority);
     this.children = [];
@@ -60,7 +61,7 @@ export default class Department {
       const newList = [];
       toPickList.forEach((dpt) => {
         if (_.isEqual(parent.deptId, dpt.parentDeptId)) {
-          const departObj = new Department(dpt);
+          const departObj = new Department(Object.assign({}, dpt, { parent }));
           parent.children.push(departObj);
         } else {
           newList.push(dpt);
