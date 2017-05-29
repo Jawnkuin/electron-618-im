@@ -22,6 +22,8 @@ function getGlobalConfigDb () {
     // 获取所有用户
     getAllUsers: () => globalConfigDb.get('users').value(),
 
+    getUserByName: name => globalConfigDb.get('users').find({ name }).value(),
+
     setUserRememberPsw: name => globalConfigDb.get('users')
       .find({ name })
       .assign({ remember: true })
@@ -47,7 +49,7 @@ function getGlobalConfigDb () {
       await globalConfigDb.get('users').push(newUser).write();
     },
 
-    setLogoutByName: (name) => {
+    setLogoutByName: async (name) => {
       console.log('setLogoutByName': name);
 
       return globalConfigDb.get('users')

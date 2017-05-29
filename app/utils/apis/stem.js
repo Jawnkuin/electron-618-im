@@ -40,6 +40,7 @@ export const onBuddyListResponce = res => async (resolve, reject) => {
 
   try {
     let buddyList = null;
+    let allUsersModelList = [];
     const localDb = await getLocalDb();
     buddyList = res.body.userList;
     // 如果请求里面含有buddyList插入
@@ -47,34 +48,24 @@ export const onBuddyListResponce = res => async (resolve, reject) => {
 
     if (!buddyList || _.isEmpty(buddyList)) {
       console.time('getAllUsersInfo');
-      const allUsersModelList = await localDb.getAllUsersInfo();
+      allUsersModelList = await localDb.getAllUsersInfo();
       console.timeEnd('getAllUsersInfo');
-      // 转回long型
-      buddyList = allUsersModelList.map((user) => {
-        const userObj = user.toJSON();
-        userObj.userId = Long.fromString(userObj.userId, true);
-        userObj.departmentId = Long.fromString(userObj.departmentId, true);
-        return userObj;
-      });
     } else {
       console.time('insertUserInfoEntitys');
-      buddyList.map(user => localDb.upsertUserInfoEntity(user));
-      // localDb.insertMultiUserInfoEntity(buddyList);
+      // buddyList.map(user => localDb.upsertUserInfoEntity(user));
+      allUsersModelList = _.flatten(await localDb.upsertMultiUserInfoEntity(buddyList));
       console.timeEnd('insertUserInfoEntitys');
       const configDb = getAccountConfigDb();
       configDb.setUserLastUpdateTime(res.body.latestUpdateTime);
-
-      buddyList = buddyList.map((buddy) => {
-        if (typeof buddy.userId !== 'object') {
-          buddy.userId = Long.fromValue(buddy.userId).toUnsigned();
-        }
-        if (typeof buddy.departmentId !== 'object') {
-          buddy.departmentId = Long.fromValue(buddy.departmentId).toUnsigned();
-        }
-        return buddy;
-      });
     }
 
+    // 转回long型
+    buddyList = allUsersModelList.map((user) => {
+      const userObj = user.toJSON();
+      userObj.userId = Long.fromString(userObj.userId, true);
+      userObj.departmentId = Long.fromString(userObj.departmentId, true);
+      return userObj;
+    });
     if (buddyList) {
       resolve(buddyList);
     }
@@ -118,40 +109,30 @@ export const onDepListResponce = res => async (onResolve, onReject) => {
 
   try {
     let deptList = null;
+    let deptModelLists = [];
     const localDb = await getLocalDb();
     deptList = res.body.deptList;
     // 如果请求里面含有deptlist插入
     // 没有则从数据库获取
     if (!deptList || _.isEmpty(deptList)) {
       console.time('getAllDepartmentInfo');
-      const deptModelLists = await localDb.getAllDepartmentInfo();
+      deptModelLists = await localDb.getAllDepartmentInfo();
       console.timeEnd('getAllDepartmentInfo');
-      // 转回long型
-      deptList = deptModelLists.map((dept) => {
-        const deptObj = dept.toJSON();
-        deptObj.deptId = Long.fromString(deptObj.deptId, true);
-        deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
-        return deptObj;
-      });
     } else {
       console.time('insertDepartmentInfoEntitys');
-      deptList.map(dept => localDb.upsertDepartmentInfoEntity(dept));
-      // localDb.insertMultiDepartmentInfoEntity(deptList);
+      // deptList.map(dept => localDb.upsertDepartmentInfoEntity(dept));
+      deptModelLists = _.flatten(await localDb.upsertMultiDepartmentInfoEntity(deptList));
       console.timeEnd('insertDepartmentInfoEntitys');
       const configDb = getAccountConfigDb();
       configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);
-      // change num to obj
-      deptList = deptList.map((dept) => {
-        if (typeof dept.deptId !== 'object') {
-          dept.deptId = Long.fromValue(dept.deptId).toUnsigned();
-        }
-        if (typeof dept.parentDeptId !== 'object') {
-          dept.parentDeptId = Long.fromValue(dept.parentDeptId).toUnsigned();
-        }
-        return dept;
-      });
     }
-
+    // 转回long型
+    deptList = deptModelLists.map((dept) => {
+      const deptObj = dept.toJSON();
+      deptObj.deptId = Long.fromString(deptObj.deptId, true);
+      deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
+      return deptObj;
+    });
     if (deptList) {
       onResolve(deptList);
     }

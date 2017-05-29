@@ -1,5 +1,6 @@
 const getLocalModels = require('./models_local');
 const Long = require('long');
+const _ = require('lodash');
 
 let localDb = null;
 
@@ -63,20 +64,57 @@ async function getLocalDb () {
         }
         return models.userinfo.upsert(userInfo);
       },
-      insertMultiUserInfoEntity: (userObjList) => {
+      upsertMultiUserInfoEntity: async (userObjList) => {
         const newObjList = [];
+
+        // 必要的类型转换
         userObjList.forEach((e) => {
           const userInfo = Object.assign({}, e);
           if (typeof userInfo.userId === 'object') {
             userInfo.userId = Long.fromValue(userInfo.userId).toString();
           }
+          if (typeof userInfo.userId === 'number') {
+            userInfo.userId = userInfo.userId.toString();
+          }
           if (typeof userInfo.departmentId === 'object') {
             userInfo.departmentId = Long.fromValue(userInfo.departmentId).toString();
           }
-          newObjList.push(userInfo);
+          if (typeof userInfo.departmentId === 'number') {
+            userInfo.departmentId = userInfo.departmentId.toString();
+          }
+          if (_.findIndex(newObjList, o => o.userId === userInfo.userId) < 0) {
+            newObjList.push(userInfo);
+          }
         });
 
-        return models.userinfo.bulkCreate(newObjList);
+        // 筛选待更新和待插入
+        const newUserIds = newObjList.map(u => u.userId);
+        const updateIds = (await models.userinfo.findAll({
+          attributes: ['userId'],
+          where: {
+            userId: {
+              $in: newUserIds
+            }
+          }
+        })).map(idObj => idObj.userId);
+
+        const updateObjList = [];
+        const createObjList = [];
+        newObjList.forEach((u) => {
+          if (updateIds.includes(u.userId)) {
+            updateObjList.push(u);
+          } else {
+            createObjList.push(u);
+          }
+        });
+        const updateOperations = updateObjList.map(uObj =>
+          models.userinfo.update(updateObjList, {
+            where: { userId: uObj.userId }
+          })
+        );
+        const createOperations = models.userinfo.bulkCreate(createObjList);
+
+        return Promise.all([...updateOperations, createOperations]);
       },
       // update userinfo set name=?,nickName=?,avatarUrl=?,departmentId=?,
       // departmentName=?,email=?,gender=?,user_domain=?,telephone=?,status=?,reserve1=? where userId=?
@@ -122,7 +160,8 @@ async function getLocalDb () {
         }
         return models.departmentinfo.upsert(departmentInfo);
       },
-      insertMultiDepartmentInfoEntity: (deptList) => {
+
+      upsertMultiDepartmentInfoEntity: async (deptList) => {
         const newObjList = [];
         deptList.forEach((e) => {
           const departmentInfo = Object.assign({}, e);
@@ -132,10 +171,46 @@ async function getLocalDb () {
           if (typeof departmentInfo.parentDeptId === 'object') {
             departmentInfo.parentDeptId = Long.fromValue(departmentInfo.parentDeptId).toString();
           }
-          newObjList.push(departmentInfo);
+          if (typeof departmentInfo.deptId === 'number') {
+            departmentInfo.deptId = departmentInfo.deptId.toString();
+          }
+          if (typeof departmentInfo.parentDeptId === 'number') {
+            departmentInfo.parentDeptId = departmentInfo.parentDeptId.toString();
+          }
+          if (_.findIndex(newObjList, o => o.deptId === departmentInfo.deptId) < 0) {
+            newObjList.push(departmentInfo);
+          }
         });
 
-        return models.departmentinfo.bulkCreate(newObjList);
+        // 筛选待更新和待插入
+        const newDeptIds = newObjList.map(d => d.deptId);
+        const updateIds = (await models.departmentinfo.findAll({
+          attributes: ['deptId'],
+          where: {
+            deptId: {
+              $in: newDeptIds
+            }
+          }
+        })).map(idObj => idObj.deptId);
+
+        const updateObjList = [];
+        const createObjList = [];
+        newObjList.forEach((d) => {
+          if (updateIds.includes(d.deptId)) {
+            updateObjList.push(d);
+          } else {
+            createObjList.push(d);
+          }
+        });
+
+        const updateOperations = updateObjList.map(dObj =>
+          models.departmentinfo.update(updateObjList, {
+            where: { deptId: dObj.deptId }
+          })
+        );
+        const createOperations = models.departmentinfo.bulkCreate(createObjList);
+
+        return Promise.all([...updateOperations, createOperations]);
       },
       // update departmentinfo set dId=?,priority=?
       // ,name=?,departmentId=?,parentDepartId=?,status=? where dId=?

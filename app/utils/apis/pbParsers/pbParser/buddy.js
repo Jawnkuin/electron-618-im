@@ -1,3 +1,4 @@
+import Long from 'long';
 import { IMBaseDefine, IMBuddy } from '../pbModules';
 import getActionCreators from '../../../../main/actions';
 import { onBuddyListResponce, onDepListResponce, getUsersStatReq, onUsersStatResponce } from '../../stem';
@@ -14,6 +15,10 @@ export default (pbHeader, pbBodyBuffer) => {
     case BCmdIDs.CID_BUDDY_LIST_STATUS_NOTIFY:
       {
         const userStatNotify = IMBuddy.IMUserStatNotify.decode(pbBodyBuffer);
+        const userStat = userStatNotify.userStat;
+        if (typeof userStat.userId !== 'object') {
+          userStat.userId = Long.fromValue(userStat.userId).toUnsigned();
+        }
         Actions.getUserStatSuccess([userStatNotify.userStat]);
         break;
       }

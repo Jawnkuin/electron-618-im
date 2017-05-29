@@ -37,7 +37,7 @@ app.on('window-all-closed', async () => {
     } else {
       const loginName = loginState.user.userRealName;
       await globalConfigDb.setLogoutByName(loginName);
-      app.quit();
+      setTimeout(() => { app.quit(); }, 100);
     }
   }
 });

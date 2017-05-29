@@ -29,12 +29,13 @@ export default (preState, newState) => {
     }
     // 发生了变化
     if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
+      const globalConfigDb = getGlobalConfigDb();
+      console.log(key);
       switch (key) {
         case loginKeys.user:
           {
             try {
               const reserveUserData = mainStore.getState().login.reserveUserData;
-              const globalConfigDb = getGlobalConfigDb();
               globalConfigDb.addOrUpdateUser(Object.assign({}, reserveUserData, { logging: true }));
             } catch (e) {
               console.warn('Insert User Data Failed to "globalConfigDb"', e.message);
@@ -52,7 +53,7 @@ export default (preState, newState) => {
             // 打开主窗体，关闭登录窗体
             const stemWin = new BrowserWindow(WindowConfigs.stem);
             const loginWinId = mainStore.getState().windows.login.windowID;
-
+            // stemWin.webContents.openDevTools();
             mainWindowManager.add(stemWin, 'stem', () => {
               mainWindowManager.close(loginWinId);
               // 默认托盘点击事件为主窗体显示
@@ -89,7 +90,15 @@ export default (preState, newState) => {
           {
             // 尝试登录
             const newAttemptor = newState[key];
-            doLogin(newAttemptor.name, newAttemptor.psw);
+            const record = globalConfigDb.getUserByName(newAttemptor.name);
+            if (record && record.logging) {
+              setImmediate(() => {
+                Actions.loginFail(`帐号[${newAttemptor.name}]不能重复登录！`);
+              });
+            } else {
+              doLogin(newAttemptor.name, newAttemptor.psw);
+            }
+
             break;
           }
         default:
