@@ -3,10 +3,12 @@ import { Input, Icon, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
 import styles from './InputPanel.less';
 import LinkBox from './LinkBox';
+import UserItem from './UserItem';
 import dummyimage from '../../utils/dummyimage';
 
 
 const defaultAvatar = 'http://www.youlanw.com/static/images/man.jpg';
+
 
 class InputPanel extends Component {
   static propTypes = {
@@ -25,7 +27,8 @@ class InputPanel extends Component {
       psw: '',
       rememberPsw: false,
       autoLogin: false,
-      avatar: defaultAvatar
+      avatar: defaultAvatar,
+      userListShow: false
     };
   }
 
@@ -34,53 +37,68 @@ class InputPanel extends Component {
     const userNum = loginstate.users.length;
     if (userNum > 0 && !this.state.name) {
       const lastUser = loginstate.users[userNum - 1];
-      this.setState({
-        name: lastUser.name,
-        psw: lastUser.remember ? lastUser.psw : '',
-        rememberPsw: lastUser.remember,
-        autoLogin: lastUser.autoLogin,
-        avatar: lastUser.avatarUrl ? lastUser.avatarUrl : dummyimage(lastUser.nickName, null, 50)
-      });
+      this.mapUsertoState(lastUser);
     }
   }
 
+  // 将用户信息显示出来
+  mapUsertoState = (user, extraStates) => {
+    this.setState({
+      name: user.name,
+      psw: user.remember ? user.psw : '',
+      rememberPsw: user.remember,
+      autoLogin: user.autoLogin,
+      avatar: user.avatarUrl ? user.avatarUrl : dummyimage(user.nickName, null, 50),
+      ...extraStates
+    });
+  }
+
+  // 密码输入框变化
   onChangeRememberPsw = (e) => {
     this.setState({ rememberPsw: e.target.checked });
   }
 
+  // Id输入框变化
   onNameChange = (e) => {
     const { loginstate } = this.props;
-    let isSameName = false;
-    let nickName = '';
     if (loginstate && loginstate.users && loginstate.users.length > 0) {
-      const userNum = loginstate.users.length;
-      const propName = loginstate.users[userNum - 1].name;
-      isSameName = e.target.value === propName;
-      if (isSameName) {
-        nickName = loginstate.users[userNum - 1].nickName;
+      const nameIdx = loginstate.users.map(u => u.name).indexOf(e.target.value);
+      if (nameIdx >= 0) {
+        this.mapUsertoState(loginstate.users[nameIdx]);
+      } else {
+        this.setState({ name: e.target.value });
       }
     }
+  }
+
+  // 自动登录变化
+  onChangeAutoLogin = (e) => {
     this.setState({
-      name: e.target.value,
-      avatar: isSameName ? dummyimage(nickName, null, 50) : defaultAvatar
+      autoLogin: e.target.checked,
+      rememberPsw: e.target.checked ? e.target.checked : this.state.rememberPsw
     });
   }
 
-  onChangeAutoLogin = (e) => {
-    if (e.target.checked) {
-      this.setState({
-        autoLogin: e.target.checked,
-        rememberPsw: e.target.checked
-      });
-    } else {
-      this.setState({
-        autoLogin: e.target.checked
-      });
-    }
-  }
+  // 是否在登陆中
   checkLoading = () => this.props.loginstate.status === 'LOGINING'
+
+  // 打开或者关闭用户列表
+  toggleUserList = () => {
+    this.setState({ userListShow: !this.state.userListShow });
+  }
+
+  onUserSelected = (user) => {
+    console.log(this.state);
+    this.mapUsertoState(user, { userListShow: false });
+  }
   render () {
-    const { tryLoginAction } = this.props;
+    const { tryLoginAction, loginstate } = this.props;
+    let userCandidates = [];
+    if (loginstate && loginstate.users) {
+      userCandidates = loginstate.users;
+    }
+    const userListShow = this.state.userListShow;
+    console.log('render called');
     return (
       <div
         className={styles.InputPanel}
@@ -106,10 +124,24 @@ class InputPanel extends Component {
           <Input
             id="account"
             value={this.state.name}
-            suffix={<Icon type="caret-down" />}
+            suffix={<Icon type="caret-down" onClick={this.toggleUserList} />}
             placeholder="请输入帐号"
             onChange={this.onNameChange}
           />
+          {userListShow && (
+            <div className={styles.UserItemList}>
+              {
+                userCandidates.map(e =>
+                  (<UserItem
+                    key={e.name}
+                    user={e}
+                    selectHandler={() => { this.onUserSelected(e); }}
+                  />)
+                )
+              }
+            </div>
+          )}
+
           <Input
             id="psw"
             type="password"
