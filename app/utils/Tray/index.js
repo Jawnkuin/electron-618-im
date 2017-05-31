@@ -1,5 +1,5 @@
 import path from 'path';
-import { Tray } from 'electron';
+import { Tray, Menu, BrowserWindow } from 'electron';
 import { ICON_PATH } from '../../configs';
 
 class TrayManager {
@@ -55,15 +55,18 @@ class TrayManager {
   initTray (iconPath) {
     this.tray = new Tray(iconPath);
     this.defaultIconPath = iconPath;
-
     this.tray.setToolTip(
-`v0.0.5
+`v0.0.7
 招标采购集团即时通
 `);
+    const contextMenu = Menu.buildFromTemplate([{
+      label: '退出',
+      click: () => {
+        BrowserWindow.getAllWindows().forEach((win) => { win.close(); });
+      }
+    }]);
 
-    this.tray.on('right-click', (e, p) => {
-      console.log(e, p);
-    });
+    this.tray.setContextMenu(contextMenu);
 
     this.tray.on('click', () => {
       this.clickHandler();

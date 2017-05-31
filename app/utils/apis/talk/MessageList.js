@@ -1,6 +1,7 @@
 import { IMMessage, IMBaseDefine } from '../pbParsers/pbModules';
 import mainStore from '../../../main/store';
 import tcpClient from '../tcp_client';
+import { getLocalDb } from '../../database';
 
 // 用来获取service id
 const serviceIdEnums = IMBaseDefine.ServiceID;
@@ -30,7 +31,7 @@ export const getMsgList = (sessionId, msgIdBegin, msgCnt) => {
 };
 
 
-export const onGetMsgListResponce = res => (resolve, reject) => {
+export const onGetMsgListResponce = res => async (resolve, reject) => {
   if (!res || !res.header || !res.body) {
     reject('Error Empty res');
   }
@@ -39,6 +40,16 @@ export const onGetMsgListResponce = res => (resolve, reject) => {
     reject('Wrong cmdId');
     return;
   }
+
+  res.body.msgList.reverse(); // 修改顺序
+  // 保证message格式兼容
+  res.body.msgList.forEach((e) => {
+    e.fromUserId = res.body.sessionId;
+    e.toSessionId = res.body.userId;
+  });
+
+  const localDb = await getLocalDb();
+  localDb.insertMessageList(res.body.msgList);
   // console.log('msgListBody', res.body);
   resolve(res.body);
   // console.log(msgList);

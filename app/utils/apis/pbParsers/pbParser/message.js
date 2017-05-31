@@ -58,12 +58,6 @@ export default (pbHeader, pbBodyBuffer) => {
           };
           Talk.onGetMsgListResponce(msgListRes)(
             (msgListRsp) => {
-              msgListRsp.msgList.reverse(); // 修改顺序
-              // 保证message格式兼容
-              msgListRsp.msgList.forEach((e) => {
-                e.fromUserId = msgListRsp.sessionId;
-                e.toSessionId = msgListRsp.userId;
-              });
               Actions.onReceiveUnReadMsgList(msgListRsp);
             }
             ,

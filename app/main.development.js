@@ -30,14 +30,13 @@ app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
     const globalConfigDb = getGlobalConfigDb();
     const loginState = mainStore.getState().login;
-    console.log(loginState);
     if (!loginState || !loginState.user || !loginState.user.userRealName) {
-      console.log(loginState.user.userRealName);
       app.quit();
     } else {
       const loginName = loginState.user.userRealName;
       await globalConfigDb.setLogoutByName(loginName);
-      setTimeout(() => { app.quit(); }, 100);
+      console.log('setLogoutByName', loginName);
+      app.quit();
     }
   }
 });

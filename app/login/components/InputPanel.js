@@ -65,10 +65,10 @@ class InputPanel extends Component {
       const nameIdx = loginstate.users.map(u => u.name).indexOf(e.target.value);
       if (nameIdx >= 0) {
         this.mapUsertoState(loginstate.users[nameIdx]);
-      } else {
-        this.setState({ name: e.target.value });
+        return;
       }
     }
+    this.setState({ name: e.target.value });
   }
 
   // 自动登录变化
@@ -88,7 +88,6 @@ class InputPanel extends Component {
   }
 
   onUserSelected = (user) => {
-    console.log(this.state);
     this.mapUsertoState(user, { userListShow: false });
   }
   render () {
@@ -98,7 +97,6 @@ class InputPanel extends Component {
       userCandidates = loginstate.users;
     }
     const userListShow = this.state.userListShow;
-    console.log('render called');
     return (
       <div
         className={styles.InputPanel}

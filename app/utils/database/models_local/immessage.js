@@ -5,43 +5,44 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      autoIncrement: true,
       primaryKey: true
     },
     msgId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    sessionid: {
+    toSessionId: {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    talkerid: {
+    fromUserId: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    content: {
+    msgData: {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    rendertype: {
+    msgType: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: '2'
+      defaultValue: 1
     },
-    sessiontype: {
+    sessionType: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: '1'
+      defaultValue: 1
     },
-    msgtime: {
+    createTime: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: '0'
+      defaultValue: 0
     },
-    createtime: {
-      type: DataTypes.INTEGER,
+    readAck: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: '0'
+      defaultValue: false
     },
     reserve1: {
       type: DataTypes.TEXT,

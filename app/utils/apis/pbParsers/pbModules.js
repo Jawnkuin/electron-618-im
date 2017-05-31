@@ -1,7 +1,10 @@
 import protobuf from 'protobufjs';
+import Long from 'long';
 // import fs from 'fs'; // fs在解析asar文件时候会有bug,需要选择一个一个加
 import { PB_PATH } from '../../../configs';
 
+protobuf.util.Long = Long;
+protobuf.configure();
 
 const protoAddrs = [
   'IM.BaseDefine.proto',

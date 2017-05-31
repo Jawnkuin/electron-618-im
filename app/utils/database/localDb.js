@@ -4,6 +4,16 @@ const _ = require('lodash');
 
 let localDb = null;
 
+const mutateObjOrNumToString = (a) => {
+  if (typeof a === 'object') {
+    return Long.fromValue(a).toString();
+  }
+
+  if (typeof a === 'number') {
+    return a.toString();
+  }
+};
+
 async function getLocalDb () {
   if (!localDb) {
     const models = getLocalModels();
@@ -56,12 +66,7 @@ async function getLocalDb () {
       // user_domain,telephone,status,reserve1) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);
       upsertUserInfoEntity: function UpsertUserInfoEntity (userObj) {
         const userInfo = Object.assign({}, userObj);
-        if (typeof userInfo.userId === 'object') {
-          userInfo.userId = Long.fromValue(userInfo.userId).toString();
-        }
-        if (typeof userInfo.departmentId === 'object') {
-          userInfo.departmentId = Long.fromValue(userInfo.departmentId).toString();
-        }
+        userInfo.userId = mutateObjOrNumToString(userInfo.userId);
         return models.userinfo.upsert(userInfo);
       },
       upsertMultiUserInfoEntity: async (userObjList) => {
@@ -70,18 +75,8 @@ async function getLocalDb () {
         // 必要的类型转换
         userObjList.forEach((e) => {
           const userInfo = Object.assign({}, e);
-          if (typeof userInfo.userId === 'object') {
-            userInfo.userId = Long.fromValue(userInfo.userId).toString();
-          }
-          if (typeof userInfo.userId === 'number') {
-            userInfo.userId = userInfo.userId.toString();
-          }
-          if (typeof userInfo.departmentId === 'object') {
-            userInfo.departmentId = Long.fromValue(userInfo.departmentId).toString();
-          }
-          if (typeof userInfo.departmentId === 'number') {
-            userInfo.departmentId = userInfo.departmentId.toString();
-          }
+          userInfo.userId = mutateObjOrNumToString(userInfo.userId);
+          userInfo.departmentId = mutateObjOrNumToString(userInfo.departmentId);
           if (_.findIndex(newObjList, o => o.userId === userInfo.userId) < 0) {
             newObjList.push(userInfo);
           }
@@ -152,12 +147,7 @@ async function getLocalDb () {
       // INSERT OR REPLACE into departmentinfo(dId,priority,name,parentDepartId,status)
       upsertDepartmentInfoEntity: function UpsetDepartmentInfoEntity (departmentObj) {
         const departmentInfo = Object.assign({}, departmentObj);
-        if (typeof departmentInfo.deptId === 'object') {
-          departmentInfo.deptId = Long.fromValue(departmentInfo.deptId).toString();
-        }
-        if (typeof departmentInfo.parentDeptId === 'object') {
-          departmentInfo.parentDeptId = Long.fromValue(departmentInfo.parentDeptId).toString();
-        }
+        departmentInfo.deptId = mutateObjOrNumToString(departmentInfo.deptId);
         return models.departmentinfo.upsert(departmentInfo);
       },
 
@@ -165,18 +155,10 @@ async function getLocalDb () {
         const newObjList = [];
         deptList.forEach((e) => {
           const departmentInfo = Object.assign({}, e);
-          if (typeof departmentInfo.deptId === 'object') {
-            departmentInfo.deptId = Long.fromValue(departmentInfo.deptId).toString();
-          }
-          if (typeof departmentInfo.parentDeptId === 'object') {
-            departmentInfo.parentDeptId = Long.fromValue(departmentInfo.parentDeptId).toString();
-          }
-          if (typeof departmentInfo.deptId === 'number') {
-            departmentInfo.deptId = departmentInfo.deptId.toString();
-          }
-          if (typeof departmentInfo.parentDeptId === 'number') {
-            departmentInfo.parentDeptId = departmentInfo.parentDeptId.toString();
-          }
+
+          departmentInfo.deptId = mutateObjOrNumToString(departmentInfo.deptId);
+          departmentInfo.parentDeptId = mutateObjOrNumToString(departmentInfo.parentDeptId);
+
           if (_.findIndex(newObjList, o => o.deptId === departmentInfo.deptId) < 0) {
             newObjList.push(departmentInfo);
           }
@@ -268,18 +250,51 @@ async function getLocalDb () {
       // @{INSERT OR IGNORE INTO immessage(msgId,sessionId,talkerid,content,
       // rendertype,sessiontype,msgtime,createtime,reserve1,reserve2,reserve3)
       insertMessage: function InsertMessage (msg) {
-        return models.imimage.create(msg);
+        msg.msgId = mutateObjOrNumToString(msg.msgId);
+        msg.toSessionId = mutateObjOrNumToString(msg.toSessionId);
+        msg.fromUserId = mutateObjOrNumToString(msg.fromUserId);
+        return models.immessage.create(msg);
       },
       // BatchInsertMessage:function (IN std::list<MessageEntity>& msgList){},
       // select * from immessage where sessionId=? and msgId <= ? order by msgId desc limit ?
       getHistoryMessage: function GetHistoryMessage (sId, msgId, nMsgCount) {
-        return models.imimage.findAll({
+        const sIdNum = mutateObjOrNumToString(sId);
+        const msgIdNum = mutateObjOrNumToString(msgId);
+        return models.immessage.findAll({
           where: {
-            sessionId: sId,
-            msgId: { $lte: msgId }
+            toSessionId: sIdNum,
+            msgId: { $lte: msgIdNum }
           },
           limit: nMsgCount
         });
+      },
+      insertMessageList: (msgList) => {
+        const newList = msgList.map((m) => {
+          const msg = Object.assign({}, m);
+          msg.msgId = mutateObjOrNumToString(msg.msgId);
+          msg.toSessionId = mutateObjOrNumToString(msg.toSessionId);
+          msg.fromUserId = mutateObjOrNumToString(msg.fromUserId);
+          return msg;
+        });
+        console.log(newList);
+        return models.immessage.bulkCreate(newList);
+      },
+
+      setMessageReadAck: (sId, msgId) => {
+        const sIdNum = mutateObjOrNumToString(sId);
+        const msgIdNum = mutateObjOrNumToString(msgId);
+        try {
+          console.log('setMessageReadAck', msgIdNum);
+          console.log('setMessageReadAck', sIdNum);
+          models.immessage.update({ readAck: true }, {
+            where: {
+              toSessionId: sIdNum,
+              msgId: { $lte: msgIdNum }
+            }
+          });
+        } catch (e) {
+          console.log(e.message);
+        }
       },
 
       /** @name 文件传输相关*/

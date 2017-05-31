@@ -30,7 +30,6 @@ export default (preState, newState) => {
     // 发生了变化
     if (!preState[key] || !_.isEqualWith(preState[key], newState[key])) {
       const globalConfigDb = getGlobalConfigDb();
-      console.log(key);
       switch (key) {
         case loginKeys.user:
           {
@@ -41,13 +40,18 @@ export default (preState, newState) => {
               console.warn('Insert User Data Failed to "globalConfigDb"', e.message);
             }
 
-            // 登录成功
-            // 初始化托盘
-            trayManager.setDefaultTrayIcon(path.join(ICON_PATH, 'tray.png'));
-
             // 设置用户数据库
             const userId = newState[key].userId;
             setLocalDataPath(Long.fromValue(userId).toString());
+
+            // 登录成功
+            // 初始化托盘
+            const curUser = newState[key];
+            trayManager.setDefaultTrayIcon(path.join(ICON_PATH, 'tray.png'));
+            trayManager.setToolTip(
+`${curUser.userNickName}
+${curUser.userRealName}`
+            );
 
 
             // 打开主窗体，关闭登录窗体
@@ -62,6 +66,7 @@ export default (preState, newState) => {
                 if (!theStem) {
                   return;
                 }
+                // theStem.webContents.openDevTools();
                 if (theStem.isMinimized()) {
                   theStem.restore();
                 }
@@ -92,6 +97,7 @@ export default (preState, newState) => {
             const newAttemptor = newState[key];
             const record = globalConfigDb.getUserByName(newAttemptor.name);
             if (record && record.logging) {
+              // 异步
               setImmediate(() => {
                 Actions.loginFail(`帐号[${newAttemptor.name}]不能重复登录！`);
               });

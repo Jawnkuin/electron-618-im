@@ -22,7 +22,6 @@ const stem = handleActions({
       }
       const copyedToBuddy = Object.assign({}, toBuddy, { userId });
       const toBuddys = _.unionWith(state.toBuddys, [copyedToBuddy], (f, l) => _.isEqual(f.userId, l.userId));
-      console.log(toBuddys);
       return Object.assign({}, state, {
         toBuddys
       });

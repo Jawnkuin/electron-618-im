@@ -9,6 +9,14 @@ const tcpProcess = fork(TCP_CHILD_PATH);
 const SEND_PB = 'SEND_PB';
 const HEART_BEAT = 'HEART_BEAT';
 
+function onExit () {
+  console.log('Process Exit');
+  tcpProcess.kill('SIGINT');
+  process.exit(0);
+}
+
+process.on('SIGINT', onExit);
+process.on('exit', onExit);
 
 tcpProcess.on('message', (m) => {
   const bodyNodeBuffer = Buffer.from(m.pbBodyBuf);

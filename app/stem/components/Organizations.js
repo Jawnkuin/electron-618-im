@@ -66,8 +66,6 @@ class Organizations extends Component {
       this.state.deptTreeWithBuddys = newDeptTree;
     }
 
-
-    this.onToggleExpand = this.onToggleExpand.bind(this);
     this.onToggleSelect = this.onToggleSelect.bind(this);
     this.getTreeNodes = this.getTreeNodes.bind(this);
   }
@@ -81,11 +79,6 @@ class Organizations extends Component {
       const newDeptTree = appendBuddyToOrg(this.state.deptTree, userList);
       this.setState({ deptTreeWithBuddys: newDeptTree });
     }
-  }
-
-  onToggleExpand (expandedkeys) {
-    // this.setState({ expandedKeys: expandedkeys });
-    console.log(expandedkeys);
   }
 
   onToggleSelect (selectedKeys, e) {
@@ -159,7 +152,6 @@ class Organizations extends Component {
       <Tree
         className={styles.TreeNode}
         onSelect={this.onToggleSelect}
-        onExpand={this.onToggleExpand}
         expandedKeys={this.state.expandedKeys}
       >
         {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Icon } from 'antd';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import DlgItem from './DlgItem';
@@ -32,6 +33,7 @@ class DialogPanel extends Component {
     return (
       <div className={styles.DialogPanel}>
         <div className={styles.DlgListView} >
+          <div className={styles.ViewMore}><Icon type="clock-circle" />查看更多</div>
           {
             msgList.map((dlg) => {
               const utf8Buf = Buffer.from(dlg.msgData, 'base64');

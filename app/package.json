@@ -1,7 +1,7 @@
 {
   "name": "electron-618-im",
   "productName": "招标采购集团即时通",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "IM based on electron",
   "main": "./main.js",
   "author": {

@@ -49,14 +49,10 @@ function getGlobalConfigDb () {
       await globalConfigDb.get('users').push(newUser).write();
     },
 
-    setLogoutByName: async (name) => {
-      console.log('setLogoutByName': name);
-
-      return globalConfigDb.get('users')
+    setLogoutByName: async name => globalConfigDb.get('users')
           .find({ name })
           .assign({ logging: false })
-          .write();
-    }
+          .write()
 
   };
 }

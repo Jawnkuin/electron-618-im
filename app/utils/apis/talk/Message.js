@@ -1,6 +1,7 @@
 import { IMMessage, IMBaseDefine } from '../pbParsers/pbModules';
 import mainStore from '../../../main/store';
 import tcpClient from '../tcp_client';
+import { getLocalDb } from '../../database';
 
 // 用来获取service id
 const serviceIdEnums = IMBaseDefine.ServiceID;
@@ -9,18 +10,24 @@ const messageCmdIdEnums = IMBaseDefine.MessageCmdID;
 
 const IMMsgData = IMMessage.IMMsgData;
 
-const getMessageBuf = (toSid, data, msgType = IMBaseDefine.MsgType.MSG_TYPE_SINGLE_TEXT) => {
+const getMessageBuf = async (toSid, data, msgType = IMBaseDefine.MsgType.MSG_TYPE_SINGLE_TEXT) => {
   // console.log(mainStore.getState().login.userInfo);
+  const localDb = await getLocalDb();
   const fromId = mainStore.getState().login.user.userId;
 
-  const messageData = IMMsgData.create({
+  const messageObj = {
     fromUserId: fromId,
     toSessionId: toSid,
     msgId: 0,
     createTime: new Date().getTime(),
     msgType,
     msgData: data
-  });
+  };
+
+  const messageData = IMMsgData.create(messageObj);
+  // 存入本地消息记录,自己发送的自动标记已读，异步
+  localDb.insertMessage(Object.assign(messageObj, { readAck: true }));
+
   const msgDataBuf = IMMsgData.encode(messageData).finish();
   return msgDataBuf;
 };
@@ -40,8 +47,8 @@ function getMsgDataReadAckReqBuf (senderId, msgId, sessionType = IMBaseDefine.Se
 }
 
 // 发送消息
-export const sendMessage = (toSid, data) => {
-  const reqBuf = getMessageBuf(toSid, data);
+export const sendMessage = async (toSid, data) => {
+  const reqBuf = await getMessageBuf(toSid, data);
   const serviceId = serviceIdEnums.SID_MSG;
   const reqCmdId = messageCmdIdEnums.CID_MSG_DATA;
 
@@ -66,7 +73,7 @@ const sendMessageAck = (senderId, msgId, sessionType = IMBaseDefine.SessionType.
 };
 
 // 接收到消息
-export const onMessageGet = res => (resolve, reject) => {
+export const onMessageGet = res => async (resolve, reject) => {
   if (!res || !res.header || !res.body) {
     reject('onMessageGet Error Empty res');
   }
@@ -77,15 +84,22 @@ export const onMessageGet = res => (resolve, reject) => {
   }
 
   sendMessageAck(res.body.fromUserId, res.body.msgId);
+  const localDb = await getLocalDb();
+  // 存入本地消息记录,接收的自动标记未读读，异步
+  localDb.insertMessage(Object.assign({}, res.body, { readAck: false }));
 
   resolve(res.body);
 };
 
 // 发送消息已读信令
-export const msgDataReadAckReq = (senderId, msgId) => {
+export const msgDataReadAckReq = async (senderId, msgId) => {
   const reqBuf = getMsgDataReadAckReqBuf(senderId, msgId);
   const serviceId = serviceIdEnums.SID_MSG;
   const reqCmdId = messageCmdIdEnums.CID_MSG_READ_ACK;
+
+  const localDb = await getLocalDb();
+  // 标记已读，异步
+  localDb.setMessageReadAck(senderId, msgId);
 
   tcpClient.sendPbToServer(reqBuf, serviceId, reqCmdId);
 };
