@@ -23,6 +23,34 @@ class DialogPanel extends Component {
     sendMessageReadAck: PropTypes.func.isRequired
   };
 
+  constructor (props) {
+    super(props);
+    this.state = {
+      mouseDown: false
+    };
+  }
+
+  componentDidMount () {
+    if (!this.state.mouseDown) {
+      this.dlgListView && this.dlgListView.scrollIntoView({ block: 'end', behavior: 'smooth' });
+    }
+  }
+
+  shouldComponentUpdate (nextProps) {
+    if (_.isEqual(this.props, nextProps)) {
+      return false;
+    }
+    return true;
+  }
+
+  componentDidUpdate () {
+    console.log('dlgListView');
+    if (!this.state.mouseDown) {
+      console.log('dlgListView', this.dlgListView);
+      this.dlgListView && this.dlgListView.scrollIntoView({ block: 'end', behavior: 'smooth' });
+    }
+  }
+
   render () {
     const { msgList } = this.props.dlgInfo;
     const { selfInfo, buddyInfo } = this.props.buddyInfo;
@@ -32,35 +60,44 @@ class DialogPanel extends Component {
 
     return (
       <div className={styles.DialogPanel}>
-        <div className={styles.DlgListView} >
+        <div
+          className={styles.DlgListView}
+          onMouseDown={() => { this.setState({ mouseDown: true }); }}
+          onMouseUp={() => { this.setState({ mouseDown: false }); }}
+        >
           <div className={styles.ViewMore}><Icon type="clock-circle" />查看更多</div>
           {
-            msgList.map((dlg) => {
+            msgList.map((dlg, idx) => {
               const utf8Buf = Buffer.from(dlg.msgData, 'base64');
-
+              // console.log(utf8Buf.toString('base64').toString('base64'));
               let msgStr = '';
               try {
-                msgStr = atob(utf8Buf.toString('utf8'));
+                msgStr = utf8Buf.toString('utf8');
               } catch (e) {
                 console.warn(e.message);
-                msgStr = utf8Buf.toString('utf8');
+                msgStr = '';
               }
 
               const isFromSelf = _.isEqual(dlg.fromUserId, selfInfo.userId);
               return (
-                <DlgItem
+                <div
                   key={
                     `${generateKeyString(dlg.msgId)}${generateKeyString(dlg.fromUserId)}`}
-                  name={
-                    isFromSelf ? selfInfo.userNickName : buddyInfo.userNickName
-                  }
-                  time={dlg.createTime}
-                  msg={msgStr}
-                  isLeft={!isFromSelf}
-                  isReadAck={dlg.readAck}
-                  sendReadAck={() => { sendMessageReadAck(dlg.fromUserId, dlg.msgId); }}
-                  onlineStatus={onlineStatus}
-                />
+                  ref={(dlgListView) => { this.dlgListView = (idx === msgList.length - 1) ? dlgListView : null; }}
+                >
+                  <DlgItem
+                    name={
+                      isFromSelf ? selfInfo.userNickName : buddyInfo.userNickName
+                    }
+                    time={dlg.createTime}
+                    msg={msgStr}
+                    isLeft={!isFromSelf}
+                    isReadAck={dlg.readAck}
+                    sendReadAck={() => { sendMessageReadAck(dlg.fromUserId, dlg.msgId); }}
+                    onlineStatus={onlineStatus}
+                  />
+                </div>
+
               );
             }
             )

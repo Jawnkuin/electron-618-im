@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Icon } from 'antd';
+import { Tabs, Icon, Tooltip } from 'antd';
 import _ from 'lodash';
 import styles from './BuddyPanel.less';
 import Conversation from './Conversation';
@@ -20,13 +20,16 @@ const getConversations = (userListInfo, historySessions, openSingleTalk) => {
 
 
     const lastData = item.latestMsg.msgData;
-    const utf8Buf = Buffer.from(lastData, 'base64');
-    let msgStr = 'A';
 
+
+    const utf8Buf = Buffer.from(lastData, 'base64');
+    // console.log(utf8Buf.toString('base64').toString('base64'));
+    let msgStr = '';
     try {
-      msgStr = atob(utf8Buf.toString('utf8'));
-    } catch (e) {
       msgStr = utf8Buf.toString('utf8');
+    } catch (e) {
+      console.warn(e.message);
+      msgStr = '';
     }
 
     return {
@@ -92,12 +95,23 @@ class BuddyPanel extends Component {
       <div className={styles.BuddyPanel}>
         <Tabs>
           <TabPane
-            tab={<Icon type="message" />}
+            tab={
+              <Tooltip title={'会话'}>
+                <Icon type="message" />
+              </Tooltip>
+            }
             key="1"
           >
             {conversationItems}
           </TabPane>
-          <TabPane tab={<Icon type="user" />} key="2" >
+          <TabPane
+            tab={
+              <Tooltip title={'联系人'}>
+                <Icon type="user" />
+              </Tooltip>
+            }
+            key="2"
+          >
             <Tabs>
               <TabPane tab="组织构架" key="a1">
                 <OrganizationsContainer />
@@ -105,7 +119,14 @@ class BuddyPanel extends Component {
               <TabPane tab="所属企业" key="a2" />
             </Tabs>
           </TabPane>
-          <TabPane tab={<Icon type="team" />} key="3" />
+          <TabPane
+            tab={
+              <Tooltip title={'群组'}>
+                <Icon type="team" />
+              </Tooltip>
+            }
+            key="3"
+          />
         </Tabs>
       </div>
     );

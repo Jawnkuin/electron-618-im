@@ -15,7 +15,7 @@ function onExit () {
   process.exit(0);
 }
 
-process.on('SIGINT', onExit);
+// process.on('SIGINT', onExit);
 process.on('exit', onExit);
 
 tcpProcess.on('message', (m) => {

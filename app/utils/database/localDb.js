@@ -186,7 +186,7 @@ async function getLocalDb () {
         });
 
         const updateOperations = updateObjList.map(dObj =>
-          models.departmentinfo.update(updateObjList, {
+          models.departmentinfo.update(dObj, {
             where: { deptId: dObj.deptId }
           })
         );
