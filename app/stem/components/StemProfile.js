@@ -20,7 +20,7 @@ const StemProfile = ({ userInfo }) => (
         </div>
       <div className={styles.ToolBox}>
         <div className={styles.LeftBox}>
-          <a href="http://192.168.8.41:8080/fjbidoa"><Icon type="home" /></a>
+          <a href="http://www.fjqyw.com:7080/fjbidoa"><Icon type="home" /></a>
         </div>
         <div className={styles.RightBox}>
           <Button icon="message" ghost />

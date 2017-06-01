@@ -17,6 +17,8 @@ export const RECIEVE_UNREAD_MESSAGE = 'RECIEVE_UNREAD_MESSAGE';
 
 export const MESSAGE_READ_ACK = 'MESSAGE_READ_ACK';
 
+export const GET_HISTORY_MESSAGES = 'GET_HISTORY_MESSAGES';
+
 const sendMessageActionCreator = createAction(SEND_MESSAGE,
 (fromUserId, createTime, msgData, msgId) => ({
   fromUserId,

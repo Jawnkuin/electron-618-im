@@ -65,7 +65,13 @@ class DialogPanel extends Component {
           onMouseDown={() => { this.setState({ mouseDown: true }); }}
           onMouseUp={() => { this.setState({ mouseDown: false }); }}
         >
-          <div className={styles.ViewMore}><Icon type="clock-circle" />查看更多</div>
+          <div
+            className={styles.ViewMore}
+            // onClick={this.getHistoryMessages}
+          >
+            <Icon type="clock-circle" />
+            查看更多
+          </div>
           {
             msgList.map((dlg, idx) => {
               const utf8Buf = Buffer.from(dlg.msgData, 'base64');

@@ -77,8 +77,12 @@ async function getLocalDb () {
           const userInfo = Object.assign({}, e);
           userInfo.userId = mutateObjOrNumToString(userInfo.userId);
           userInfo.departmentId = mutateObjOrNumToString(userInfo.departmentId);
-          if (_.findIndex(newObjList, o => o.userId === userInfo.userId) < 0) {
+
+          const objIdx = _.findIndex(newObjList, o => o.userId === userInfo.userId);
+          if (objIdx < 0) {
             newObjList.push(userInfo);
+          } else {
+            newObjList[objIdx] = userInfo;
           }
         });
 
@@ -266,6 +270,16 @@ async function getLocalDb () {
             msgId: { $lte: msgIdNum }
           },
           limit: nMsgCount
+        });
+      },
+      setSentMessageId: (msgAck) => {
+        const msgId = mutateObjOrNumToString(msgAck.msgId);
+        const sessionId = mutateObjOrNumToString(msgAck.sessionId);
+        return models.immessage.update({ msgId }, {
+          where: {
+            toSessionId: sessionId,
+            msgId: 0
+          }
         });
       },
       insertMessageList: (msgList) => {

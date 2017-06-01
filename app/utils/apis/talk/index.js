@@ -1,4 +1,4 @@
-import { sendMessage, onMessageGet, msgDataReadAckReq } from './Message';
+import { sendMessage, onMessageGet, msgDataReadAckReq, onMessageDataAck } from './Message';
 import { getMsgList, onGetMsgListResponce } from './MessageList';
 import { getUnreadMsgCnt, onUnReadMsgCntResponce } from './UnreadMessageCnt';
 
@@ -16,5 +16,7 @@ export default {
   // 获取未读消息数量()
   getUnreadMsgCnt,
   // 获得未读消息数量的反馈(res => (resolve, reject))
-  onUnReadMsgCntResponce
+  onUnReadMsgCntResponce,
+  // 服务器接收到本机发送消息做的标记
+  onMessageDataAck
 };

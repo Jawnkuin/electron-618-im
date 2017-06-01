@@ -15,6 +15,22 @@ const TreeNode = Tree.TreeNode;
 * Use `Number.MAX_SAFE_INTEGER` to check
 **/
 
+/*
+const jian = {
+  avatarUrl: '',
+  createdAt: '2017-06-01T12:37:43.558Z',
+  departmentId: { high: 134219, low: -1422196736, unsigned: true },
+  status: 0,
+  userDomain: 'jian',
+  userGender: 1,
+  userId: { high: 66666, low: 66666, unsigned: true },
+  userNickName: '简灿良',
+  userRealName: 'jian',
+  userTel: '123456789'
+};
+*/
+
+const cheated = false;
 
 const appendBuddyToOrg = (deptTree, userList) => {
   const newDeptTree = _.cloneDeep(deptTree);
@@ -62,6 +78,12 @@ class Organizations extends Component {
 
     if (!_.isEmpty(allUsersInfo.userListInfo)) {
       const userList = allUsersInfo.userListInfo;
+      /*
+      if (!cheated) {
+        userList.push(jian);
+        cheated = true;
+      }
+      */
       const newDeptTree = appendBuddyToOrg(this.state.deptTree, userList);
       this.state.deptTreeWithBuddys = newDeptTree;
     }
@@ -76,6 +98,12 @@ class Organizations extends Component {
 
     if (!_.isEmpty(allUsersInfo.userListInfo)) {
       const userList = allUsersInfo.userListInfo;
+      /*
+      if (!cheated) {
+        userList.push(jian);
+        cheated = true;
+      }
+      */
       const newDeptTree = appendBuddyToOrg(this.state.deptTree, userList);
       this.setState({ deptTreeWithBuddys: newDeptTree });
     }

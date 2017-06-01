@@ -19,7 +19,7 @@ const getMessageBuf = async (toSid, data, msgType = IMBaseDefine.MsgType.MSG_TYP
     fromUserId: fromId,
     toSessionId: toSid,
     msgId: 0,
-    createTime: new Date().getTime(),
+    createTime: parseInt(new Date().getTime() / 1000, 10),
     msgType,
     msgData: data
   };
@@ -72,6 +72,23 @@ const sendMessageAck = (senderId, msgId, sessionType = IMBaseDefine.SessionType.
   tcpClient.sendPbToServer(reqBodyBuf, serviceId, reqCmdId);
 };
 
+// 接收到服务器接收到消息的ack
+export const onMessageDataAck = res => async(resolve, reject) => {
+  if (!res || !res.header || !res.body) {
+    reject('onMessageGet Error Empty res');
+    return;
+  }
+  // 其它消息
+  if (messageCmdIdEnums.CID_MSG_DATA_ACK !== res.header.commandId) {
+    reject('onMessageGet Wrong cmdId');
+    return;
+  }
+
+  const localDb = await getLocalDb();
+  // 存入本地消息记录,接收的自动标记未读读，异步
+  localDb.setSentMessageId(Object.assign({}, res.body));
+};
+
 // 接收到消息
 export const onMessageGet = res => async (resolve, reject) => {
   if (!res || !res.header || !res.body) {
@@ -86,7 +103,11 @@ export const onMessageGet = res => async (resolve, reject) => {
   sendMessageAck(res.body.fromUserId, res.body.msgId);
   const localDb = await getLocalDb();
   // 存入本地消息记录,接收的自动标记未读读，异步
-  localDb.insertMessage(Object.assign({}, res.body, { readAck: false }));
+  localDb.insertMessage(Object.assign(
+    { },
+    res.body,
+    { readAck: false, toSessionId: res.body.fromUserId }
+  ));
 
   resolve(res.body);
 };

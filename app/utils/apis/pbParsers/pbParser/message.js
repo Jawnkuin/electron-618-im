@@ -21,10 +21,14 @@ export default (pbHeader, pbBodyBuffer) => {
         }
       // 服务器接收消息标识
       case IMMessageCmdIDs.CID_MSG_DATA_ACK:
-        return ({
+        Talk.onMessageDataAck({
           header: pbHeader,
           body: IMMessage.IMMsgDataAck.decode(pbBodyBuffer)
-        });
+        })(
+          () => {},
+          (e) => { throw new Error(`onMessageGet Failure ${e.message}`); }
+        );
+        break;
       // 消息已读标识
       case IMMessageCmdIDs.CID_MSG_READ_ACK:
         return ({

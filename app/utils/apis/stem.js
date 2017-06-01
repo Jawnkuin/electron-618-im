@@ -128,10 +128,16 @@ export const onDepListResponce = res => async (onResolve, onReject) => {
     }
     // 转回long型
     deptList = deptModelLists.map((dept) => {
-      const deptObj = dept.toJSON();
-      deptObj.deptId = Long.fromString(deptObj.deptId, true);
-      deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
-      return deptObj;
+      try {
+        const deptObj = dept.toJSON();
+        deptObj.deptId = Long.fromString(deptObj.deptId, true);
+        deptObj.parentDeptId = Long.fromString(deptObj.parentDeptId, true);
+        return deptObj;
+      } catch (e) {
+        console.log(e.message);
+        console.log('dept', dept);
+        return {};
+      }
     });
     if (deptList) {
       onResolve(deptList);
