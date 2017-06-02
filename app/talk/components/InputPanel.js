@@ -42,7 +42,7 @@ class InputPanel extends Component {
     // const base64String = buf.toString('base64');
     const sendTime = parseInt(new Date().getTime() / 1000, 10);
     // 用于更改本线程内的状态,并向服务器发送消息
-    sendMessage(fromInfo.userId, parseInt(sendTime / 1000, 10), buf, this.state.msgId);
+    sendMessage(fromInfo.userId, sendTime, buf, this.state.msgId);
 
     this.emitInputEmpty();
   }
