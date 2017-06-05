@@ -121,10 +121,12 @@ export const onDepListResponce = res => async (onResolve, onReject) => {
     } else {
       console.time('insertDepartmentInfoEntitys');
       // deptList.map(dept => localDb.upsertDepartmentInfoEntity(dept));
-      deptModelLists = _.flatten(await localDb.upsertMultiDepartmentInfoEntity(deptList));
-      console.timeEnd('insertDepartmentInfoEntitys');
+      await localDb.upsertMultiDepartmentInfoEntity(deptList);
+
       const configDb = getAccountConfigDb();
       configDb.setDepartmentLastUpdateTime(res.body.latestUpdateTime);
+      deptModelLists = await localDb.getAllDepartmentInfo();
+      console.timeEnd('insertDepartmentInfoEntitys');
     }
     // 转回long型
     deptList = deptModelLists.map((dept) => {
@@ -135,7 +137,6 @@ export const onDepListResponce = res => async (onResolve, onReject) => {
         return deptObj;
       } catch (e) {
         console.log(e.message);
-        console.log('dept', dept);
         return {};
       }
     });

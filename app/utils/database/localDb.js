@@ -263,13 +263,25 @@ async function getLocalDb () {
       // select * from immessage where sessionId=? and msgId <= ? order by msgId desc limit ?
       getHistoryMessage: function GetHistoryMessage (sId, msgId, nMsgCount) {
         const sIdNum = mutateObjOrNumToString(sId);
-        const msgIdNum = mutateObjOrNumToString(msgId);
+        if (!msgId || msgId <= 0) {
+          console.log('msgId', msgId);
+          return models.immessage.findAll({
+            where: {
+              toSessionId: sIdNum
+            },
+            limit: nMsgCount,
+            order: [['msgId', 'DESC']]
+          });
+        }
+        const msgIdNum = parseInt(mutateObjOrNumToString(msgId), 10);
+        console.log('mutateObjOrNumToString', msgIdNum);
         return models.immessage.findAll({
           where: {
             toSessionId: sIdNum,
-            msgId: { $lte: msgIdNum }
+            msgId: { $lt: msgIdNum }
           },
-          limit: nMsgCount
+          limit: nMsgCount,
+          order: [['msgId', 'DESC']]
         });
       },
       setSentMessageId: (msgAck) => {

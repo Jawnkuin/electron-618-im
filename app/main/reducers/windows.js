@@ -31,6 +31,7 @@ const windows = handleActions({
           }
         case 'talk':
           {
+            console.log('action.payload', action.payload);
             const talkList = _.unionBy(state.talk, [{ ...action.payload }], 'windowID');
             return Object.assign({}, state, {
               talk: talkList

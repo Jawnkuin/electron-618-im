@@ -49,8 +49,7 @@ export default (preState, newState) => {
             const curUser = newState[key];
             trayManager.setDefaultTrayIcon(path.join(ICON_PATH, 'tray.png'));
             trayManager.setToolTip(
-`${curUser.userNickName}
-${curUser.userRealName}`
+              `${curUser.userNickName}\n${curUser.userRealName}`
             );
 
 

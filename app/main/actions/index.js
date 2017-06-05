@@ -20,7 +20,8 @@ import {
   onLoadTalkActionCreator,
   onReceiveMessageActionCreator,
   checkUnreadMessageActionCreator,
-  onReceiveUnReadMsgListActionCreator
+  onReceiveUnReadMsgListActionCreator,
+  onGetHistoryMsgsActionCreator
 } from './talk';
 
 let actions = null;
@@ -46,7 +47,8 @@ export const wrapActions = (store) => {
       onLoadTalk: onLoadTalkActionCreator(store.dispatch, store.getState),
       onReceiveMessage: onReceiveMessageActionCreator(store.dispatch, store.getState),
       checkUnreadMessage: checkUnreadMessageActionCreator(store.dispatch, store.getState),
-      onReceiveUnReadMsgList: onReceiveUnReadMsgListActionCreator(store.dispatch, store.getState)
+      onReceiveUnReadMsgList: onReceiveUnReadMsgListActionCreator(store.dispatch, store.getState),
+      onGetHistoryMsgs: onGetHistoryMsgsActionCreator(store.dispatch, store.getState)
 
     };
   }

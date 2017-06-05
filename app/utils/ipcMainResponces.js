@@ -5,8 +5,8 @@ import { ipcMain } from 'electron';
 import { GET_ALL_USERS, GET_DEPT_LIST } from '../stem/actions';
 import { getDepList, getAllUser } from './apis/stem';
 
-import { SEND_MESSAGE, MESSAGE_READ_ACK } from '../talk/actions';
-import { sendMessage, msgDataReadAckReq } from './apis/talk';
+import { SEND_MESSAGE, MESSAGE_READ_ACK, GET_HISTORY_MESSAGES } from '../talk/actions';
+import { sendMessage, msgDataReadAckReq, getHistoryMessages } from './apis/talk';
 
 /*
 ipcMain.on(LOGIN, (event, arg) => {
@@ -28,4 +28,8 @@ ipcMain.on(SEND_MESSAGE, (e, arg) => {
 
 ipcMain.on(MESSAGE_READ_ACK, (e, arg) => {
   msgDataReadAckReq(arg.senderId, arg.msgId);
+});
+
+ipcMain.on(GET_HISTORY_MESSAGES, (e, arg) => {
+  getHistoryMessages(arg.sessionId, arg.endId, arg.count);
 });

@@ -4,7 +4,8 @@ import {
   ON_LOAD_TALK,
   RECIEVE_MESSAGE,
   RECIEVE_UNREAD_MESSAGE,
-  RECIEVE_UNREAD_MSG_LIST
+  RECIEVE_UNREAD_MSG_LIST,
+  GET_HISTORY_MESSAGES
 } from '../../talk/actions';
 
 // 更改以获得onread消除
@@ -54,4 +55,13 @@ dispatch => (...args) => {
     RECIEVE_UNREAD_MSG_LIST,
     msgListRsp => msgListRsp,
     () => ({ scope: '__ALL__' }))(...args));
+};
+
+export const onGetHistoryMsgsActionCreator =
+dispatch => (...args) => {
+  dispatch(createAction(
+    GET_HISTORY_MESSAGES,
+    (msgList, sid) => ({ sessionId: sid, msgList }),
+    () => ({ scope: 'talk' })
+  )(...args));
 };

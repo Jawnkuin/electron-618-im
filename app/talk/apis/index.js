@@ -12,6 +12,5 @@ export const sendIpcMessageReadAck = (senderId, msgId) => {
 };
 
 // 查看历史消息，会话ID，最后一个msgId,最大数量
-export const getHistoryMessages = (sessionId, endId, maxNum) => {
-  ipcRenderer.send(GET_HISTORY_MESSAGES, { sessionId, endId, count: maxNum });
-};
+export const getHistoryMessages = (sessionId, endId, maxNum) =>
+ipcRenderer.send(GET_HISTORY_MESSAGES, { sessionId, endId, count: maxNum });

@@ -1,6 +1,7 @@
-/* jshint indent: 2 */
-/* eslint-disable */
-module.exports = function(sequelize, DataTypes) {
+// const Long = require('long');
+
+
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('immessage', {
     id: {
       type: DataTypes.INTEGER,

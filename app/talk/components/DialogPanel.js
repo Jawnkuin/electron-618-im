@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Icon } from 'antd';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import DlgItem from './DlgItem';
 import { generateKeyString } from '../../utils/uint64';
 import InputPanelContainer from '../containers/InputPanelContainer';
+import ViewMore from './ViewMore';
 
 import styles from './DialogPanel.less';
 
@@ -14,7 +14,8 @@ class DialogPanel extends Component {
     dlgInfo: PropTypes.shape({
       msgList: PropTypes.arrayOf(PropTypes.shape({
         msg: PropTypes.string
-      })).isRequired
+      })).isRequired,
+      hasHistory: PropTypes.bool.isRequired
     }).isRequired,
     buddyInfo: PropTypes.shape({
       buddyInfo: PropTypes.object.isRequired,
@@ -44,19 +45,16 @@ class DialogPanel extends Component {
   }
 
   componentDidUpdate () {
-    console.log('dlgListView');
     if (!this.state.mouseDown) {
-      console.log('dlgListView', this.dlgListView);
       this.dlgListView && this.dlgListView.scrollIntoView({ block: 'end', behavior: 'smooth' });
     }
   }
 
   render () {
-    const { msgList } = this.props.dlgInfo;
+    const { msgList, hasHistory } = this.props.dlgInfo;
     const { selfInfo, buddyInfo } = this.props.buddyInfo;
     const sendMessageReadAck = this.props.sendMessageReadAck;
     const onlineStatus = buddyInfo.onlineStatus;
-
 
     return (
       <div className={styles.DialogPanel}>
@@ -65,13 +63,11 @@ class DialogPanel extends Component {
           onMouseDown={() => { this.setState({ mouseDown: true }); }}
           onMouseUp={() => { this.setState({ mouseDown: false }); }}
         >
-          <div
-            className={styles.ViewMore}
-            // onClick={this.getHistoryMessages}
-          >
-            <Icon type="clock-circle" />
-            查看更多
-          </div>
+          <ViewMore
+            sessionId={buddyInfo.userId}
+            endId={msgList.length > 0 ? msgList[0].msgId : 0}
+            hasHistory={hasHistory}
+          />
           {
             msgList.map((dlg, idx) => {
               const utf8Buf = Buffer.from(dlg.msgData, 'base64');
