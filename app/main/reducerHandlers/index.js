@@ -1,13 +1,9 @@
-import loginHandlers from './loginHandlers';
-import windowsHandlers from './windowsHandlers';
-import stemHandlers from './stemHandlers';
-import talkHandlers from './talkHandlers';
+import { loginUserMapper, attemptMapper } from './loginHandlers';
+import { toBuddysMapper } from './stemHandlers';
+import { unReadInfosMapper } from './talkHandlers';
 
-// 每个handler会传入对应的preState和newState
-// loginHandlers(loginPreState, loginNewState)
-export default {
-  login: loginHandlers,
-  stem: stemHandlers,
-  talk: talkHandlers,
-  windows: windowsHandlers
+
+export default () => {
+  const allMappers = [loginUserMapper, attemptMapper, toBuddysMapper, unReadInfosMapper];
+  return allMappers;
 };

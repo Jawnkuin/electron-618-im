@@ -1,12 +1,12 @@
 // @flow
 import { app, BrowserWindow } from 'electron';
 import { replayActionMain } from 'electron-window-redux';
+import { reactivateState } from 'reactive-redux-state';
 import path from 'path';
 import trayManager from './utils/Tray';
-import mapStateToWindow from './utils/redux/mapStateToWindow';
+import getSelectorMappers from './main/reducerHandlers';
 import getActionCreators from './main/actions';
 import { WindowConfigs, mainWindowManager } from './utils/WindowManager';
-import stateChangeHandlers from './main/reducerHandlers';
 import mainStore from './main/store';
 import { getGlobalConfigDb } from './utils/database';
 import { ICON_PATH } from './configs';
@@ -68,8 +68,7 @@ app.on('ready', async () => {
   // 接收render的action到reducer中，修改state
   replayActionMain(mainStore);
   // 根据修改的state更新window
-  mapStateToWindow({}, mainStore, stateChangeHandlers);
-
+  reactivateState(mainStore, getSelectorMappers());
 
   // 登录窗体
   const loginWindow = new BrowserWindow(WindowConfigs.login);
