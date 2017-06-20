@@ -1,6 +1,6 @@
 const net = require('net');
 
-const ipaddr = '127.0.0.1';// '192.168.8.41';
+const ipaddr = '192.168.8.41';
 const port = 8000;
 const HEADER_LENGTH = 16;
 const VERSION = 1;
